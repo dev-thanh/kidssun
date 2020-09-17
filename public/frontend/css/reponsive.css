@@ -1,0 +1,400 @@
+
+@media (max-width: 1199px) {
+	.megamenu-content li {
+	    margin-right: 35px;
+	}
+
+	.videos-grid .banner-link,
+	.images-grid .banner-link {
+	    font-size: 16px;
+	}
+
+	.blogs-details-content {
+	    padding-right: 0;
+	}
+	.blogs-details-title .title {
+	    font-size: 30px;
+	}
+
+	.introduces-site .banner-content {
+		width: 45%;
+		padding-right: 0;
+	}
+	.introduces-site .banner-img {
+		width: 55%;
+	}
+	.introduces-site .mission-content .banner-content {
+		padding-left: 0;
+	}
+
+	.contacts {
+		padding-right: 0;
+	}
+
+	.blog-detail-contact .contacts-form {
+	    padding: 48px 15px 100px;
+	}
+	.other-position-info {
+		font-size: 15px;
+	}
+	.other-position-info li {
+	    margin-bottom: 0;
+	}
+}
+
+@media (max-width: 991px) {
+	.main-bar {
+	    padding-bottom: 149px;
+	}
+
+	.megamenu-content .sub-menu {
+		position: initial;
+		padding: 0 15px;
+	}
+	.megamenu-content .sub-menu li {
+		border: none;
+	}
+	.menu-content .language-box ul {
+		flex-direction: row;
+	}
+	.menu-content .language-box ul li {
+		margin-right: 5px;
+		width: auto;
+	}
+	.menu-content .language-box ul li:last-child {
+		margin-right: 0;
+	}
+
+	.slick-slidershow .slick-dots {
+	    bottom: 0;
+	}
+
+	.art-introduces .banner-content,
+	.art-introduces .banner-img {
+		width: 50%;
+	}
+	.art-introduces .banner-content {
+		padding-bottom: 10px;
+	}
+	.short-description {
+	    margin-bottom: 15px;
+	}
+
+	.art-services h4 {
+    	font-size: 16px;
+	}
+
+	.blogs-box {
+		margin: -15px;
+	}
+	.blogs-box .item {
+	    padding: 15px;
+	}
+	.blog-content {
+	    padding-bottom: 0;
+	}
+
+	.testimonial-content .author-office {
+	    margin-top: 15px;
+	    margin-bottom: 20px;
+	}
+	.testimonial-content .author {
+	    font-size: 20px;
+	}
+	.testimonial-comment .comment {
+	    font-size: 15px;
+	}
+
+	.slick-brands .slick-arrow,
+	.slick-blogs .slick-arrow {
+	    left: 5px;
+	}
+	.slick-brands .slick-next,
+	.slick-blogs .slick-next {
+	    left: auto;
+	    right: 5px;
+	}
+
+	.blogs .blogs-box,
+	.videos-grid,
+	.images-grid {
+		    grid-template-columns: 1fr 1fr;
+	}
+
+	.blogs .blogs-box {
+		margin: -15px;
+	}
+	.blogs .blogs-box .item {
+	    padding: 15px;
+	}
+
+	.art-pagination .pagination ul {
+	    justify-content: center;
+	}
+	.pagination-number {
+	    text-align: center;
+	    margin-top: 15px;
+	}
+
+	.introduces-site .banner-box {
+		flex-direction: column;
+	}
+	.introduces-site .banner-content,
+	.introduces-site .banner-img {
+		width: 100%;
+	}
+	.introduces-site .banner-content {
+		margin-bottom: 10px;
+		padding-top: 0;
+	}
+	.introduces-site .mission-content .banner-content {
+		margin-bottom: 0;
+		margin-top: 10px;
+	}
+	.introduces-site .banners-box .title {
+	    margin-bottom: 25px;
+	}
+
+	.recruitments .recruitments-box {
+		    grid-template-columns: 1fr 1fr;
+	}
+	.recruitments .recruitments-box {
+		margin: -15px;
+	}
+	.recruitments .recruitments-box .item {
+	    padding: 15px;
+	}
+
+	.recruitments-details-title {
+	    padding: 0 0 19px;
+	}
+	.recruitment-detail-description {
+	    padding: 0;
+	}
+	.blog-detail-contact .title {
+	    padding: 0;
+	    margin-bottom: 15px;
+	}
+	.other-position-box {
+	    padding: 28px 15px 35px;
+	    padding-right: 145px;
+	}
+	.other-position-button .btn-read-more {
+		right: 15px;
+	}
+	.blog-detail-contact .contacts-form .phone-group,
+	.blog-detail-contact .contacts-form .email-group {
+	    width: calc(50% - 15px);
+	}
+	.blog-detail-other-info ul {
+	    grid-template-columns: 1fr 1fr;
+	}
+}
+
+@media (max-width: 767px) {
+	.banner-box {
+	    flex-direction: column;
+	}
+	.art-introduces .banner-content,
+	.art-introduces .banner-img {
+	    width: 100%;
+	    margin: 0;
+	}
+
+	.art-services .banners-box {
+	    grid-template-columns: 1fr 1fr;
+	}
+
+	.art-blogs {
+	    padding-top: 40px;
+	}
+
+	.art-testimonials {
+	    padding-top: 20px;
+	}
+	.testimonial-box {
+	    padding: 88px 60px 68px;
+	}
+
+	.art-brands {
+	    padding-top: 0;
+	    padding-bottom: 80px;
+	}
+
+	.slick-brands .slick-arrow,
+	.slick-blogs .slick-arrow {
+	    width: 30px;
+	    height: 30px;
+	    line-height: 33px;
+	    font-size: 22px;
+	    top: calc(50% - 15px);
+	}
+
+	.footer-contact-title {
+	    padding-top: 0;
+	}
+
+	.videos-grid .banner-link,
+	.images-grid .banner-link {
+	    font-size: 14px;
+	}
+
+	.content-404 h3 {
+	    font-size: 30px;
+	}
+	.content-404 .btn {
+	    font-size: 20px;
+	}
+
+	.other-position-box {
+	    padding-right: 15px;
+	}
+	.other-position-button .btn-read-more {
+		position: initial;
+		margin-top: 25px;
+	}
+
+	.art-services .banner-box {
+	    padding-top: 25px;
+	    padding-bottom: 25px;
+	}
+	.art-services .banner-img {
+	    margin-bottom: 25px;
+	}
+
+	.blog-name {
+	    max-width: 228px;
+	}
+}
+
+@media (max-width: 575px) {
+	.title {
+	    font-size: 25px !important;
+	}
+
+	.art-introduces .banners-title:before {
+	    background-size: 290px;
+	}
+
+	.art-services .banners-box {
+	    grid-template-columns: 1fr;
+	}
+
+	.testimonial-box {
+	    padding: 88px 15px 68px;
+	}
+	.slick-testimonials .slick-arrow {
+	    width: 18px;
+	    height: 32px;
+	    left: -10px;
+	}
+	.slick-testimonials .slick-next {
+	    left: auto;
+	    right: -10px;
+	}
+
+	.breadcrumbs-box span, .breadcrumbs-box a {
+	    font-size: 15px;
+	}
+
+	.blogs .blogs-box,
+	.videos-grid,
+	.images-grid {
+	    grid-template-columns: 1fr;
+	}
+
+	.contacts-form .phone-group,
+	.contacts-form .email-group {
+		width: 100%;
+	}
+
+	.content-404 h3 {
+	    font-size: 18px;
+	}
+
+	.recruitments .recruitments-box {
+		    grid-template-columns: 1fr;
+	}
+
+	.other-position-info ul,
+	.blog-detail-other-info ul {
+		display: block;
+	}
+	.other-position-info li,
+	.blog-detail-other-info li {
+		display: inline-block;
+		margin-right: 15px;
+	}
+	.other-position-info li:last-child,
+	.blog-detail-other-info li:last-child {
+		margin-right: 0;
+	}
+	.others-position-title .title,
+	.blog-detail-contact .title,
+	.recruitment-detail-description .title {
+		font-size: 15px !important;
+	}
+	.blog-detail-contact .contacts-form .phone-group,
+	.blog-detail-contact .contacts-form .email-group {
+	    width: 100%;
+	}
+	.blog-detail-contact .btn {
+	    font-size: 15px;
+	    padding: 10px 30px;
+	    margin-right: 15px;
+	}
+	.blog-detail-contact .file-upload-btn {
+	    padding: 10px 20px;
+	}
+	.blog-detail-contact .contact-title .title {
+		font-size: 25px !important;
+	}
+
+	.blog-detail-contact .form-button {
+		flex-direction: column;
+	}
+
+	.brands-box {
+	    margin: -15px -5px;
+	}
+	.brands-box .item {
+	    padding: 15px 5px;
+	}
+
+	.recruitments-details-site .contacts-form .phone-group {
+		margin-bottom: 28px;
+	}
+	.blog-detail-contact .form-button .fr-button {
+		flex-direction: column;
+	}
+	.blog-detail-contact .file-upload-btn {
+		margin: 0;
+	}
+	.blog-detail-contact .fr-button .help-block {
+		position: initial;
+	}
+
+	.blog-detail-box .video iframe {
+		width: 100% !important;
+	}
+
+	.chatbot-box {
+	    top: auto;
+	    right: 5px;
+	    bottom: 30px;
+	}
+
+	.introduces-site .title-box {
+	    margin-bottom: 30px !important;
+	}
+
+	.blogs,
+	.recruitments,
+	.images {
+	    padding-top: 0;
+	}
+
+	.breadcrumbs-content .title-box {
+		margin-bottom: 30px;
+	}
+}

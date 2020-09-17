@@ -1,0 +1,145 @@
+.mobile-content {
+  display: block;
+  margin-top: 10%;
+}
+
+.menu-content {
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 400ms;
+    transform: translateX(100%);
+    max-width: 300px;
+    left: auto;
+    right: 0;
+}
+.menu-content.active {
+    opacity: 1;
+    visibility: initial;
+    transform: translateX(0);
+}
+
+.menu-content .modal-content {
+    border-radius: 0;
+    border: none;
+    border-left: 1px solid #ededed;
+}
+
+/*Burger-Menu*/
+
+.menu-open {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    margin: 25px;
+}
+.menu-open span {
+    margin: 0 auto;
+    position: relative;
+    top: 12px;
+}
+
+.menu-open span:before, .menu-open span:after {
+    position: absolute;
+    content: '';
+}
+.menu-open span, .menu-open span:before, .menu-open span:after {
+    width: 30px;
+    height: 6px;
+    background-color: #FFF0A5;
+    display: block;
+}
+.menu-open span:before {
+    margin-top: -12px;
+}
+.menu-open span:after {
+    margin-top: 12px;
+}
+
+/*Fake-Trigger*/
+.menu-open {
+    width:60px;
+    height:50px;
+    color:transparent;
+    background-color: transparent;
+    border: transparent;
+}
+
+
+
+.close {
+    color: #468966;
+    float: left;
+    font-size: 5em;
+    font-weight: bold;
+    opacity: 1;
+}
+
+.close:hover,
+.close:focus {
+    color: #B64926;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+@-webkit-keyframes zoomIn {
+    from {
+        opacity: 0;
+        -webkit-transform: scale3d(.3, .3, .3);
+        transform: scale3d(.3, .3, .3);
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+
+/*Navigation Inner Styling*/
+
+.menu-content .nav ul li{
+    display: block;
+    width: 100%;
+}
+
+.menu-content .nav ul{
+    width: 100%;
+}
+
+.megamenu-mobile {
+    display: flex;
+    justify-content: flex-end;
+}
+.menu-open {
+    margin: 0;
+    width: 30px;
+    height: 30px;
+    top: 3px;
+}
+.menu-open span {
+    top: 0;
+}
+.menu-open span, .menu-open span:before, .menu-open span:after {
+    height: 2px;
+    background-color: #333;
+}
+.menu-close {
+    padding: 15px 15px 0;
+}
+.menu-close .close {
+    color: #333;
+    font-size: 50px;
+}
+.menu-content .nav ul {
+    flex-direction: column;
+    align-items: flex-start;
+}
+.menu-content .nav ul li {
+    margin: 0;
+}
+.main-sticky .menu-content a {
+    padding: 10px 0 !important;
+}
+.megamenu-mobile .menu-content {
+    overflow-y: scroll;
+}
