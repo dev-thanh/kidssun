@@ -11,7 +11,11 @@ use SEO;
 use SEOMeta;
 use OpenGraph;
 use App\Models\Menu;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Validator;
+use Carbon\Carbon;
 use App\Models\Image;
 use App\Models\Customer;
 use App\Models\Posts;
@@ -19,8 +23,12 @@ use App\Models\Picture;
 use App\Models\Video;
 use App\Models\Contact;
 use App\Models\ApplyJob;
+use App\Models\Member;
+use App\Models\ResetPassword;
 use App\Http\Requests\ContactRequest;
 use App\Http\Requests\RecruitmentRequest;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use DB;
 
 
@@ -260,6 +268,236 @@ class IndexController extends Controller
         return redirect()->back()->with([
             'flash_message' => ucfirst(trans('message.thong_bao_thanh_cong')),
         ]);
+    }
+
+    public function postMember(Request $request){
+        if (Lang::locale() == 'vi'){           
+            $message = [
+                'full_name.required' => 'Họ tên không được để trống',
+                'user_name.required' => 'Tên đăng nhập không được để trống',
+                'user_name.unique' => 'Tên đăng nhập này đã có người sử dụng',
+                'email.required' => 'Email không được để trống',
+                'email.email' => 'Email không đúng định dạng',
+                'email.unique' => 'Email này đã có người sử dụng',
+                'phone.required' => 'Số điện thoại không được để trống',
+                'password.required' => 'Mật khẩu không được để trống',
+                'password.string' => 'Mật khẩu phải là chuỗi kí tự',
+                'password.min' => 'Mật khẩu ít nhất phải 6 kí tự',
+                'password.confirmed' => 'Nhập lại mật khẩu không khớp',
+                'password_confirmation.required' => 'Vui lòng nhập lại mật khẩu'
+            ];
+            $success = 'Đăng ký thành công, vui lòng đăng nhập lại';
+            $mess_code = 'Mã giới thiệu không đúng';
+        }else{
+            $message = [
+                'full_name.required' => 'Full name cannot be left blank',
+                'user_name.required' => 'Username cannot be left blank',
+                'user_name.unique' => 'This username is already in use',
+                'email.required' => 'Email cannot be left blank',
+                'email.email' => 'Email invalidate',
+                'email.unique' => 'This email is already in use',
+                'phone.required' => 'Phone number can not be left blank',
+                'password.required' => 'Password number can not be left blank',
+                'password.string' => 'Password must be a string of characters',
+                'password.min' => 'Password must be at least 6 characters',
+                'password.confirmed' => 'Password mismatched again',
+                'password_confirmation.required' => 'Please re-enter your password'
+            ];
+            $success = 'Successful registration, please login again';
+            $mess_code = 'Referral code is incorrect';
+        }
+        $input = $request->all();
+        
+        $validator = Validator::make($input, [
+            'full_name' => 'required',
+            'user_name' => 'required|unique:member,user_name',
+            'email' => 'required|email|unique:member,email',
+            'phone' => 'required',
+            'password' => [
+                'required',
+                'string',
+                'min:6', 
+                'confirmed',
+            ],
+            'password_confirmation' => 'required',
+        ],$message);
+
+
+        if ($validator->passes()) {
+
+            $mentor = Member::where('code',$request->mentor_code)->first();
+            if(!$mentor){
+                return response()->json(['error_code'=>$mess_code]);
+            }
+
+            $input['password'] = Hash::make($request->password);
+            $input['mentor'] = $mentor->id;
+            $input['code'] = 'KS'.Carbon::now()->format('dmYHis');
+            $member = Member::create($input);
+
+            return response()->json(['success'=>$success]);
+        }
+
+
+
+
+        return response()->json(['error'=>$validator->errors()]);
+    }
+
+    /*  Login  */
+    public function postLogin(Request $request){
+        $input = $request->all();
+        // Auth::guard('customer')->logout();
+        // return redirect()->back();
+        if (Lang::locale() == 'vi'){
+            $message = [
+                'name_email.required' => 'Bạn chưa điền tên đăng nhập hoặc email',
+                'password_login.required' => 'Bạn chưa nhập mật khẩu'
+            ];
+            $message_login = 'Tên đăng nhập hoặc mật khẩu không chính xác';
+            $message_title= 'Lỗi đăng nhập';
+        }else{
+            $message = [
+                'name_email.required' => 'You have not entered your username or email',
+                'password_login.required' => 'You have not entered the password'
+            ];
+            $message_login = 'Username or password incorrect';
+            $message_title= 'Login error';
+        }
+        
+        $validator = Validator::make($input, [
+            'name_email' => 'required',
+            'password_login' => 'required'
+        ],$message);
+        if ($validator->passes()) {
+
+
+            $login_type = filter_var($request->name_email, FILTER_VALIDATE_EMAIL ) 
+                ? 'email' 
+                : 'user_name';
+            if($login_type == 'email'){
+                $credentials = array('email' => $request->name_email, 'password' => $request->password_login);
+            }else{
+                $credentials = array('user_name' => $request->name_email, 'password' => $request->password_login);
+            }
+           
+            if (Auth::guard('customer')->attempt($credentials)) {
+                        return response()->json(['status_login'=>1]);
+            }
+
+            return response()->json([
+                'status_login'=>0,
+                'message_login' => $message_login,
+                'message_title' => $message_title
+            ]);
+        }
+
+        return response()->json(['error'=>$validator->errors()]);
+    }
+
+    public function postLogout(Request $request) {
+        Auth::guard('customer')->logout();
+        return redirect()->back();
+    }
+
+    public function getForgotPassword(Request $request)
+    {
+        //Tạo token và gửi đường link reset vào email nếu email tồn tại
+        if (Lang::locale() == 'vi'){
+            $message=[
+                'nhapemail' => 'Vui lòng nhập email đăng kí tài khoản của bạn',
+                'xacnhanmk' => 'Xác nhận lấy lại mật khẩu',
+                'mess-success' => 'Vui lòng kiểm tra email của bạn để xác nhận thay đổi mật khẩu',
+                'mess-error' => 'Email không có trong hệ thống, vui lòng kiểm tra lại'
+            ];
+        }else{
+            $message=[
+                'nhapemail' => 'Please enter your account registration email',
+                'xacnhanmk' => 'Confirm password recovery',
+                'mess-success' => 'Please check your email to confirm password change',
+                'mess-error' => 'Email is not in the system, please check'
+            ];
+        }
+        if($request->email_reset ==''){            
+            return response()->json([
+                'status'=>2,
+                'error_empty' => $message['nhapemail']
+            ]);
+        }
+        $result = Member::where('email', $request->email_reset)->first();
+        if($result){
+            $resetPassword = ResetPassword::firstOrCreate(['email'=>$request->email_reset, 'token'=>Str::random(60)]);
+
+            $token = ResetPassword::where('email', $request->email_reset)->first();
+
+            $link = url('resetPassword')."/".$token->token; //send it to email
+
+            $content_email = [
+                'title' => $message['xacnhanmk'],
+                'url' => $link,
+            ];
+
+            Mail::send('frontend.mail.mail-resetpassword', $content_email, function ($msg) use($request) {
+                $msg->from('no.reply.bot.gco@gmail.com', 'Website - KIDS SUN VIỆT NAM');
+                $msg->to($request->email_reset, 'Website - KIDS SUN VIỆT NAM')->subject($message['xacnhanmk']);
+            });
+            return response()->json([
+                'status'=>1,
+                'message' => $message['mess-success']
+            ]);
+            
+        } else {
+            return response()->json([
+                'status'=>0,
+                'error' => $message['mess-error']
+            ]);
+        }
+        
+    }
+
+    public function resetPassword($token)
+    {
+        $result = ResetPassword::where('token', $token)->first();
+
+        if($result){
+            return view('frontend.pages.new-password', compact('result'));
+        } else {
+            echo 'This link is expired';
+        }
+    }
+
+    public function newPassword(Request $request)
+    {
+        if (Lang::locale() == 'vi'){
+            $message=[
+                'nhapmk' => 'Vui lòng nhập đầy đủ mật khẩu mới và nhập lại mật khẩu mới',
+                'mess-success' => 'Thay đổi mật khẩu thành công',
+                'mess-error' => 'Mật khẩu không khớp,vui lòng nhập lại'
+            ];
+        }else{
+            $message=[
+                'nhapmk' => 'Please enter your new password completely and re-enter your new password',
+                'mess-success' => 'Password changed successfully',
+                'mess-error' => 'Password does not match, please re-enter'
+            ];
+        }
+
+        if($request->password == '' || $request->confirm==''){
+            return redirect()->back()->with('error_empty',$message['nhapmk']);
+        }
+        if($request->password == $request->confirm){
+            // Check email with token
+            $result = ResetPassword::where('token', $request->token)->first();
+
+            // Update new password 
+            Member::where('email', $result->email)->update(['password'=>Hash::make($request->password)]);
+
+            ResetPassword::where('token', $request->token)->delete();
+
+            return redirect()->route('home.index')->with('success',$message['mess-success']);
+        } else {
+            return redirect()->back()->with('error',$message['mess-error']);
+        }
     }
 
 }

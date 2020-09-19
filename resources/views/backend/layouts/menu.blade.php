@@ -11,6 +11,23 @@
     </a>
 </li>
 
+<li class="treeview {{ Request::segment(2) === 'category' || Request::segment(2) === 'products' ? 'active' : null }}">
+    <a href="#">
+        <i class="fa fa-building" aria-hidden="true"></i> <span>Sản phẩm</span>
+        <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+        </span>
+    </a>
+    <ul class="treeview-menu">
+        <li class="{{ Request::segment(2) === 'products' ? 'active' : null }}">
+            <a href="{{ route('products.index') }}"><i class="fa fa-circle-o"></i> Danh sách sản phẩm</a>
+        </li>
+        <li class="{{ Request::segment(2) === 'category' ? 'active' : null }}">
+            <a href="{{ route('category.index') }}"><i class="fa fa-circle-o"></i> Danh mục sản phẩm</a>
+        </li>
+    </ul>
+</li>
+
 <li class="treeview {{ Request::segment(2) === 'picture' || Request::segment(2) === 'video' ? 'active' : null }}">
     <a href="#">
         <i class="fa fa-building" aria-hidden="true"></i> <span>Hình ảnh video</span>
@@ -74,11 +91,11 @@
             <a href="{{ route('backend.options.general') }}"><i class="fa fa-circle-o"></i> Cấu hình chung</a>
         </li>
         <li class="{{ request()->get('type') == 'slider' ? 'active' : null }}">
-            <a href="{{ route('images.index', ['type'=> 'slider']) }}"><i class="fa fa-circle-o"></i> Slider</a>
+            <a href="{{ route('image.index', ['type'=> 'slider']) }}"><i class="fa fa-circle-o"></i> Slider</a>
         </li>
 
         <li class="{{ request()->get('type') == 'partner' ? 'active' : null }}">
-            <a href="{{ route('images.index', ['type'=> 'partner']) }}"><i class="fa fa-circle-o"></i> Đối tác</a>
+            <a href="{{ route('image.index', ['type'=> 'partner']) }}"><i class="fa fa-circle-o"></i> Đối tác</a>
         </li> 
         <li class="{{ Request::segment(2) === 'menu' ? 'active' : null }}">
             <a href="{{ route('setting.menu') }}"><i class="fa fa-circle-o"></i> Menu</a>

@@ -629,3 +629,18 @@ function cancelInput(slug = null){
     $('#sample-permalink').html(html);
 }
 
+$('input#amount_money').keyup(function(event) {
+    if($(this).val() != ''){
+        $('.amount_money_error').html('');
+    }
+    if(event.which >= 37 && event.which <= 40) return;
+    $(this).val(function(index, value) {
+        return value
+        .replace(/\D/g, "")
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        ;
+    });
+    var number = $(this).val().replace(/,/g, '');
+    $('input[name="price"]').val(number);
+    // $('input[name="money"]').val(number);
+});

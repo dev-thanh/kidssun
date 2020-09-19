@@ -38,6 +38,37 @@ Route::group(['middleware' => 'locale'], function () {
 
     Route::post('/tuyen-dung', 'IndexController@postRecruitment')->name('home.post-recruitment');
 
+    Route::post('/dang-ky', 'IndexController@postMember')->name('home.post-member');
+
+    Route::post('/dang-nhap', 'IndexController@postLogin')->name('home.post-login');
+
+    Route::get('/logout', 'IndexController@postLogout')->name('home.logout');
+
+    Route::post('/quen-mat-khau', 'IndexController@getForgotPassword')->name('home.quen-mat-khau');
+
+    Route::get('/resetPassword/{token}', 'IndexController@resetPassword')->name('home.resetPassword');
+
+    Route::post('/new-password', 'IndexController@newPassword')->name('home.new-password');
+
+    /*  Quản lý tài khoản  */
+    Route::group(['middleware' => 'customer_auth'], function () {
+        // Đăng nhập thành công
+        Route::get('/san-pham', 'ProductsController@listProducts')->name('home.list-products');
+
+        Route::post('add-cart', 'ProductsController@postAddCart')->name('home.post-add-cart');
+
+        Route::get('get-add-cart', 'ProductsController@getAddCart')->name('home.get-add-cart');
+
+        Route::get('gio-hang', 'ProductsController@gioHang')->name('home.gio-hang');
+
+        Route::get('update-giohang', 'ProductsController@getUpdateCart')->name('home.update-giohang');
+
+        Route::get('remove-card', 'ProductsController@getRemoveCart')->name('home.remove-card');
+
+        Route::get('destroy-card', 'ProductsController@cartDestroy')->name('home.destroy-card');
+        
+    });
+
 });
 
 
@@ -50,10 +81,10 @@ Route::group(['namespace' => 'Admin'], function () {
             'show'
         ]]);
 
-        Route::resource('images', 'ImageController', ['except' => [
+        Route::resource('image', 'ImageController', ['except' => [
             'show'
         ]]);
-        Route::post('images/postMultiDel', ['as' => 'images.postMultiDel', 'uses' => 'ImageController@deleteMuti']);
+        Route::post('image/postMultiDel', ['as' => 'image.postMultiDel', 'uses' => 'ImageController@deleteMuti']);
 
         // tuyển dụng
         Route::resource('recruitment', 'RecruitmentController', ['except' => ['show']]);
@@ -73,7 +104,15 @@ Route::group(['namespace' => 'Admin'], function () {
         Route::resource('video', 'VideoController', ['except' => ['show']]);
         Route::post('video/postMultiDel', ['as' => 'video.postMultiDel', 'uses' => 'VideoController@deleteMuti']);
         Route::get('video/get-slug', 'VideoController@getAjaxSlug')->name('video.get-slug');
+
+        /*Danh mục sản phẩm*/
+        Route::resource('category', 'CategoriesController', ['except' => ['show']]);
         
+        /*Danh sách sản phẩm*/
+        Route::resource('products', 'ProductsController', ['except' => ['show']]);
+        Route::post('products/postMultiDel', ['as' => 'products.postMultiDel', 'uses' => 'ProductsController@deleteMuti']);
+        Route::get('products/get-slug', 'ProductsController@getAjaxSlug')->name('products.get-slug');
+
         // Đơn ứng tuyển
         Route::group(['prefix' => 'apply-job'], function() {
             Route::get('/', ['as' => 'get.list.job', 'uses' => 'ApplyJobController@getList']);

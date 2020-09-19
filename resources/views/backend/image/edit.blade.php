@@ -1,14 +1,14 @@
 @extends('backend.layouts.app')
 @section('controller', request()->get('type') == 'slider' ? 'Slider' : 'Đối tác' )
 @section('action','Cập nhật')
-@section('controller_route', route('images.index').'?type='.request()->get('type'))
+@section('controller_route', route('image.index').'?type='.request()->get('type'))
 @section('content')
     <div class="content">
         <div class="clearfix"></div>
         <div class="box box-primary">
             <div class="box-body">
                 @include('flash::message')
-                <form action="{{ route('images.update', $data->id) }}" method="POST">
+                <form action="{{ route('image.update', $data->id) }}" method="POST">
                     @csrf
                     {{ method_field('PUT') }}
                     <div class="nav-tabs-custom">

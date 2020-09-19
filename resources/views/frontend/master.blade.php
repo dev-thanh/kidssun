@@ -33,10 +33,14 @@
 	<link rel="stylesheet" type="text/css" title="" href="{{ __BASE_URL__ }}/css/slick.css">
 
 	<link rel="stylesheet" type="text/css" title="" href="{{ __BASE_URL__ }}/css/all.fontawesome.min.css">
+
+	<link rel="stylesheet" type="text/css" title="" href="{{ __BASE_URL__ }}/css/toastr.min.css">
 	
 	<link rel="stylesheet" type="text/css" title="" href="{{ __BASE_URL__ }}/css/styles.css">
 
 	<link rel="stylesheet" type="text/css" title="" href="{{ __BASE_URL__ }}/css/reponsive.css">
+
+	<script type="text/javascript" src="{{ __BASE_URL__ }}/js/jquery.min.js"></script> 
  	
 
  	@if (!empty($site_info->google_analytics))
@@ -94,13 +98,15 @@
 
 		<!--Link js-->
 		
-		<script type="text/javascript" src="{{ __BASE_URL__ }}/js/jquery.min.js"></script> 
+		
 
 		<script type="text/javascript" src="{{ __BASE_URL__ }}/js/bootstrap.min.js"></script>
 
 		<script type="text/javascript" src="{{ __BASE_URL__ }}/js/slick.min.js"></script> 
 
 		<script type="text/javascript" src="{{ __BASE_URL__ }}/js/mobilemenu.js"></script>
+
+		<script type="text/javascript" src="{{ __BASE_URL__ }}/js/toastr.min.js"></script>
 
 		<script type="text/javascript" src="{{ __BASE_URL__ }}/js/main.js"></script>
 
@@ -125,6 +131,39 @@
 
 		<script>
 		</script>
-
+		<script type="text/javascript">
+			$(document).ready(function(){
+				toastr.options = {
+					"closeButton": false,
+					"debug": false,
+					"newestOnTop": false,
+					"progressBar": false,
+					"positionClass": "toast-top-right",
+					"preventDuplicates": false,
+					"onclick": null,
+					"showDuration": "300",
+					"hideDuration": "1000",
+					"timeOut": "5000",
+					"extendedTimeOut": "1000",
+					"showEasing": "swing",
+					"hideEasing": "linear",
+					"showMethod": "fadeIn",
+					"hideMethod": "fadeOut"
+				}
+			});
+		</script>
+		
+		@if(Session::has('message'))
+			<script type='text/javascript'>
+				toastr["{!! Session::get('level') !!}"]("{!! Session::get('message') !!}")
+			</script>
+     	@endif
+     	@if(Session::has('success'))
+		<script type="text/javascript">
+			$(document).ready(function($) {
+				toastr["success"]('{{ Session::get('success') }}', "Thông báo");
+			});
+		</script>
+	@endif
 	</body>
 </html>

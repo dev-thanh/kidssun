@@ -68,38 +68,38 @@ function renderLinkAddPostType()
     }
 }
 
-function listCate($data, $parent_id = 0, $str = '')
-{
-    foreach ($data as $value) {
-        $id   = $value->id;
-        $name = $value->name;
-        if ($value->parent_id == $parent_id) {
-            if ($str == '') {
-                $strName = '<b>' . $str . $name . '</b>';
-            } else {
+// function listCate($data, $parent_id = 0, $str = '')
+// {
+//     foreach ($data as $value) {
+//         $id   = $value->id;
+//         $name = $value->name;
+//         if ($value->parent_id == $parent_id) {
+//             if ($str == '') {
+//                 $strName = '<b>' . $str . $name . '</b>';
+//             } else {
 
-                $strName = $str . $name;
-            }
-            echo '<tr class="odd">';
-            echo '<td><input type="checkbox" name="chkItem[]" value="' . $id . '"></td>';
-            // echo "<td><img src='$value->image' class='img-responsive imglist'></td>";
-            echo '<td>
-                        <a class="text-default" href="' . route('category.edit', $id) . '" title="Sửa">' . $strName . '</a></br>
-                        <a href="' . asset('danh-muc/' . $value->slug) . '" target="_blank"> <i class="fa fa-hand-o-right" aria-hidden="true"></i> Link: ' . asset('danh-muc/' . $value->slug) . ' </a> 
-                    </td>';
-            echo '<td><a class="text-default" href="' . route('category.edit', $id) . '" title="Sửa"> ' . count($value->get_child_cate()) ?: '_' . ' </a>
-                        </td>';
-            echo ' <td><a href="' . route('category.edit', $id) . '" title="Sửa"> <i class="fa fa-pencil fa-fw"></i> Sửa</a> &nbsp; &nbsp; &nbsp;
-                                <a href="javascript:;" class="btn-destroy" data-href="' . route('category.destroy', $id) . '" data-toggle="modal" data-target="#confim">
-                                    <i class="fa fa-trash-o fa-fw"></i> Xóa
-                                </a>
-                            </td>';
-            echo '</tr>';
+//                 $strName = $str . $name;
+//             }
+//             echo '<tr class="odd">';
+//             echo '<td><input type="checkbox" name="chkItem[]" value="' . $id . '"></td>';
+//             // echo "<td><img src='$value->image' class='img-responsive imglist'></td>";
+//             echo '<td>
+//                         <a class="text-default" href="' . route('category.edit', $id) . '" title="Sửa">' . $strName . '</a></br>
+//                         <a href="' . asset('danh-muc/' . $value->slug) . '" target="_blank"> <i class="fa fa-hand-o-right" aria-hidden="true"></i> Link: ' . asset('danh-muc/' . $value->slug) . ' </a> 
+//                     </td>';
+//             echo '<td><a class="text-default" href="' . route('category.edit', $id) . '" title="Sửa"> ' . count($value->get_child_cate()) ?: '_' . ' </a>
+//                         </td>';
+//             echo ' <td><a href="' . route('category.edit', $id) . '" title="Sửa"> <i class="fa fa-pencil fa-fw"></i> Sửa</a> &nbsp; &nbsp; &nbsp;
+//                                 <a href="javascript:;" class="btn-destroy" data-href="' . route('category.destroy', $id) . '" data-toggle="modal" data-target="#confim">
+//                                     <i class="fa fa-trash-o fa-fw"></i> Xóa
+//                                 </a>
+//                             </td>';
+//             echo '</tr>';
 
-            listCate($data, $id, $str . '---| ');
-        }
-    }
-}
+//             listCate($data, $id, $str . '---| ');
+//         }
+//     }
+// }
 
 function checkBoxCategory($data, $id, $item, $list_id = null)
 {
@@ -237,5 +237,76 @@ function getOptions($key = null, $field = null)
         return substr(str_shuffle(str_repeat($x='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(10/strlen($x)) )),1, 10);
     }
 
+    function listCate($data, $parent_id = 0, $str = '')
+    {
+        foreach ($data as $value) {
+            $id   = $value->id;
+            $name = $value->name;
+            if ($value->parent_id == $parent_id) {
+                if ($str == '') {
+                    $strName = '<b>' . $str . $name . '</b>';
+                } else {
 
+                    $strName = $str . $name;
+                }
+                if($value->status==1){
+                    $status = '<label class="label label-success">Hiển thị trang chủ</label>';
+                }else{
+                    $status = '<label class="label label-danger">Không hiển thị</label>';
+                }
+                echo '<tr class="odd">';
+                echo '<td><input type="checkbox" name="chkItem[]" value="' . $id . '"></td>';
+                
+                echo '<td>
+                        <span class="text-default" >' . $strName . '</span> 
+                        </td>';
+                echo '<td>
+                        <span class="text-default">' . $value->slug . '</a>
+                        </td>';
+                echo '<td>'.$status.'</td>';
+
+                echo ' <td><a href="' . route('category.edit', $id) . '" title="Sửa"> <i class="fa fa-pencil fa-fw"></i> Sửa</a> &nbsp; &nbsp; &nbsp;
+                            <a href="javascript:;" class="btn-destroy" data-href="' . route('category.destroy', $id) . '" data-toggle="modal" data-target="#confim">
+                                <i class="fa fa-trash-o fa-fw"></i> Xóa
+                            </a>
+                    </td>';
+                echo '</tr>';
+
+                listCate($data, $id, $str . '---| ');
+            }
+        }
+    }
+
+    function menuMulticateproduct($data, $parent_id = 0, $str = '---| ', $select = 0)
+    {
+        foreach ($data as $value) {
+            $id   = $value->id;
+            $name = $value->name;
+            if ($value->parent_id == $parent_id) {
+                if ($select != 0 && $id == $select) {
+                    echo '<option value=' . $id . ' selected> ' . $str . $value->name . ' </option>';
+                } else {
+                    echo '<option value=' . $id . ' data-level='.$value->level.'> ' . $str . $value->name . ' </option>';
+                }
+                menuMulticateproduct($data, $id, $str . '---|  ', $select);
+            }
+        }
+    }
+
+    function menueditcategoryproduct($data,$parent_id = 0, $str = '', $select = 0,$selected)
+    {
+        foreach ($data as $value) {
+            $id   = $value->id;
+            $name = $value->name;
+            if($id == $selected){
+                $sl = 'selected';
+            }else{
+                $sl ='';
+            }
+            if ($value->parent_id == $parent_id) {              
+                echo '<option value=' . $id . ' '.$sl.'> ' . $str . $value->name . ' </option>';
+                menueditcategoryproduct($data, $id, $str . '---|  ', $select,$selected);
+            }
+        }
+    }
 

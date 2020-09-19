@@ -630,4 +630,353 @@ jQuery(document).ready(function($) {
 
     });
 
+    /*  Login register  */
+
+    $('.login-registration a').click(function(e){
+        e.preventDefault();
+
+        var hslgi = $(this).hasClass('login');
+        var hsfp = $(this).hasClass('forgot-password');
+
+        var hw = $(window).height();
+
+        $('.popups-content > div').removeClass('active');
+
+        if (hslgi) {
+            var hlg = $('.popup-content-login').height();
+            var hpcs = parseInt(hlg) + 60;
+
+            if (hpcs > hw) {
+                $('.popups-box').css({'height': hw - 30, 'top': '0'});
+            } else {
+                $('.popups-box').css({'height': 'auto', 'top': 'auto'});
+            }
+
+            $('.popup-content-login').addClass('active');
+        } else if (hsfp) {
+            var hlg = $('.popup-content-forgot-password').height();
+            var hpcs = parseInt(hlg) + 60;
+
+            if (hpcs > hw) {
+                $('.popups-box').css({'height': hw - 30, 'top': '0'});
+            } else {
+                $('.popups-box').css({'height': 'auto', 'top': 'auto'});
+            }
+
+            $('.popup-content-forgot-password').addClass('active');
+        } else {
+            var hlg = $('.popup-content-registration').height();
+            var hpcs = parseInt(hlg) + 60;
+
+            if (hpcs > hw) {
+                $('.popups-box').css({'height': hw - 30, 'top': '0'});
+            } else {
+                $('.popups-box').css({'height': 'auto', 'top': 'auto'});
+            }
+
+            $('.popup-content-registration').addClass('active');
+        }
+
+        $('.art-popups-login-registration').addClass('active');
+    });
+
+    $('.popups-box').click(function(){
+        $('.art-popups-login-registration').removeClass('active');
+        $('#form-login')[0].reset();
+        $('#reset-pass-member')[0].reset();
+        $('.email_reset-error').html('');
+        $('.loadingcover').remove();
+    });
+
+    $('.popups-content').click(function(e){
+        e.stopPropagation();
+    });
+
+    $('.title-accounts .tab-title a').click(function(e){
+         e.preventDefault();
+
+         var hac = $(this).hasClass('active');
+
+         if (!hac) {
+            var clnm = $(this).attr('class').replace('-title','');
+            var clsnm = clnm + '-box';
+            $('.accounts-content > div').removeClass('active');
+            $('.title-accounts .tab-title a').removeClass('active');
+            $('.' + clsnm).addClass('active');
+            $(this).addClass('active');
+         }
+    });
+
+    $('.login-registration .title-sub').click(function(e){
+        e.preventDefault();
+        $(this).parent().toggleClass('active');
+    });
+
+    $('.title-sidebars').click(function(){
+        var wd = $(window).width();
+        if (wd < 992) {
+            var hsc = $(this).hasClass('active');
+            if (hsc) {
+                $(this).removeClass('active');
+                $(this).next().slideUp('slow');
+            } else {
+                $('.title-sidebars').removeClass('active');
+                $(this).addClass('active');
+                $('.sidebars-content').slideUp('slow');
+                $(this).next().slideDown('slow');
+            }
+        }        
+    });
+
+    $(window).resize(function(){
+        var hw = $(window).height();
+        var hlg = $('.popups-content > div.active').height();
+        var hpcs = parseInt(hlg) + 60;
+
+        if (hpcs > hw) {
+            $('.popups-box').css({'height': hw - 30, 'top': '0'});
+        } else {
+            $('.popups-box').css({'height': 'auto', 'top': 'auto'});
+        }
+
+        var wd = $(window).width();
+        if (wd < 992) {
+            $('.sidebars-content').hide();
+            $('.title-sidebars').removeClass('active');
+        } else {
+            $('.sidebars-content').show();
+        }
+    });
+
+    /*  register  */
+    $(".btn-register-member").click(function(e){
+        e.preventDefault();
+        var _this = $(this);
+        var url_browse = window.location.origin;
+        var url = $('#register-member').attr('action');
+        var _token = $("input[name='_token']").val();
+        var full_name = $("input[name='full_name']").val();
+        var user_name = $("input[name='user_name']").val();
+        var phone = $("input[name='phone']").val();
+        var email = $("input[name='email']").val();
+        var password = $("input[name='password']").val();
+        var password_confirmation = $("input[name='password_confirmation']").val();
+        var mentor_code = $("input[name='mentor_code']").val();
+        _this.attr("disabled", true);
+
+        $.ajax({
+            url: url,
+            type:'POST',
+            data: {_token:_token, full_name:full_name, user_name:user_name, email:email, phone:phone, password:password, password_confirmation:password_confirmation, mentor_code:mentor_code},
+            beforeSend: function() {
+                $('.eror-ms').html('');
+            },
+            success: function(data) {
+                // console.log(data);
+                if(data.error_code){
+                    $('.mentor_code-error').html(data.error_code);
+                }
+                if($.isEmptyObject(data.error)){
+                    toastr["success"](data.success, "Thông báo");
+                    $('.popup-content-registration').removeClass('active');
+                    $('.popup-content-login').addClass('active');
+                    history.pushState({}, null, url_browse+'?login=1');
+                }else{
+                    if(data.error.full_name){
+                        $('.full_name-error').html(data.error.full_name);
+                    }
+                    if(data.error.user_name){
+                        $('.user_name-error').html(data.error.user_name);
+                    }
+                    if(data.error.email){
+                        $('.email-error').html(data.error.email);
+                    }
+                    if(data.error.phone){
+                        $('.phone-error').html(data.error.phone);
+                    }
+                    if(data.error.password){
+                        $('.password-error').html(data.error.password);
+                    }
+                    if(data.error.password_confirmation){
+                        $('.password_confirmation-error').html(data.error.password_confirmation);
+                    }
+                   
+                }
+                _this.removeAttr('disabled');
+            }
+        });
+
+
+    });
+
+    $(".btn-login-member:not(.disabled)").click(function(e){
+        e.preventDefault();
+        var _this = $(this);
+        var url_browse = window.location.origin;
+        var url = $('#form-login').attr('action');
+        var _token = $("input[name='_token']").val();
+        var name_email = $("input[name='name_email']").val();
+        var password_login = $("input[name='password_login']").val();
+        _this.attr("disabled", true);
+        $.ajax({
+            url: url,
+            type:'POST',
+            data: {_token:_token, name_email:name_email, password_login:password_login},
+            beforeSend: function() {
+                $('.eror-ms').html('');
+                $("input[name='name_email']").css('border-color','');
+                $("input[name='password_login']").css('border-color','');
+            },
+            success: function(data) {
+                if(data.error_code){
+                    $('.mentor_code-error').html(data.error_code);
+                }
+                if($.isEmptyObject(data.error)){
+                    if(data.status_login =='0'){
+                        $("input[name='name_email']").css('border-color','red');
+                        $("input[name='password_login']").css('border-color','red');
+                        toastr["error"](data.message_login, data.message_title);
+                    }
+                    if(data.status_login =='1'){                        
+                        location.reload();
+                    }
+                }else{
+                    if(data.error.name_email){
+                        $('.name_email-error').html(data.error.name_email);
+                    }
+                    if(data.error.password_login){
+                        $('.password_login-error').html(data.error.password_login);
+                    }
+                    
+                   
+                }
+                _this.removeAttr('disabled');
+            }
+        });
+
+
+    });
+
+    $(".btn-reset-password").click(function(e){
+        e.preventDefault();
+        var loading = '<div class="loadingcover"">'+
+                '<p class="csslder">'+
+                    '<span class="csswrap">'+
+                        '<span class="cssdot"></span>'+
+                        '<span class="cssdot"></span>'+
+                        '<span class="cssdot"></span>'+
+                    '</span>'+
+                '</p>'+
+            '</div>';
+        var url = $('#reset-pass-member').attr('action');
+        var _token = $("input[name='_token']").val();
+        var email_reset = $("input[name='email_reset']").val();
+        $('.popups-box').append(loading);
+        $.ajax({
+            url: url,
+            type:'POST',
+            data: {_token:_token,email_reset:email_reset},
+            beforeSend: function() {
+                $('.eror-ms').html('');
+            },
+            success: function(data) {
+                console.log(data);
+                if(data.status == 0){
+                    $('.email_reset-error').html(data.error);
+                }
+                if(data.status == 2){
+                    $('.email_reset-error').html(data.error_empty);
+                }
+                if(data.status == 1){
+                    toastr["success"](data.message, "Thông báo");
+                    $('.art-popups-login-registration').removeClass('active');
+                }
+                $('.loadingcover').remove();
+            }
+        });
+    });
+
+    /*  GIỎ HÀNG  */
+    ajax_giohang = function(id,qty,url,parent){
+        $.ajax({
+            url: url,
+            type:'GET',
+            data: {id:id,qty:qty},
+            beforeSend: function() {
+                
+            },
+            success: function(data) {
+               console.log(data);
+               parent.find('.cartitem-price').html(data.price_new);
+               $('.total-cart').html(data.total);
+               $('.count-cart').html('( '+data.count+' )');
+               $('.disabled-click').removeClass();
+            }
+        });
+    }
+    $(".icon-minus-next").click(function(e){
+        e.preventDefault();
+        var parent = $(this).parents('tr');
+        var id = parent.find('input[name="get_id_product"]').val();
+        var url = parent.find('input[name="get_id_product"]').data('url');
+        var qty_old = parent.find('input[name="product_qty"]');
+        parent.addClass("disabled-click");
+        var qty = qty_old.val();
+        qty = parseFloat(qty)+1;
+        qty_old.val(qty);
+
+        ajax_giohang(id,qty,url,parent);
+    });
+    $(".icon-minus-pre").click(function(e){
+        e.preventDefault();
+        var parent = $(this).parents('tr');
+        var id = parent.find('input[name="get_id_product"]').val();
+        var url = parent.find('input[name="get_id_product"]').data('url');
+        var qty_old = parent.find('input[name="product_qty"]');
+        parent.addClass("disabled-click");
+        var qty = qty_old.val();
+        if(parseFloat(qty) > 1){
+            qty =  parseFloat(qty)-1;        
+            qty_old.val(qty);
+            ajax_giohang(id,qty,url,parent);
+        }
+        else{
+            //alert('Bạn có mún xóa sản phẩm khỏi giỏ hàng');
+            $('.disabled-click').removeClass();
+        }
+    });
+
+    $('.delete-cart').click(function(e){
+        e.preventDefault();
+        var _this_tbody = $(this).parents('tbody');
+        var parent = $(this).parents('tr');
+        var id = parent.find('input[name="get_id_product"]').val();
+        var url = $(this).attr('href');
+        $.ajax({
+            url: url,
+            type:'GET',
+            data: {id:id},
+            success: function(data) {
+               console.log(data);
+               $('.total-cart').html(data.total);
+               $('.count-cart').html('( '+data.count+' )');
+               toastr["success"](data.toastr, "");
+               parent.remove();
+               if(data.count==0){
+                    _this_tbody.append('<tr><td colspan="5" rowspan="" headers="">'+data.empty+'</td></tr>');
+               }
+            }
+        });
+    });
+    $('input[name="product_qty"]').blur(function(){
+        var parent = $(this).parents('tr');
+        var url = parent.find('input[name="get_id_product"]').data('url');
+        var id = parent.find('input[name="get_id_product"]').val();
+        var qty = $(this).val();
+        if(qty !=''){            
+            ajax_giohang(id,qty,url,parent);        
+        }
+    });
 });
+
+

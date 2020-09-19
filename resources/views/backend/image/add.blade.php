@@ -1,14 +1,14 @@
 @extends('backend.layouts.app')
 @section('controller', request()->get('type') == 'slider' ? 'Slider' : 'Đối tác' )
 @section('action','Thêm mới')
-@section('controller_route', route('images.index').'?type='.request()->get('type'))
+@section('controller_route', route('image.index').'?type='.request()->get('type'))
 @section('content')
     <div class="content">
         <div class="clearfix"></div>
         <div class="box box-primary">
             <div class="box-body">
                 @include('flash::message')
-                <form action="{{ route('images.store') }}" method="POST">
+                <form action="{{ route('image.store') }}" method="POST">
                     @csrf
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">

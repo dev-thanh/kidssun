@@ -1,3 +1,4 @@
+<?php $magioithieu = request()->get('ma-gioi-thieu') ? request()->get('ma-gioi-thieu') : ''; ?>
 @extends('frontend.master')
 @section('main')
 	<?php if(!empty($contentHome)){
@@ -205,4 +206,22 @@
 		</div>
 	</div>
 	
+    @if(request()->get('login') && !Auth::guard('customer')->check())
+    	<script type="text/javascript">
+    		$(document).ready(function($) {
+    			$('.popup-content-registration').removeClass('active');
+	            $('.popup-content-login').addClass('active');
+	            $('.art-popups-login-registration').addClass('active');
+    		})
+    	</script>
+    @endif
+	@if($magioithieu && $magioithieu !='')
+	<script type="text/javascript">
+		$(document).ready(function($) {
+			$('.popups-content > div').removeClass('active');
+			$('.popup-content-registration').addClass('active');
+			$('.art-popups-login-registration').addClass('active');
+		});
+	</script>
+	@endif
 @endsection
