@@ -977,6 +977,90 @@ jQuery(document).ready(function($) {
             ajax_giohang(id,qty,url,parent);        
         }
     });
+
+    /*   Thông tin tài khoản   */
+    function readURL(input,img) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          img.attr('src', e.target.result);
+          img.hide();
+          img.fadeIn(650);
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+    $("#fileToUpload1").change(function() {
+        var img = $(this).parents('.form-group').find('.preview-img');
+      readURL(this,img);
+    });
+    $("#fileToUpload2").change(function() {
+        var img = $(this).parents('.form-group').find('.preview-img');
+      readURL(this,img);
+    });
 });
 
+$(document).ready(function($) {
+    $('.btn-cap-nhap-thong-tin').click(function(e){
+        e.preventDefault();
+        var _this = $(this);
+        var url = $('#cap_nhap_thong_tin').attr('action');
+        console.log(url);
+        var formData = new FormData($('#cap_nhap_thong_tin')[0]);
+        $('.error-message').html('');
+        $('.loadingcover').show();
+        $.ajax({
+            url: url,
+            type:'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                if(data.status==1){
+                    toastr["success"](data.toastr, "");
+                }else{                          
+                    if(data.error.full_name){
+                        $('.error_full_name').html(data.error.full_name);
+                    }
+                    if(data.error.email){
+                        $('.error_email').html(data.error.email);
+                    }
+                    if(data.error.phone){
+                        $('.error_phone').html(data.error.phone);
+                    }
+                    if(data.error.cmnd1){
+                        $('.error_cmnd1').html(data.error.cmnd1);
+                    }
+                    if(data.error.cmnd2){
+                        $('.error_cmnd2').html(data.error.cmnd2);
+                    }
+                }
+                $('.loadingcover').hide();
+                $('#thay_doi_mat_khau')[0].reset();
+            }
+        });
+    });
+});
 
+$(document).ready(function($) {
+    $('.btn-thay-doi-mat-khau').click(function(e){
+        e.preventDefault();
+        var _this = $(this);
+        var url = $('#thay_doi_mat_khau').attr('action');
+        var formData = new FormData($('#thay_doi_mat_khau')[0]);
+        $('.error-message').html('');
+        $('.loadingcover').show();
+        $.ajax({
+            url: url,
+            type:'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                console.log(data);
+                $('.loadingcover').hide();
+                //$('#thay_doi_mat_khau')[0].reset();
+            }
+        });
+    });
+});

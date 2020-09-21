@@ -159,11 +159,11 @@
 			</script>
      	@endif
      	@if(Session::has('success'))
-		<script type="text/javascript">
-			$(document).ready(function($) {
-				toastr["success"]('{{ Session::get('success') }}', "Thông báo");
-			});
-		</script>
-	@endif
+			<script type="text/javascript">
+				$(document).ready(function($) {
+					toastr["success"]('{{ Session::get('success') }}', "Thông báo");
+				});
+			</script>
+		@endif
 	</body>
 </html>

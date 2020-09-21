@@ -41,7 +41,7 @@
 		<div class="sidebars-content">
 			<ul>
 				<li>
-					<a href="thong-tin-tai-khoan.html" title="Thông tin tài khoản">Thông tin tài khoản</a>
+					<a href="{{route('home.thong-tin-tai-khoan')}}" title="Thông tin tài khoản">Thông tin tài khoản</a>
 				</li>
 				<li>
 					<a href="tai-khoan-ngan-hang.html" title="Tài khoản ngân hàng">Tài khoản ngân hàng</a>

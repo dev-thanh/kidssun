@@ -66,6 +66,12 @@ Route::group(['middleware' => 'locale'], function () {
         Route::get('remove-card', 'ProductsController@getRemoveCart')->name('home.remove-card');
 
         Route::get('destroy-card', 'ProductsController@cartDestroy')->name('home.destroy-card');
+        /*  Quản lý tài khoản  */
+        Route::get('thong-tin-tai-khoan', 'ManagerAccountController@thongTinTaiKhoan')->name('home.thong-tin-tai-khoan');
+
+        Route::post('cap-nhap-tai-khoan', 'ManagerAccountController@postUpdateAccount')->name('home.cap-nhap-tai-khoan');
+
+        Route::post('cap-nhap-mat-khau', 'ManagerAccountController@postUpdatePassword')->name('home.cap-nhap-mat-khau');
         
     });
 

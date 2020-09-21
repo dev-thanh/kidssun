@@ -2043,6 +2043,7 @@ footer {
 .accounts-content .form-group-control .form-group {
 	padding: 0 15px;
 	margin-bottom: 20px;
+	text-align: center;
 }
 .accounts-content .form-img {
 	position: relative;
@@ -2276,7 +2277,7 @@ textarea.form-control {
     animation: fx 1000ms ease infinite 600ms
 }
 .loadingcover {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -2564,4 +2565,8 @@ button:focus {
 }
 .agency-table .price {
 	text-transform: initial;
+}
+#cap_nhap_thong_tin .preview{
+	max-width: 200px;
+	margin-bottom: 5px;
 }
