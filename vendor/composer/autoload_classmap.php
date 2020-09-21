@@ -67,6 +67,7 @@ return array(
     'App\\Models\\Picture' => $baseDir . '/app/Models/Picture.php',
     'App\\Models\\Posts' => $baseDir . '/app/Models/Posts.php',
     'App\\Models\\Products' => $baseDir . '/app/Models/Products.php',
+    'App\\Models\\Recharge' => $baseDir . '/app/Models/Recharge.php',
     'App\\Models\\Recruitment' => $baseDir . '/app/Models/Recruitment.php',
     'App\\Models\\ResetPassword' => $baseDir . '/app/Models/ResetPassword.php',
     'App\\Models\\Video' => $baseDir . '/app/Models/Video.php',

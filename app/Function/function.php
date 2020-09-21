@@ -6,6 +6,7 @@ define("__IMAGE_DEFAULT__", asset('public/backend/img/placeholder.png'));
 define("__BASE_URL__", url('public/frontend'));
 
 use App\Models\Options;
+use Carbon\Carbon;
 
 function renderImage($link)
 {
@@ -32,6 +33,12 @@ function text_limit($str, $limit = 10)
     } else {
         return $str;
     }
+}
+
+function format_datetime($date,$setting)
+{   
+    $date_format = Carbon::parse($date);
+    return $date_format->format($setting);
 }
 
 function menuChildren($data, $id, $item)

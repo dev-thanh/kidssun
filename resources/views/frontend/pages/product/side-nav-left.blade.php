@@ -1,18 +1,18 @@
 <aside class="art-sidebars">
 	<div class="sidebars-box">
 		<div class="title-box title-sidebars">
-			<h3 class="title">Doanh thu</h3>
+			<h3 class="title">{{ trans('message.doanh_thu') }}</h3>
 		</div>
 		<div class="sidebars-content">
 			<ul>
 				<li>
-					<a href="quan-ly-dai-ly.html" title="Quản lý đại lý">Quản lý đại lý</a>
+					<a href="quan-ly-dai-ly.html" title="{{ trans('message.quan_ly_dai_ly') }}">{{ trans('message.quan_ly_dai_ly') }}</a>
 				</li>
 				<li>
-					<a href="lich-su-mua-hang.html" title="Lịch sử mua hàng">Lịch sử mua hàng của tôi</a>
+					<a href="lich-su-mua-hang.html" title="{{ trans('message.lich_su_mua_hang') }}">{{ trans('message.lich_su_mua_hang') }}</a>
 				</li>
 				<li>
-					<a href="lich-su-mua-hang-dlbl.html" title="Lịch sử mua hàng">Lịch sử mua hàng của đại lý</a>
+					<a href="lich-su-mua-hang-dlbl.html" title="{{ trans('message.lich_su_mua_hang_dai_ly') }}">{{ trans('message.lich_su_mua_hang_dai_ly') }}</a>
 				</li>
 			</ul>
 		</div>
@@ -20,15 +20,15 @@
 
 	<div class="sidebars-box">
 		<div class="title-box title-sidebars">
-			<h3 class="title">Sản phẩm</h3>
+			<h3 class="title">{{ trans('message.san_pham') }}</h3>
 		</div>
 		<div class="sidebars-content">
 			<ul>
 				<li>
-					<a href="{{route('home.list-products')}}" title="Danh sách sản phẩm">Danh sách sản phẩm</a>
+					<a href="{{route('home.list-products')}}" title="{{ trans('message.danh_sach_san_pham') }}">{{ trans('message.danh_sach_san_pham') }}</a>
 				</li>
 				<li>
-					<a href="{{route('home.gio-hang')}}" title="Giỏ hàng">Giỏ hàng <span class="count-cart">( {{ Cart::count() }} )</span></a>
+					<a href="{{route('home.gio-hang')}}" title="{{ trans('message.gio_hang') }}">{{ trans('message.gio_hang') }} <span class="count-cart">( {{ Cart::count() }} )</span></a>
 				</li>
 			</ul>
 		</div>
@@ -36,21 +36,21 @@
 
 	<div class="sidebars-box">
 		<div class="title-box title-sidebars">
-			<h3 class="title">Tài khoản</h3>
+			<h3 class="title">{{ trans('message.tai_khoan') }}</h3>
 		</div>
 		<div class="sidebars-content">
 			<ul>
 				<li>
-					<a href="{{route('home.thong-tin-tai-khoan')}}" title="Thông tin tài khoản">Thông tin tài khoản</a>
+					<a href="{{route('home.thong-tin-tai-khoan')}}" title="{{ trans('message.thong_tin_tai_khoan') }}">{{ trans('message.thong_tin_tai_khoan') }}</a>
 				</li>
 				<li>
-					<a href="tai-khoan-ngan-hang.html" title="Tài khoản ngân hàng">Tài khoản ngân hàng</a>
+					<a href="{{route('home.tai-khoan-ngan-hang')}}" title="{{ trans('message.tai_khoan_ngan_hang') }}">{{ trans('message.tai_khoan_ngan_hang') }}</a>
 				</li>
 				<li>
-					<a href="nap-tien.html" title="Nạp tiền">Nạp tiền</a>
+					<a href="{{route('home.nap-tien')}}" title="{{ trans('message.nap_tien') }}">{{ trans('message.nap_tien') }}</a>
 				</li>
 				<li>
-					<a href="lich-su-nap-tien.html" title="Lịch sử nạp tiền">Lịch sử nạp tiền</a>
+					<a href="{{route('home.lich-su-giao-dich')}}" title="{{ trans('message.lich_su_nap_tien') }}">{{ trans('message.lich_su_nap_tien') }}</a>
 				</li>
 			</ul>
 		</div>

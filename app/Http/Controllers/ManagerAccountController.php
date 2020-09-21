@@ -12,14 +12,18 @@ use OpenGraph;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Mail;
 use Validator;
+use Carbon\Carbon;
 use Image;
 use File;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\LichsuagiaodichExport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Member;
 use App\Models\Menu;
+use App\Models\Recharge;
 
 class ManagerAccountController extends Controller
 {
@@ -296,4 +300,205 @@ class ManagerAccountController extends Controller
         }
         return response()->json(['error'=>$validator->errors()]);
     }
+
+    public function bankAccount(Request $request){
+    	$member_id = Auth::guard('customer')->user()->id;
+    	$member = Member::findOrFail($member_id);
+        return view('frontend.pages.account.tai-khoan-ngan-hang',compact('member'));
+    }
+
+    public function postBankAccount(Request $request){
+    	if (Lang::locale() == 'vi'){           
+            $message = [
+                'bank_name.required' => 'Tên tài khoản không được để trống',
+                'bank_account.required' => 'Số tài khoản không được để trống',
+                'bank_account.min' => 'Số tài khoản không hợp lệ',
+                'bank_account_name.required' => 'Tên chủ tài khoản không được để trống',
+            ];
+            $success = 'Cập nhập tài khoản ngân hàng thành công';
+            $error = 'Cập nhập tài khoản không thành công';
+        }else{
+            $message = [
+                'bank_name.required' => 'Account name cannot be left blank',
+                'bank_account.required' => 'Account number cannot be left blank',
+                'bank_account.min' => 'Invalid account number',
+                'bank_account_name.required' => 'The name of the account holder cannot be left blank',
+                
+            ];
+            $success = 'Bank account update successfully';
+            $error = 'Bank account update failed';
+        }
+
+        $fields = [
+            'bank_name' => 'required',
+            'bank_account_name' => 'required',
+            'bank_account' => 'required|min:8',
+        ];
+
+        $input = $request->all();
+
+        $validator = Validator::make($input, $fields,$message);
+        if ($validator->fails())
+	    {	       
+			return  redirect()->back()
+	            ->withErrors($validator)
+	            ->withInput()->with(['error'=>$error]);
+	    }
+    	$member_id = Auth::guard('customer')->user()->id;
+    	$member = Member::findOrFail($member_id);
+    	
+    	$member->update($input);
+    	return back()->with(['success'=>$success]);
+    }
+
+    public function napTien(){
+    	return view('frontend.pages.account.nap-tien');
+    }
+
+    public function postNapTien(Request $request){
+    	//dd($request->all());
+    	$member_id = Auth::guard('customer')->user()->id;
+    	if (Lang::locale() == 'vi'){           
+            $message = [
+                'sender.required' => 'Tên người gửi không được để trống.',
+                'bankname.required' => 'Bạn chưa chọn ngân hàng gửi.',
+                'amount_money.required' => 'Số tiền gửi không được để trống.',
+                'receiver.required' => 'Bạn chưa chọn người nhận.',
+                'trading_code.required' => 'Mã giao dịch không được để trống.',
+                'trading_code.min' => 'Mã giao dịch không hợp lệ.',
+                'filename.required' => 'Bạn chưa chọn hình ảnh bil chuyển tiền.',
+                'filename.image' => 'Vui lòng chọn đúng file ảnh.',
+                'filename.mimes' => 'Chỉ chấp nhận hình ảnh có đuôi jpeg,png,jpg,jpeg.',
+            ];
+            $success = 'Nạp tiền thành công,chúng tối sẽ xác nhận trong thời gian sớm nhất';
+            $error = 'Nạp tiền không thành công,vui lòng xác nhận lại';
+        }else{
+            $message = [
+                'sender.required' => 'The sender name cannot be left blank.',
+                'bankname.required' => 'You have not selected a sending bank.',
+                'amount_money.required' => 'Deposit amount cannot be left blank.',
+                'receiver.required' => 'You have not selected a recipient',
+                'trading_code.required' => 'Transaction code cannot be left blank.',
+                'trading_code.min' => 'Invalid transaction code.',
+                'filename.required' => 'You have not selected the image of money transfer bil.',
+                'filename.image' => 'Please select the correct image file.',
+                'filename.mimes' => 'Only images with extensions are accepted: jpeg,png,jpg,jpeg.',
+            ];
+            $success = 'Deposit successfully, we will confirm in the shortest time.';
+            $error = 'Deposit failed, please confirm again.';
+        }
+
+        $fields = [
+            'sender' => 'required',
+            'bankname' => 'required',
+            'amount_money' => 'required',
+            'receiver' => 'required',
+            'trading_code' => 'required|min:6',
+            'filename' => 'required|image|mimes:jpeg,png,jpg,jpeg|max:3048',
+        ];
+
+        $input = $request->all();
+
+        $validator = Validator::make($input, $fields,$message);
+
+        if ($validator->passes()) {  
+        	if($request->hasFile('filename')){
+	        	$image = $request->file('filename');
+		        $name = $image->getClientOriginalName();
+		        $image_name = $this->makeStringFriendly($name);
+			    $destinationPath = public_path('images/naptien');
+			    $input['image'] = $image_name;
+
+			    $resize_image = Image::make($image->getRealPath());
+
+			    $resize_image->resize(250, null, function($constraint){
+			      $constraint->aspectRatio();
+			    })->save($destinationPath . '/' . $member_id.'_'.$image_name);
+			}
+			$input['id_status'] = 1;
+			$input['member_id'] = $member_id;
+
+			$option = json_decode(Options::where('type', 'general')->first()->content);
+
+        	$email_admin = !empty($option->email_admin) ? $option->email_admin : 'dangthanh151293@gmail.com';
+
+        	$content_email = [
+	            'title' => 'Thông tin nạp tiền từ khách hàng',
+	            'name' => $request->sender,
+	            'bankname' => $request->bankname,
+	            'amount_money' => number_format($request->amount_money, 0, '.', '.').' đ',
+	            'image' => url('/').'/public/images/naptien/'.$member_id.'_'.$image_name,
+	            'trading_code' => $request->trading_code,
+	            'node' => $request->note,
+	            'url' => 'dfdsfsd',
+	            
+	        ];
+	        Mail::send('frontend.mail.mail-teamplate', $content_email, function ($msg) use($email_admin) {
+	            $msg->from('no.reply.bot.gco@gmail.com', 'Website - Kids Sun Việt Nam');
+	            $msg->to($email_admin, 'Website - Kids Sun Việt Nam')->subject('Khách hàng nạp tiền');
+	        });
+
+			Recharge::create($input);
+
+		   	return response()->json([
+                'toastr' => $success,
+               	'status' => 1
+        	]);
+		}
+
+		return response()->json(['error'=>$validator->errors()]);
+    }
+
+    public function recharge_list($request,$member_id){
+    	$recharge = Recharge::select('recharge.*','status.name as name_status','status.name_en as nameen_status')
+            ->join('status','recharge.id_status','=','status.id')
+            ->where(['recharge.member_id'=>$member_id])
+            ->where(function($q) use ($request) {
+                if($request->start_date !=''){
+                    $start_format = Carbon::parse($request->start_date);
+                    $start_format->format('Y-m-d');
+                    $end_format = Carbon::parse($request->end_date);
+                    $end_format->format('Y-m-d');
+                    $q->whereBetween('recharge.created_at', [$start_format, $end_format]);
+                }           
+                if($request->search !=''){
+                    $q->where('trading_code', 'LIKE', '%' . $request->search . '%');
+                }
+            })->orderBy('recharge.created_at', 'desc')->get();
+        return $recharge;
+    }
+    /*  Lịch sử giao dịch  */
+    public function TransactionHistory(Request $request){
+    	$member_id = Auth::guard('customer')->user()->id;	  
+
+        $recharge = $this->recharge_list($request,$member_id);
+
+    	return view('frontend.pages.account.lich-su-nap-tien',compact('recharge'));
+    }
+
+    /*  Xuất exel lịc sử dai dịch  */
+    public function export_Lichsu_Giaodich(Request $request){
+        
+        $member_id = Auth::guard('customer')->user()->id;
+
+        $recharge = $this->recharge_list($request,$member_id);
+
+        $array_export = [];
+
+        foreach ($recharge as $item) {
+            $status = $item->name_status;            
+            $array = [
+                'Ngày '.format_datetime($item->created_at,'d-m-y').'',
+                'Nạp tiền',
+                $item->trading_code, 
+                number_format($item->amount_money, 0, '.', ',').' đ',
+                $status
+            ];
+            array_push($array_export,$array);
+            
+        }
+        $export = new LichsuagiaodichExport($array_export);
+        return Excel::download($export, 'lichsu_giaodich.xlsx');
+    }
+
 }

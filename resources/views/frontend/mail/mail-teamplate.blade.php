@@ -48,9 +48,9 @@
             display: block;
             margin: 0 auto !important;
             /* makes it centered */
-            max-width: 580px;
+            max-width: 700px;
             padding: 10px;
-            width: 580px; 
+            width: 700px; 
         }
 
         /* This should also be a block element, so that it will fill 100% of the .container */
@@ -58,7 +58,7 @@
             box-sizing: border-box;
             display: block;
             margin: 0 auto;
-            max-width: 580px;
+            max-width: 700px;
             padding: 10px; 
         }
 
@@ -344,15 +344,13 @@
                       <td>
                         <p>Xin chào,</p>
                         <p>Đây là email tự động gửi từ website <a href="{{ url('/') }}">{{ url('/') }}</a>.</p>
-                        <p>Có khách hàng vừa gửi thông tin liên hệ cho bạn với thông tin như sau,</p>
-                        <p><span class="with">Tên khách hàng: </span> <b>{{ @$name }}</b></p>
-                        <p><span class="with">Số điện thoại: </span> <b>{{ @$phone }}</b></p>
-                        <p><span class="with">Email: </span> <b>{{ @$email }}</b></p>
-                        <p><span class="with">Địa chỉ: </span> <b>{{ @$address }}</b></p>
-                        <p><span class="with">Nội dung: </span> <b>{{ @$content }}</b></p>
-                        @if (!empty($link_product))
-                          Liên kết sản phẩm : {{ $link_product }}
-                        @endif
+                        <p>Có khách hàng vừa gửi thông tin nạp tiền với nội dung như sau,</p>
+                        <p><span class="with">Tên chủ tài khoản chuyển tiền: </span> <b>{{ @$name }}</b></p>
+                        <p><span class="with">Ngân hàng chuyển: </span> <b>{{ @$bankname }}</b></p>
+                        <p><span class="with">Số tiền chuyển: </span> <b>{{ @$amount_money }}</b></p>
+                        <p><span class="with">Hình ảnh bil chuyển tiền: </span> <img src="{{ $message->embed($image) }}" alt=""> </p>
+                        <p><span class="with">Mã giao dịch: </span> <b>{{ @$trading_code }}</b></p>
+                        <p><span class="with">Nội dung ghi chú: </span> <b>{{ @$note }}</b></p>
                         <table role="presentation" border="0" cellpadding="0" cellspacing="0" 
                         class="btn btn-primary">
                         <tbody>
@@ -361,7 +359,7 @@
                                 <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                   <tbody>
                                     <tr>
-                                      <td> <a href="{{ @$url }}" target="_blank">Xem chi tiết</a> </td>
+                                      <td> <a href="{{@$url}}" target="_blank">Xem chi tiết</a> </td>
                                   </tr>
                               </tbody>
                           </table>
@@ -377,11 +375,11 @@
 </tr>
 
 </table>
-<div class="footer">
+<!-- <div class="footer">
   <table role="presentation" border="0" cellpadding="0" cellspacing="0">
     <tr>
       <td class="content-block">
-        <span class="apple-link">VILLAR HOME STAY</span>
+        <span class="apple-link">Bắc Việt</span>
     </td>
 </tr>
 <tr>
@@ -390,7 +388,7 @@
 </td>
 </tr>
 </table>
-</div>
+</div> -->
 </div>
 </td>
 <td>&nbsp;</td>

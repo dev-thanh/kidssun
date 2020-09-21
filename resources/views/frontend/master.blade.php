@@ -40,6 +40,8 @@
 
 	<link rel="stylesheet" type="text/css" title="" href="{{ __BASE_URL__ }}/css/reponsive.css">
 
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+
 	<script type="text/javascript" src="{{ __BASE_URL__ }}/js/jquery.min.js"></script> 
  	
 
@@ -108,6 +110,12 @@
 
 		<script type="text/javascript" src="{{ __BASE_URL__ }}/js/toastr.min.js"></script>
 
+		<script src="{{ __BASE_URL__ }}/js/moment.min.js"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>
+
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.3/js/bootstrap-datetimepicker.min.js"></script>
+
 		<script type="text/javascript" src="{{ __BASE_URL__ }}/js/main.js"></script>
 
 		<div class="popup popup-images">
@@ -161,7 +169,12 @@
      	@if(Session::has('success'))
 			<script type="text/javascript">
 				$(document).ready(function($) {
-					toastr["success"]('{{ Session::get('success') }}', "Thông báo");
+					@if(Lang::locale() == 'vi')
+					$thongbao = 'Thông báo';
+					@else
+					$thongbao = 'Alert';
+					@endif
+					toastr["success"]('{{ Session::get('success') }}', $thongbao);
 				});
 			</script>
 		@endif

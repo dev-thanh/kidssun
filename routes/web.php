@@ -72,6 +72,20 @@ Route::group(['middleware' => 'locale'], function () {
         Route::post('cap-nhap-tai-khoan', 'ManagerAccountController@postUpdateAccount')->name('home.cap-nhap-tai-khoan');
 
         Route::post('cap-nhap-mat-khau', 'ManagerAccountController@postUpdatePassword')->name('home.cap-nhap-mat-khau');
+
+        Route::get('tai-khoan-ngan-hang', 'ManagerAccountController@bankAccount')->name('home.tai-khoan-ngan-hang');
+
+        Route::post('cap-nhap-tai-khoan-ngan-hang', 'ManagerAccountController@postBankAccount')->name('home.cap-nhap-tai-khoan-ngan-hang');
+
+        Route::get('nap-tien', 'ManagerAccountController@napTien')->name('home.nap-tien');
+
+        Route::post('post-nap-tien', 'ManagerAccountController@postNapTien')->name('home.post-nap-tien');
+
+        Route::get('lich-su-giao-dich', 'ManagerAccountController@TransactionHistory')->name('home.lich-su-giao-dich');
+
+        Route::get('/export','ManagerAccountController@export_Lichsu_Giaodich')->name('home.export-giaodich');
+
+        Route::get('/export','ManagerAccountController@export_Lichsu_Giaodich')->name('home.export-giaodich');
         
     });
 

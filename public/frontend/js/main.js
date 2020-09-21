@@ -996,7 +996,11 @@ jQuery(document).ready(function($) {
     });
     $("#fileToUpload2").change(function() {
         var img = $(this).parents('.form-group').find('.preview-img');
-      readURL(this,img);
+        readURL(this,img);
+    });
+    $("#filename").change(function() {
+        var img = $(this).parents('.form-group').find('.preview-img');
+        readURL(this,img);
     });
 });
 
@@ -1005,7 +1009,6 @@ $(document).ready(function($) {
         e.preventDefault();
         var _this = $(this);
         var url = $('#cap_nhap_thong_tin').attr('action');
-        console.log(url);
         var formData = new FormData($('#cap_nhap_thong_tin')[0]);
         $('.error-message').html('');
         $('.loadingcover').show();
@@ -1043,6 +1046,21 @@ $(document).ready(function($) {
 });
 
 $(document).ready(function($) {
+    $('.tab-title .information-title').click(function(e){
+        var url_browse = $('.current-url').val();
+        $('.information-box').addClass('active');
+        history.pushState({}, null, url_browse+'?tab=tttk');
+    });
+    $('.tab-title .password-title').click(function(e){
+        var url_browse = $('.current-url').val();
+        $('.password-box').addClass('active');
+        history.pushState({}, null, url_browse+'?tab=tdmk');
+    });
+    $('.tab-title .url-title').click(function(e){
+        var url_browse = $('.current-url').val();
+        $('.url-box').addClass('active');
+        history.pushState({}, null, url_browse+'?tab=urlgt');
+    });
     $('.btn-thay-doi-mat-khau').click(function(e){
         e.preventDefault();
         var _this = $(this);
@@ -1057,9 +1075,70 @@ $(document).ready(function($) {
             contentType: false,
             processData: false,
             success: function(data) {
-                console.log(data);
                 $('.loadingcover').hide();
-                //$('#thay_doi_mat_khau')[0].reset();
+                if(data.status==1){
+                    toastr["success"](data.toastr, "");
+                    $('#thay_doi_mat_khau')[0].reset();                    
+                }else{                   
+                    if(data.error.old_password){
+                        $('.error_old_password').html(data.error.old_password);
+                    }
+                    if(data.error.new_password){
+                        $('.error_new_password').html(data.error.new_password);
+                    }
+                    if(data.error.renew_password){
+                        $('.error_renew_password').html(data.error.renew_password);
+                    }
+                }
+                $('#cap_nhap_thong_tin').load(location.href + " #cap_nhap_thong_tin>*");
+            }
+        });
+    });
+
+    $('.btn-nap-tien').click(function(e){
+        e.preventDefault();
+        var _this = $(this);
+        var url = $('#recharge-form').attr('action');
+        var formData = new FormData($('#recharge-form')[0]);
+        $('.error-message').html('');
+        $('.loadingcover').show();
+        $.ajax({
+            url: url,
+            type:'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                if(data.status==1){
+                    $('#recharge-form')[0].reset();
+                    var url_browse = window.location.origin;
+                    $('.recharge-bill').find('.preview-img').attr('src',url_browse+'/public/images/img-bill.png');
+                    toastr["success"](data.toastr, "");
+                }else{                          
+                    if(data.error.sender){
+                        $('.error_sender').html(data.error.sender);
+                    }
+                    if(data.error.bankname){
+                        $('.error_bankname').html(data.error.bankname);
+                    }
+                    if(data.error.amount_money){
+                        $('.error_amount_money').html(data.error.amount_money);
+                    }
+                    if(data.error.filename){
+                        $('.error_filename').html(data.error.filename);
+                    }
+                    if(data.error.receiver){
+                        $('.error_receiver').html(data.error.receiver);
+                    }
+                    if(data.error.trading_code){
+                        $('.error_trading_code').html(data.error.trading_code);
+                    }
+                }
+                $('.loadingcover').hide();
+            },
+            error: function(data){
+                $('.loadingcover').hide();
+                toastr["error"]('Has an error,please try again later', "");
             }
         });
     });

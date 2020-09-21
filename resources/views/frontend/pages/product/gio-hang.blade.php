@@ -26,7 +26,7 @@
 
 						<div class="title-box breadcrumbs-title title-left">
 
-							<h1 class="title">Giỏ hàng</h1>
+							<h1 class="title">{{ trans('message.gio_hang') }}</h1>
 
 						</div>
 
@@ -60,10 +60,10 @@
 										<table border="1" class="products-table">
 											<thead>
 												<tr>
-													<th>Sản phẩm</th>
-													<th>Giá bán</th>
-													<th>Số lượng</th>
-													<th>Thành tiền</th>
+													<th>{{ trans('message.san_pham') }}</th>
+													<th>{{ trans('message.gia_ban') }}</th>
+													<th>{{ trans('message.so_luong') }}</th>
+													<th>{{ trans('message.thanh_tien') }}</th>
 													<th></th>
 												</tr>
 											</thead>
@@ -80,7 +80,7 @@
 																</div>
 																<div class="product-content">
 																	<h4 class="product-name">
-																		<a href="#" class="product-link">{{$item->name}}</a>
+																		<a href="#" class="product-link">{{ app()->getLocale() == 'vi' ? $item->name : $item->options->name_en }}</a>
 																	</h4>
 																</div>	
 															</div>
@@ -106,55 +106,17 @@
 														<td>	
 															<a href="{{route('home.remove-card')}}" class="delete delete-cart">
 																<i class="far fa-trash-alt icon"></i>
-																<span>Xóa</span>
+																<span>{{ trans('message.xoa') }}</span>
 															</a>
 														</td>
 													</tr>
 													@endforeach
 												@else
 													<tr>
-														<td colspan="5" rowspan="" headers="">Không có sản phẩm nào trong giỏ hàng</td>
+														<td colspan="5" rowspan="" headers="">{{ trans('message.khong_co_san_pham') }}</td>
 													</tr>
 												@endif
-												<!-- <tr>
-													<td>
-														<div class="product-box">
-															<div class="product-image">
-																<a href="#">
-																	<img src="assets/images/pr-01.jpg" style="max-width: 100px; max-height: 100px; width: 100%; height: 100%;">
-																</a>
-															</div>
-															<div class="product-content">
-																<h4 class="product-name">
-																	<a href="#" class="product-link">Tên sản phẩm</a>
-																</h4>
-															</div>	
-														</div>
-													</td>
-													<td>
-														<div class="product-prices">
-															<span class="price">200.000đ</span>
-														</div>
-													</td>
-													<td>
-														<div class="qty">
-															<button class="btn icon-minus"><i class="far fa-minus icon"></i></button>
-															<input type="text" name="number" value="1">
-															<button class="btn icon-minus"><i class="far fa-plus icon"></i></button>
-														</div>
-													</td>
-													<td>
-														<div class="product-prices">
-															<span class="price">200.000đ</span>
-														</div>
-													</td>
-													<td>	
-														<a href="#" class="delete">
-															<i class="far fa-trash-alt icon"></i>
-															<span>Xóa</span>
-														</a>
-													</td>
-												</tr> -->
+												
 												
 											</tbody>
 										</table>
@@ -162,12 +124,12 @@
 
 									<div class="table-footer">
 										<div class="button">
-											<a href="{{route('home.destroy-card')}}" class="btn delete">Hủy giỏ hàng</a>
-											<a href="#" class="btn">Cập nhật</a>
-											<a href="#" class="btn">Thanh toán</a>
+											<a href="{{route('home.destroy-card')}}" class="btn delete">{{ trans('message.huy_gio_hang') }}</a>
+											<!-- <a href="#" class="btn">{{ trans('message.cap_nhap') }}</a> -->
+											<a href="#" class="btn">{{ trans('message.thanh_toan') }}</a>
 										</div>
 										<div class="product-total">
-											<label>Tạm tính:</label>
+											<label>{{ trans('message.tam_tinh') }}:</label>
 											<span class="total-cart">{{number_format(Cart::total(), 0, '.', '.')}} vnđ</span>
 										</div>
 									</div>

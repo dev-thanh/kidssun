@@ -1,13 +1,6 @@
 <?php $tab = request()->get('tab') ? request()->get('tab') : ''; ?>
 @extends('frontend.master')
 @section('main')
-<style type="text/css" media="screen">
-	.error-message{
-		width: 100%;
-	    text-align: center;
-	    color: red;
-	}
-</style>
 	<div class="breadcrumbs">
 		<div class="breadcrumbs-content">
 
@@ -20,7 +13,7 @@
 
 						<div class="title-box breadcrumbs-title title-left">
 
-							<h1 class="title">Thông tin tài khoản</h1>
+							<h1 class="title">{{ trans('message.thong_tin_tai_khoan') }}</h1>
 
 						</div>
 
@@ -50,46 +43,47 @@
 									<div class="tab-title">
 										<ul>
 											<li>
-												<a href="#" class="information-title @if($tab =='tttk' || $tab =='') active @endif">Thông tin tài khoản</a>
+												<a href="#" class="information-title @if($tab =='tttk' || $tab =='') active @endif">{{ trans('message.thong_tin_tai_khoan') }}</a>
 											</li>
 											<li>
-												<a href="#" class="password-title">Mật khẩu</a>
+												<a href="#" class="password-title @if($tab =='tdmk') active @endif">{{ trans('message.mat_khau') }}</a>
 											</li>
 											<li>
-												<a href="#" class="url-title">Url giới thiệu</a>
+												<a href="#" class="url-title @if($tab =='urlgt') active @endif">{{ trans('message.url_gioi_thieu') }}</a>
 											</li>
+											<input type="hidden" class="current-url" value="{{route('home.thong-tin-tai-khoan')}}">
 										</ul>
 									</div>
 								</div>
 							</div>
 
 							<div class="accounts-content">
-								<div class="information-box active">
+								<div class="information-box @if($tab =='tttk' || $tab =='') active @endif">
 									<form class="forms" method="POST" id="cap_nhap_thong_tin" action="{{route('home.cap-nhap-tai-khoan')}}" enctype="multipart/form-data">
 										@csrf
 										<div class="form-content">
 											<input type="hidden" name="member_id" value="{{$member->id}}">
 											<div class="form-group">
-												<label>Họ và tên</label>
+												<label>{{ trans('message.ho_ten') }}</label>
 												<input class="form-control" type="text" name="full_name" placeholder="" value="{!! old('full_name', @$member->full_name) !!}">
 												
 												<span class="error-message error_full_name"></span>
 												
 											</div>	
 											<div class="form-group form-no-input">
-												<label>Tên truy cập</label>
+												<label>{{ trans('message.ten_truy_cap') }}</label>
 												<input class="form-control" value="{{$member->user_name}}" type="text" name="user_name" placeholder="">
 												
 											</div>	
 											<div class="form-group">
-												<label>Mail</label>
+												<label>Email</label>
 												<input class="form-control" value="{!! old('email', @$member->email) !!}" type="text" name="email" placeholder="">
 												
 												<span class="error-message error_email"></span>
 												
 											</div>	
 											<div class="form-group">
-												<label>Điện thoại</label>
+												<label>{{ trans('message.so_dien_thoai') }}</label>
 												<input class="form-control" type="text" value="{!! old('phone', @$member->phone) !!}" name="phone" placeholder="">
 												
 												<span class="error-message error_phone"></span>
@@ -165,47 +159,47 @@
 
 											<div class="form-group">
 												<div class="button">				
-													<button class="btn btn-cap-nhap-thong-tin">Cập nhật</button>
+													<button class="btn btn-cap-nhap-thong-tin">{{ trans('message.cap_nhap') }}</button>
 												</div>
 											</div>	
 										</div>
 									</form>
 								</div>
 
-								<div class="password-box">
+								<div class="password-box @if($tab =='tdmk') active @endif">
 									<form class="forms" action="{{route('home.cap-nhap-mat-khau')}}" id="thay_doi_mat_khau" method="POST">
 										@csrf
 										<div class="form-content">
 											<div class="form-group">
-												<label>Mật khẩu cũ</label>
+												<label>{{ trans('message.mat_khau_cu') }}</label>
 												<input class="form-control" type="text" name="old_password" placeholder="">
-												<span class="fr-error">Lỗi</span>
+												</br><span class="error-message error_old_password"></span>
 											</div>
 											<div class="form-group">
-												<label>Mật khẩu mới</label>
+												<label>{{ trans('message.mat_khau_moi') }}</label>
 												<input class="form-control" type="text" name="new_password" placeholder="">
-												<span class="fr-error">Lỗi</span>
+												</br><span class="error-message error_new_password"></span>
 											</div>
 											<div class="form-group">
-												<label>Nhập lại mật khẩu mới</label>
+												<label>{{ trans('message.nhap_lai_mat_khau_moi') }}</label>
 												<input class="form-control" type="text" name="renew_password" placeholder="">
-												<span class="fr-error">Lỗi</span>
+												</br><span class="error-message error_renew_password"></span>
 											</div>											
 
 											<div class="form-group">
 												<div class="button">				
-													<button class="btn btn-thay-doi-mat-khau">Cập nhật</button>
+													<button class="btn btn-thay-doi-mat-khau">{{ trans('message.cap_nhap') }}</button>
 												</div>
 											</div>	
 										</div>
 									</form>
 								</div>
 
-								<div class="url-box">
+								<div class="url-box @if($tab =='urlgt') active @endif">
 									<ul>
 										<li>
-											<a href="{{route('home.index',['ma-gioi-thieu'=>$member->code])}}">{{route('home.index',['ma-gioi-thieu'=>$member->code])}}</a>
-											<a href="#" class="btn">Copy</a>
+											<a id="divClipboard-page" href="{{route('home.index',['ma-gioi-thieu'=>$member->code])}}">{{route('home.index',['ma-gioi-thieu'=>$member->code])}}</a>
+											<a href="" class="btn btn-copy" onclick="copyClipboard_Code('divClipboard-page')">Copy</a>
 										</li>
 									</ul>
 								</div>
@@ -218,9 +212,22 @@
 		</div>
 
 	</main> <!--main-->
-	<script type="text/javascript">
-		
-		
-
+	<script type="text/javascript">		
+		function copyClipboard_Code($id) {
+			event.preventDefault();
+			var elm = document.getElementById($id);
+			$('.btn-copy').html('Copied');
+			setTimeout(function(){
+			 $('.btn-copy').html('Copy'); },
+			1000);
+			if(window.getSelection) {
+			    var selection = window.getSelection();
+			    var range = document.createRange();
+			    range.selectNodeContents(elm);
+			    selection.removeAllRanges();
+			    selection.addRange(range);
+			    document.execCommand("Copy");			    
+			}
+		}
 	</script>
 @stop

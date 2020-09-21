@@ -98,6 +98,7 @@ class ProductsController extends Controller
         $dataCart    = [
             'id'      => $dataProduct->id,
             'name'    => $dataProduct->name,
+            'name_en'    => $dataProduct->name_en,
             'qty'     => $request->qty,
             'price'   => $request->price,
             'weight'  => 0,
@@ -120,12 +121,14 @@ class ProductsController extends Controller
         $dataCart    = [
             'id'      => $dataProduct->id,
             'name'    => $dataProduct->name,
+            
             'qty'     => 1,
             'price'   => $dataProduct->price,
             'weight'  => 0,
             'options' => [
                 'image'       => $dataProduct->image,
                 'slug'        => $dataProduct->slug,
+                'name_en'    => $dataProduct->name_en,
             ],
         ];
         Cart::add($dataCart);
@@ -134,6 +137,7 @@ class ProductsController extends Controller
 
     public function gioHang(){
     	SEO::setTitle('Giỏ hàng');
+    	//dd(Cart::content());
 		return view('frontend.pages.product.gio-hang');
     }
 
@@ -152,6 +156,7 @@ class ProductsController extends Controller
     public function getRemoveCart(Request $request)
     {
         Cart::remove($request->id);
+        $empty = '';
     	if (Lang::locale() == 'vi'){
     		$toastr = 'Xóa thành công sản phẩm ra khỏi giỏ hàng';
 	        if(Cart::count() ==0){
