@@ -13,7 +13,7 @@
 
 						<div class="title-box breadcrumbs-title title-left">
 
-							<h1 class="title">Sản phẩm</h1>
+							<h1 class="title">{{ trans('message.san_pham') }}</h1>
 
 						</div>
 
@@ -61,123 +61,14 @@
 													</div>
 													<div class="product-button">
 														<a href="{{route('home.get-add-cart',['id'=>@$item->id])}}" title="Mua hàng" class="btn">
-															<span>Mua hàng</span>
+															<span>{{ trans('message.mua_hang') }}</span>
 														</a>
 													</div>
 												</div>
 											</div>
 										</div>
 										@endforeach
-										<!-- <div class="item">
-											<div class="product-box">
-												<div class="product-image">
-													<a href="#">
-														<img src="assets/images/pr-01.jpg" style="max-width: 500px; max-height: 500px; width: 100%; height: 100%;">
-													</a>
-												</div>
-												<div class="product-content">
-													<h4 class="product-name">
-														<a href="#" class="product-link">Tên sản phẩm</a>
-													</h4>
-													<div class="product-prices">
-														<span class="price">200.000đ</span>
-													</div>
-													<div class="product-button">
-														<a href="#" title="Mua hàng" class="btn">
-															<span>Mua hàng</span>
-														</a>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="item">
-											<div class="product-box">
-												<div class="product-image">
-													<a href="#">
-														<img src="assets/images/pr-01.jpg" style="max-width: 500px; max-height: 500px; width: 100%; height: 100%;">
-													</a>
-												</div>
-												<div class="product-content">
-													<h4 class="product-name">
-														<a href="#" class="product-link">Tên sản phẩm</a>
-													</h4>
-													<div class="product-prices">
-														<span class="price">200.000đ</span>
-													</div>
-													<div class="product-button">
-														<a href="#" title="Mua hàng" class="btn">
-															<span>Mua hàng</span>
-														</a>
-													</div>
-												</div>
-											</div>
-										</div>											
-										<div class="item">
-											<div class="product-box">
-												<div class="product-image">
-													<a href="#">
-														<img src="assets/images/pr-01.jpg" style="max-width: 500px; max-height: 500px; width: 100%; height: 100%;">
-													</a>
-												</div>
-												<div class="product-content">
-													<h4 class="product-name">
-														<a href="#" class="product-link">Tên sản phẩm</a>
-													</h4>
-													<div class="product-prices">
-														<span class="price">200.000đ</span>
-													</div>
-													<div class="product-button">
-														<a href="#" title="Mua hàng" class="btn">
-															<span>Mua hàng</span>
-														</a>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="item">
-											<div class="product-box">
-												<div class="product-image">
-													<a href="#">
-														<img src="assets/images/pr-01.jpg" style="max-width: 500px; max-height: 500px; width: 100%; height: 100%;">
-													</a>
-												</div>
-												<div class="product-content">
-													<h4 class="product-name">
-														<a href="#" class="product-link">Tên sản phẩm</a>
-													</h4>
-													<div class="product-prices">
-														<span class="price">200.000đ</span>
-													</div>
-													<div class="product-button">
-														<a href="#" title="Mua hàng" class="btn">
-															<span>Mua hàng</span>
-														</a>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="item">
-											<div class="product-box">
-												<div class="product-image">
-													<a href="#">
-														<img src="assets/images/pr-01.jpg" style="max-width: 500px; max-height: 500px; width: 100%; height: 100%;">
-													</a>
-												</div>
-												<div class="product-content">
-													<h4 class="product-name">
-														<a href="#" class="product-link">Tên sản phẩm</a>
-													</h4>
-													<div class="product-prices">
-														<span class="price">200.000đ</span>
-													</div>
-													<div class="product-button">
-														<a href="#" title="Mua hàng" class="btn">
-															<span>Mua hàng</span>
-														</a>
-													</div>
-												</div>
-											</div>
-										</div> -->
+										
 									</div>
 								</div>
 							</div>

@@ -119,11 +119,32 @@
                                     </div> <!-- megamenu-mobile -->
                                 </div>
                                 @if(Auth::guard('customer')->check())
-                                    <div class="logined">
+                                    <div class="login-registration">
                                         <div class="content">
                                             <ul>
                                                 <li>
-                                                    <span class="title-sub">{{ trans('message.xinchao') }}: {{Auth::guard('customer')->user()->user_name}}</span>
+                                                    <div class="title-sub">
+                                                        <div class="img" style="text-align: center; margin-bottom: 5px;">
+                                                            <img src="http://tpl.gco.vn/kidssunvn/assets/images/pr-01.jpg" title="Logo" style="max-width: 40px; max-height: 40px; width: 100%; height: 100%; border-radius: 50%;">
+                                                        </div>
+                                                        <span>{{Auth::guard('customer')->user()->user_name}}</span>
+                                                    </div>
+                                                    <div class="sub-menu">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="{{route('home.list-products')}}">{{ trans('message.capbac') }}: {{ trans('message.dlpp') }}</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="{{ route('home.logout') }}" title="Logout" class="logout">{{ trans('message.thoat') }}</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                            </ul>
+
+                                            <!-- <ul>
+                                                <li>
+                                                    <span class="title-sub">{{Auth::guard('customer')->user()->user_name}}</span>
                                                     <div class="sub-menu">
                                                         <ul>
                                                             <li>
@@ -138,7 +159,15 @@
                                                         </ul>
                                                     </div>
                                                 </li>
-                                            </ul>
+                                            </ul> -->
+                                            <!-- <ul id='menu-member-dropdown'>
+                                                <li><a class='prett' href='#' title='Menu'>Menu</a>
+                                                  <ul class='menus'>
+                                                    <li><a href='#' title='Dropdown 2'>Dropdown 2</a></li>
+                                                    <li><a href='#' title='Dropdown 3'>Dropdown 3</a></li>
+                                                  </ul>
+                                                </li>
+                                            </ul> -->
                                         </div>
                                     </div>
                                     
@@ -147,10 +176,10 @@
                                         <div class="content">
                                             <ul>
                                                 <li>
-                                                    <a href="#" title="Login" class="login">{{ trans('message.dang_nhap') }}</a>
+                                                    <a href="#" title="Login" class="login title-popup">{{ trans('message.dang_nhap') }}</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" title="Registration" class="registration">{{ trans('message.dang_ky') }}</a>
+                                                    <a href="#" title="Registration" class="registration title-popup">{{ trans('message.dang_ky') }}</a>
                                                 </li>
                                             </ul>
                                         </div>

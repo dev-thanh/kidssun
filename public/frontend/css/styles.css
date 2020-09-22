@@ -2575,3 +2575,152 @@ button:focus {
     text-align: center;
     color: red;
 }
+.art-sidebars .active,.art-sidebars .active a{
+	color: #f26824;
+}
+/*  Dropdown login member  */
+#menu-member-dropdown {
+  background: #343434;
+  color: #eee;
+  height: 35px;
+  margin: unset;
+  /* border-bottom: 4px solid #eeeded */
+}
+
+#menu-member-dropdown ul,
+#menu-member-dropdown li {
+  margin: 0 0;
+  padding: 0 0;
+  list-style: none
+}
+
+#menu-member-dropdown ul {
+  height: 35px
+}
+
+#menu-member-dropdown li {
+  float: left;
+  display: inline;
+  position: relative;
+  font: bold 12px Arial;
+  text-shadow: 0 -1px 0 #000;
+  border-right: 1px solid #444;
+  border-left: 1px solid #111;
+  text-transform: uppercase
+}
+
+#menu-member-dropdown li:first-child {
+  border-left: none
+}
+
+#menu-member-dropdown a {
+  display: block;
+  line-height: 35px;
+  padding: 0 14px;
+  text-decoration: none;
+  color: #eee;
+}
+
+#menu-member-dropdown li:hover > a,
+#menu-member-dropdown li a:hover {
+  background: #111
+}
+
+#menu-member-dropdown input {
+  display: none;
+  margin: 0 0;
+  padding: 0 0;
+  width: 80px;
+  height: 35px;
+  opacity: 0;
+  cursor: pointer
+}
+
+#menu-member-dropdown label {
+  font: bold 30px Arial;
+  display: none;
+  width: 35px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center
+}
+
+#menu-member-dropdown label span {
+  font-size: 12px;
+  position: absolute;
+  left: 35px
+}
+
+#menu-member-dropdown ul.menus {
+  height: auto;
+  width: 180px;
+  background: #111;
+  position: absolute;
+  z-index: 99;
+  display: none;
+  border: 0;
+}
+
+#menu-member-dropdown ul.menus li {
+  display: block;
+  width: 100%;
+  font: 12px Arial;
+  text-transform: none;
+}
+
+#menu-member-dropdown li:hover ul.menus {
+  display: block
+}
+
+#menu-member-dropdown a.home {
+  background: #c00;
+}
+
+#menu-member-dropdown a.prett {
+  padding: 0 27px 0 14px
+}
+
+#menu-member-dropdown a.prett::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-width: 6px 5px;
+  border-style: solid;
+  border-color: #eee transparent transparent transparent;
+  position: absolute;
+  top: 15px;
+  right: 9px
+}
+
+#menu-member-dropdown a.prett.open::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-width: 6px 5px;
+  border-style: solid;
+  border-color: transparent transparent #eee transparent;
+  position: absolute;
+  top: 9px;
+  right: 9px
+}
+
+#menu-member-dropdown ul.menus a:hover {
+  background: #333;
+}
+
+#menu-member-dropdown ul.menus .submenu {
+  display: none;
+  position: absolute;
+  left: 180px;
+  background: #111;
+  top: 0;
+  width: 180px;
+}
+
+#menu-member-dropdown ul.menus .submenu li {
+  background: #111;
+}
+
+#menu-member-dropdown ul.menus .has-submenu a.open ~ .submenu {
+  display: block;
+}

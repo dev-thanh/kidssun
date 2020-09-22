@@ -28,6 +28,20 @@
     </ul>
 </li>
 
+<li class="treeview {{ Request::segment(2) === 'orders' ? 'active' : null }}">
+    <a href="#">
+        <i class="fa fa-building" aria-hidden="true"></i> <span>Quản lý doanh thu</span>
+        <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+        </span>
+    </a>
+    <ul class="treeview-menu">
+        <li class="{{ Request::segment(2) === 'orders' ? 'active' : null }}">
+            <a href="{{ route('orders.index') }}"><i class="fa fa-circle-o"></i> Đơn hàng</a>
+        </li>
+    </ul>
+</li>
+
 <li class="treeview {{ Request::segment(2) === 'picture' || Request::segment(2) === 'video' ? 'active' : null }}">
     <a href="#">
         <i class="fa fa-building" aria-hidden="true"></i> <span>Hình ảnh video</span>

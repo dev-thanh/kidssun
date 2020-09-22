@@ -198,7 +198,7 @@
 								<div class="url-box @if($tab =='urlgt') active @endif">
 									<ul>
 										<li>
-											<a id="divClipboard-page" href="{{route('home.index',['ma-gioi-thieu'=>$member->code])}}">{{route('home.index',['ma-gioi-thieu'=>$member->code])}}</a>
+											<a id="divClipboard-page" href="{{route('home.index',['ma-gioi-thieu'=>$member->link_aff])}}">{{route('home.index',['ma-gioi-thieu'=>$member->link_aff])}}</a>
 											<a href="" class="btn btn-copy" onclick="copyClipboard_Code('divClipboard-page')">Copy</a>
 										</li>
 									</ul>

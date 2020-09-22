@@ -86,6 +86,16 @@ Route::group(['middleware' => 'locale'], function () {
         Route::get('/export','ManagerAccountController@export_Lichsu_Giaodich')->name('home.export-giaodich');
 
         Route::get('/export','ManagerAccountController@export_Lichsu_Giaodich')->name('home.export-giaodich');
+
+        Route::get('dat-hang','ManagerAccountController@datHang')->name('home.dat-hang');
+
+        Route::get('lich-su-mua-hang','ManagerAccountController@lichSuMuaHang')->name('home.lich-su-mua-hang');
+
+        Route::get('lich-su-mua-hang-dlcd','ManagerAccountController@lichSuMuaHangDaiLyCapDuoi')->name('home.lich-su-mua-hang-dlcd');
+
+        Route::get('quan-ly-dai-ly','ManagerAccountController@quanLyDaiLy')->name('home.quan-ly-dai-ly');
+
+        Route::get('chi-tiet-don-hang/{id}','ManagerAccountController@chiTietDonHang')->name('home.chi-tiet-don-hang');
         
     });
 
@@ -132,6 +142,11 @@ Route::group(['namespace' => 'Admin'], function () {
         Route::resource('products', 'ProductsController', ['except' => ['show']]);
         Route::post('products/postMultiDel', ['as' => 'products.postMultiDel', 'uses' => 'ProductsController@deleteMuti']);
         Route::get('products/get-slug', 'ProductsController@getAjaxSlug')->name('products.get-slug');
+
+        /*  Quản lý doanh thu  */
+        Route::resource('orders', 'OrdersController', ['except' => ['show']]);
+
+        Route::get('xac-nhan-don-hang', 'OrdersController@xacNhanDonHang')->name('orders.xac-nhan');
 
         // Đơn ứng tuyển
         Route::group(['prefix' => 'apply-job'], function() {

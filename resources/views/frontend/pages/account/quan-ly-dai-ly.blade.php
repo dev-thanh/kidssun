@@ -1,5 +1,5 @@
 <?php 
-	$search = request()->search ? request()->search : '';
+	$daily = request()->daily ? request()->daily : '';
 	$start_date = request()->start_date ? request()->start_date : '';
 	$end_date = request()->end_date ? request()->end_date : '';
 ?>
@@ -17,7 +17,7 @@
 
 						<div class="title-box breadcrumbs-title title-left">
 
-							<h1 class="title">{{ trans('message.lich_su_nap_tien') }}</h1>
+							<h1 class="title">{{ trans('message.quan_ly_dai_ly') }}</h1>
 
 						</div>
 
@@ -33,7 +33,7 @@
 
 
 
-	<main class="main-site accounts-site">
+	<main class="main-site products-site">
 
 		<div class="main-container">
 
@@ -44,69 +44,76 @@
 					</div>
 
 					<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
-						<article class="art-accounts art-bark">
-							<div class="accounts-content">
-								<div class="content" style="display: block;">
-									<div class="advanced-search-block">
-										<form class="advanced-search-form advanced-search-form-2">
-											<div class="form-content">
-												<div class="form-group">
-													<input type="text" name="search" value="{{@$search}}" class="form-control" placeholder="{{ trans('message.ma_giao_dich') }}">
+						<article class="art-products">
+							<div class="products-box">
+								<div class="products-content">
+									<div class="content-header">
+										<div class="advanced-search-block advanced-search-block-2">
+											<form class="advanced-search-form">
+												<div class="form-content">
+													<div class="form-group">
+														<select class="form-control" name="daily">
+															<option value="">{{ trans('message.theo_dai_ly') }}</option>
+															@foreach($thanhvien as $item)
+															<option @if($daily == $item->id) selected @endif value="{{$item->id}}">{{$item->full_name}}</option>
+															@endforeach
+														</select>
+													</div>
+													<div class="form-group">
+														<input type="text" name="start_date" value="{{@$start_date}}" class="form-control search-start" readonly id="startDate" placeholder="{{ trans('message.tu_ngay') }}">
+													</div>
+													<div class="form-group">
+														<input type="text" name="end_date" value="{{@$end_date}}" class="form-control search-input" readonly id="endDate" placeholder="{{ trans('message.den_ngay') }}">
+													</div>
+													<div class="form-group">
+														<button class="btn search-btn">
+															<span>{{ trans('message.tim_kiem') }}</span>
+														</button>
+													</div>
 												</div>
-												<div class="form-group">
-													<input type="text" name="start_date" value="{{@$start_date}}" class="form-control search-start" readonly id="startDate" placeholder="{{ trans('message.tu_ngay') }}">
-												</div>
-												<div class="form-group">
-													<input type="text" name="end_date" value="{{@$end_date}}" class="form-control search-input" readonly id="endDate" placeholder="{{ trans('message.den_ngay') }}">
-												</div>
-
-												<div class="form-group">
-													<button class="btn">
-														<span>{{ trans('message.tim_kiem') }}</span>
-													</button>
-												</div>
-											</div>
-										</form>
+											</form>
+										</div>
 									</div>
 
-									<div class="single-menus">
-										<div class="table-content">
-											<table>
-											  <tr class="title-table">
-											    <th class="center">{{ trans('message.thoi_gian') }}</th>
-											    <th class="center">{{ trans('message.loai_giao_dich') }}</th>
-											    <th class="center">{{ trans('message.ma_giao_dich') }}</th>
-											    <th class="center">{{ trans('message.gia_tri_giao_dich') }}</th>
-											    <th class="center">{{ trans('message.trang_thai') }}</th>
-											  </tr>
-											  	@if(!empty(@$recharge))
-													@foreach(@$recharge as $item)
-												  	<tr class="content-table">
-													    <td class="center">Ngày {{format_datetime($item->created_at,'d-m-y')}}</td>
-													    <td class="center">{{ trans('message.nap_tien') }}</td>
-													    <td class="center">{{@$item->trading_code}}</td>
-													    <td class="center">{!! number_format(@$item->amount_money, 0, '.', '.')!!} đ</td>
-													    <td class="center">{{ app()->getLocale() == 'vi' ? $item->name_status : $item->nameen_status }}</td>
-												  	</tr>
-												  	@endforeach
-											  	@endif
-											  <!-- <tr class="content-table">
-											    <td class="">Ngày 25 - 30/09/2020</td>
-											    <td class="">Nạp tiền</td>
-											    <td class="">#GD12345678900001</td>
-											    <td class="center">10.000.000đ</td>
-											    <td class="">Chờ xác nhận</td>
-											  </tr> -->
-											</table>
-										</div>
-										<div class="export-excel">
-											<a href="{{route('home.export-giaodich',['search'=>$search,'start_date'=>$start_date,'end_date'=>$end_date])}}" download>
-												<i class="fal fa-file-excel icon icon-excel"></i>
-												<span>{{ trans('message.xuat_exel') }}</span>
-											</a>
-											<!-- <a href="rut-tien.html" class="btn withdrawal-btn">
-												<span>Rút tiền</span>
-											</a> -->
+									<div class="table-content">
+										<table border="1" class="products-table agency-table">
+											<thead>
+												<tr>
+													<th>STT</th>
+													<th>{{ trans('message.ngay_tham_gia') }}</th>
+													<th>{{ trans('message.ho_ten') }}</th>
+													<th>{{ trans('message.so_dien_thoai') }}</th>
+													<th>{{ trans('message.doanh_thu') }}</th>
+												</tr>
+											</thead>
+											<tbody>
+												@foreach($thanhvien as $k => $item)
+												<tr>
+													<td>
+														<span>{{$k+1}}</span>
+													</td>
+													<td>
+														<span>{{format_datetime($item->created_at,'d/m/Y')}}</span>
+													</td>
+													<td>
+														<span>{{$item->full_name}}</span>
+													</td>
+													<td>
+														<a href="tle: 09xxxx">{{$item->phone}}</a>
+													</td>
+													<td class="price">
+														<span>30.000.000 vnđ</span>
+													</td>
+												</tr>
+												@endforeach
+											</tbody>
+										</table>
+									</div>
+
+									<div class="table-footer">
+										<div class="product-total">
+											<label>{{ trans('message.tong') }}:</label>
+											<span>30.000.000 vnđ</span>
 										</div>
 									</div>
 								</div>

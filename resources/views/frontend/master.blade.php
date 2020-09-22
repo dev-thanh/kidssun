@@ -166,6 +166,11 @@
 				toastr["{!! Session::get('level') !!}"]("{!! Session::get('message') !!}")
 			</script>
      	@endif
+     	@if(Session::has('error'))
+			<script type='text/javascript'>
+				toastr["error"]("{!! Session::get('error') !!}")
+			</script>
+     	@endif
      	@if(Session::has('success'))
 			<script type="text/javascript">
 				$(document).ready(function($) {

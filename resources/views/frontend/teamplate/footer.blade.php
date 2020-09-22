@@ -108,7 +108,7 @@
                                                     <a href="#" class="registration">Đăng ký</a>
                                                 </li> -->
                                                 <li>
-                                                    <a href="#" class="forgot-password">{{trans('message.quen_mat_khau') }}
+                                                    <a href="#" class="forgot-password title-popup">{{trans('message.quen_mat_khau') }}
                                                     </a>
                                                 </li>
                                             </ul>
@@ -163,10 +163,10 @@
                                         <div class="login-registration">
                                             <ul>
                                                 <li>
-                                                    <a href="#" class="login">{{ trans('message.dang_nhap') }}</a>
+                                                    <a href="#" class="login title-popup">{{ trans('message.dang_nhap') }}</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" class="forgot-password">{{ trans('message.quen_mat_khau') }}</a>
+                                                    <a href="#" class="forgot-password title-popup">{{ trans('message.quen_mat_khau') }}</a>
                                                 </li>
                                             </ul>
                                         </div>                      
@@ -196,7 +196,7 @@
                                         <div class="login-registration">
                                             <ul>
                                                 <li>
-                                                    <a href="#" class="login">{{ trans('message.dang_nhap') }}</a>
+                                                    <a href="#" class="login title-popup">{{ trans('message.dang_nhap') }}</a>
                                                 </li>
                                                 <!-- <li>
                                                     <a href="#" class="registration">Đăng ký</a>

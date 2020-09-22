@@ -126,7 +126,7 @@
 										<div class="button">
 											<a href="{{route('home.destroy-card')}}" class="btn delete">{{ trans('message.huy_gio_hang') }}</a>
 											<!-- <a href="#" class="btn">{{ trans('message.cap_nhap') }}</a> -->
-											<a href="#" class="btn">{{ trans('message.thanh_toan') }}</a>
+											<a href="{{route('home.dat-hang')}}" onclick="return confirm('Bạn có chắc chắn đặt hàng không ?')" class="btn">{{ trans('message.thanh_toan') }}</a>
 										</div>
 										<div class="product-total">
 											<label>{{ trans('message.tam_tinh') }}:</label>

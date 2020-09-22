@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Validator;
+use Cart;
 use Carbon\Carbon;
 use App\Models\Image;
 use App\Models\Customer;
@@ -325,14 +326,15 @@ class IndexController extends Controller
 
         if ($validator->passes()) {
 
-            $mentor = Member::where('code',$request->mentor_code)->first();
+            $mentor = Member::where('link_aff',$request->mentor_code)->first();
             if(!$mentor){
                 return response()->json(['error_code'=>$mess_code]);
             }
 
             $input['password'] = Hash::make($request->password);
             $input['mentor'] = $mentor->id;
-            $input['code'] = 'KS'.Carbon::now()->format('dmYHis');
+            $input['code'] = 'DLBL';
+            $input['link_aff'] = 'KS'.Carbon::now()->format('dmYHis');
             $member = Member::create($input);
 
             return response()->json(['success'=>$success]);
@@ -397,6 +399,7 @@ class IndexController extends Controller
 
     public function postLogout(Request $request) {
         Auth::guard('customer')->logout();
+        Cart::destroy();
         return redirect()->back();
     }
 
@@ -437,7 +440,7 @@ class IndexController extends Controller
                 'url' => $link,
             ];
 
-            Mail::send('frontend.mail.mail-resetpassword', $content_email, function ($msg) use($request) {
+            Mail::send('frontend.mail.mail-resetpassword', $content_email, function ($msg) use($request,$message) {
                 $msg->from('no.reply.bot.gco@gmail.com', 'Website - KIDS SUN VIỆT NAM');
                 $msg->to($request->email_reset, 'Website - KIDS SUN VIỆT NAM')->subject($message['xacnhanmk']);
             });

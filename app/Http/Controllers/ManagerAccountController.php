@@ -15,6 +15,7 @@ use Validator;
 use Carbon\Carbon;
 use Image;
 use File;
+use Cart;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
@@ -24,6 +25,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Member;
 use App\Models\Menu;
 use App\Models\Recharge;
+use App\Models\Order;
+use App\Models\Order_detail;
+use App\Models\Status;
 
 class ManagerAccountController extends Controller
 {
@@ -191,12 +195,7 @@ class ManagerAccountController extends Controller
         $input = $request->all();
         
         $validator = Validator::make($input, $fields,$message);
-   //      if ($validator->fails())
-	  //   {	       
-			// return  redirect()->back()
-	  //           ->withErrors($validator)
-	  //           ->withInput()->with(['error'=>$error]);			
-	  //   }
+   
         if ($validator->passes()) {
         	$member = Member::findOrFail($member_id);
         	$cmnd1_old = $member->cmnd1;
@@ -499,6 +498,133 @@ class ManagerAccountController extends Controller
         }
         $export = new LichsuagiaodichExport($array_export);
         return Excel::download($export, 'lichsu_giaodich.xlsx');
+    }
+
+    public function datHang(){
+    	$member_id = Auth::guard('customer')->user()->id;
+    	$member = Member::findOrFail($member_id);
+    	if (Cart::count()) {
+    		$order = new Order;
+    		$order->mavd = 'DH'.$member_id.Carbon::now()->format('dmYHis');
+    		$order->tongtien = Cart::total();
+    		$order->id_member = $member_id;
+    		$order->mentor = $member->mentor;
+    		$order->code = $member->code;
+    		$order->id_status = 1;
+    		$order->save();
+
+    		foreach (Cart::content() as $item) {
+	            $orderDetail                   = new Order_detail;
+	            $orderDetail->order_id         = $order->id;
+	            $orderDetail->mavd         = $order->mavd;
+	            $orderDetail->product_id       = $item->id;
+	            $orderDetail->qty 			   = $item->qty;
+	            $orderDetail->price            = $item->price;
+	            $orderDetail->price_total      = $item->price * $item->qty;
+	            $orderDetail->save();
+	        }
+
+	        //Cart::destroy();
+	        return redirect()->route('home.list-products')->with([
+	            'success' => 'Đơn hàng của bạn đã được đặt thành công. Chúng tôi sẽ xác nhận trong thời gian sớm nhất.',
+	        ]);
+
+    	}
+    	return back()->with([
+            'error' => 'Chưa có sản phẩm trong giỏ hàng',
+        ]);
+    }
+
+    public function lichSuMuaHang(Request $request){
+    	$member_id = Auth::guard('customer')->user()->id;
+    	$orders = Order::select('orders.*','status.name as name_status','status.name_en as nameen_status')->where('id_member',$member_id)
+	    	->join('status','status.id','=','orders.id_status')
+	    	->where(function($q) use ($request) {
+                if($request->start_date !=''){
+                    $start_format = Carbon::parse($request->start_date);
+                    $start_format->format('Y-m-d');
+                    $end_format = Carbon::parse($request->end_date);
+                    $end_format->format('Y-m-d');
+                    $q->whereBetween('orders.created_at', [$start_format, $end_format]);
+                }           
+                if($request->status !=''){
+                    $q->where('orders.id_status',$request->status);
+                }
+            })->orderBy('orders.created_at', 'desc')->get();
+
+            $all_status = Status::where('type',1)->get();
+    	return view('frontend.pages.account.lich-su-mua-hang',compact('orders','all_status'));
+    }
+
+    public function chiTietDonHang($id){
+    	$order_details = Order_detail::select('order_detail.*','products.name as product_name','products.name_en as product_name_en')
+    	->where('order_id',$id)
+    	->join('products','products.id','order_detail.product_id')
+    	->get();
+
+    	return view('frontend.pages.account.chi-tiet-don-hang',compact('order_details'));
+    }
+
+    public function lichSuMuaHangDaiLyCapDuoi(Request $request){
+    	$member_id = Auth::guard('customer')->user()->id;
+
+    	$thanhvien = Member::where('mentor',$member_id)->get();
+
+    	$all_status = Status::where('type',1)->get();
+    	$member_id_array =[];
+    	foreach ($thanhvien as $value) {
+    		array_push($member_id_array,$value->id);
+    	}
+    	//dd($member_id_array);
+    	$orders = Order::select('orders.*','status.name as name_status','status.name_en as nameen_status','member.full_name as full_name','member.link_aff as link_aff')
+	    	->where(function($q) use ($request,$member_id_array){
+			    if($request->mentor ==''){
+			    	$q->whereIn('id_member',$member_id_array);
+			    }else{
+			    	$q->where('id_member',$request->mentor);
+			    }
+			})			
+	    	->join('status','status.id','=','orders.id_status')
+	    	->join('member','member.id','=','orders.id_member')
+	    	->where(function($q) use ($request) {
+                if($request->start_date !=''){
+                    $start_format = Carbon::parse($request->start_date);
+                    $start_format->format('Y-m-d');
+                    $end_format = Carbon::parse($request->end_date);
+                    $end_format->format('Y-m-d');
+                    $q->whereBetween('orders.created_at', [$start_format, $end_format]);
+                }           
+                if($request->status !=''){
+                    $q->where('orders.id_status',$request->status);
+                }
+            })->orderBy('orders.created_at', 'desc')->get();
+	    // dd($orders);
+    	return view('frontend.pages.account.lich-su-mua-hang-dlcd',compact('orders','all_status','thanhvien'));
+    }
+
+    public function quanLyDaiLy(Request $request){
+    	$member_id = Auth::guard('customer')->user()->id;
+
+    	//$thanhvien = Member::where('mentor',$member_id)->get();
+    	if($request->daily !=''){
+
+	    	$thanhvien = Member::where('id',$request->daily)->get();
+	    	
+	    }else{
+
+	    	$thanhvien = Member::where(function($q) use ($request,$member_id) {
+	    		$q->where('mentor',$member_id);
+			    if($request->start_date !=''){
+                    $start_format = Carbon::parse($request->start_date);
+                    $start_format->format('Y-m-d');
+                    $end_format = Carbon::parse($request->end_date);
+                    $end_format->format('Y-m-d');
+                    $q->whereBetween('member.created_at', [$start_format, $end_format]);
+                }
+			})->orderBy('member.created_at', 'desc')->get();
+	    }
+
+    	return view('frontend.pages.account.quan-ly-dai-ly',compact('thanhvien'));
     }
 
 }
