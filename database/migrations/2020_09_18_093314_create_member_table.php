@@ -32,6 +32,7 @@ class CreateMemberTable extends Migration
             $table->text('active')->nullable()->default('0');
             $table->text('code')->comment('DLPP hoặc là DLBL');
             $table->text('link_aff')->nullable();
+            $table->bigInteger('tiennap')->nullable();
 
             $table->timestamps();
         });

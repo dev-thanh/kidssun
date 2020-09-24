@@ -644,3 +644,32 @@ $('input#amount_money').keyup(function(event) {
     $('input[name="price"]').val(number);
     // $('input[name="money"]').val(number);
 });
+
+$('.products-table .code-orders').click(function(e){
+    e.preventDefault();
+    var id_order = $(this).data('id');
+    var url_browse = window.location.origin;
+    $('.order-detail-content').html('<img src="'+url_browse+'/public/images/loader.gif'+'">');
+    var hw = $(window).height();
+    var hlg = $('.popup-content').height();
+    var hpcs = parseInt(hlg) + 60;
+
+    if (hpcs > hw) {
+        $('.popups-box').css({'height': hw - 30, 'top': '0'});
+    } else {
+        $('.popups-box').css({'height': 'auto', 'top': 'auto'});
+    }
+
+    $('.art-popups-code-orders').addClass('active');
+    $.ajax({
+        url: url_browse+'/backend/chi-tiet-don-hang/'+id_order,
+        type:'GET',
+        success: function(data) {
+            $('.order-detail-content').html(data);
+        }
+    });
+    
+});
+$('.popups-box').click(function(){
+    $('.art-popups').removeClass('active');
+});

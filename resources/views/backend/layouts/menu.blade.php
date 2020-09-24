@@ -28,7 +28,7 @@
     </ul>
 </li>
 
-<li class="treeview {{ Request::segment(2) === 'orders' ? 'active' : null }}">
+<li class="treeview {{ Request::segment(2) === 'orders' || Request::segment(2) === 'recharge' || Request::segment(2) === 'member' ? 'active'  : null }}">
     <a href="#">
         <i class="fa fa-building" aria-hidden="true"></i> <span>Quản lý doanh thu</span>
         <span class="pull-right-container">
@@ -38,6 +38,12 @@
     <ul class="treeview-menu">
         <li class="{{ Request::segment(2) === 'orders' ? 'active' : null }}">
             <a href="{{ route('orders.index') }}"><i class="fa fa-circle-o"></i> Đơn hàng</a>
+        </li>
+        <li class="{{ Request::segment(2) === 'member' ? 'active' : null }}">
+            <a href="{{ route('member.index') }}"><i class="fa fa-circle-o"></i> Danh sách thành viên</a>
+        </li>
+        <li class="{{ Request::segment(2) === 'recharge' ? 'active' : null }}">
+            <a href="{{ route('recharge.index') }}"><i class="fa fa-circle-o"></i> Danh sách chuyển tiền</a>
         </li>
     </ul>
 </li>

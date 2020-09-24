@@ -83,16 +83,23 @@
                             </div>
                             <div class="table-footer">
                                 <div class="button">
-                                    <!-- <a href="http://kidssunvietnam.local/destroy-card" class="btn delete">Hủy giỏ hàng</a> -->
-                                    <!-- <a href="#" class="btn">Cập nhập</a> -->
-                                                                         
-                                        <a href="{{route('orders.xac-nhan',['id'=>$order->order_id,'status'=>2])}}" onclick="return confirm('Bạn có chắc chắn đơn hàng đã hoàn thành ?')" >
-                                            <button class="btn btn-primary" type="">Xác nhận đơn hàng đã hoàn thành</button>
-                                        </a>
+                                    @if($order->id_status == 1)                       
+                                    <a href="{{route('orders.xac-nhan',['id'=>$order->order_id,'status'=>2])}}" onclick="return confirm('Bạn có chắc chắn đơn hàng đã hoàn thành ?')" >
+                                        <button class="btn btn-primary" type="">Xác nhận đơn hàng đã hoàn thành</button>
+                                    </a>
                                     
                                     <a href="{{route('orders.xac-nhan',['id'=>$order->order_id,'status'=>3])}}" onclick="return confirm('Bạn có chắc chắn hủy đơn hàng ?')" >
                                         <button class="btn btn-danger" type="">Hủy đơn hàng</button>
                                     </a>
+                                    @elseif($order->id_status == 2)
+                                        <label for="">Trạng thái đơn hàng</label>
+                                        </br>
+                                        <span class="label label-success">Đã hoàn thành</span>
+                                    @else
+                                        <label for="">Trạng thái đơn hàng</label>
+                                        </br>
+                                        <span class="label label-danger">Đã hủy</span>
+                                    @endif
                                 </div>
                                 <div class="product-total">
                                     <label>Tạm tính:</label>

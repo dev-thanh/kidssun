@@ -611,3 +611,134 @@ input#new-post-slug {
     font-weight: 500;
     border-radius: 2px;
 }
+/*////*/
+
+.art-popups {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 400ms;
+}
+.art-popups.active {
+    opacity: 1;
+    visibility: initial;
+}
+.form-content .fr-error {
+    display: none;
+}
+.popups-box {
+    max-width: 640px;
+    width: 100%;
+    padding: 0 15px;
+    position: relative;
+}
+.popups-box:after {
+    content: 'X';
+    display: block;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    position: absolute;
+    top: 0;
+    right: 15px;
+    font-size: 22px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.popups-content {
+    background-color: #fff;
+    padding: 20px 30px 40px;
+    overflow-y: auto;
+    height: 100%;
+}
+.popups-content .title-box {
+    margin-bottom: 0;
+}
+.popups-content .form-group:last-child {
+    margin-bottom: 0;
+}
+.popups-content .login-registration ul {
+    margin-left: 0;
+}
+.art-popups-login-registration .button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.popups-content > div {
+    display: none;
+}
+.popups-content > div.active {
+    display: block;
+}
+
+.sidebars-box {
+    margin-bottom: 35px;
+}
+.sidebars-box:last-child {
+    margin-bottom: 0;
+}
+.title-sidebars {   
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+.title-sidebars .title {
+    font-size: 20px;
+    color: #fff;
+    background-color: #f26824;
+}
+.sidebars-content {
+    border: 1px solid #f26824;
+    padding: 10px 15px;
+}
+.sidebars-content ul:last-child {
+    margin-bottom: 0;
+}
+.sidebars-content li:before {
+    content: "\f068";
+    font-family: FontAwesome;
+    font-size: 10px;
+    font-weight: 400;
+    margin-right: 3px;
+}
+
+.title-accounts {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    text-align: left;
+}
+.title-accounts .tab-title ul {
+    margin-bottom: 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+.title-accounts .tab-title a {
+    font-size: 18px;
+    padding: 15px 20px;
+    display: block;
+    border: 1px solid #f26824;
+    border-right-width: 0;
+}
+.title-accounts .tab-title a:hover,
+.title-accounts .tab-title a.active {
+    color: #fff;
+    background-color: #f26824;
+}
+.title-accounts .tab-title li:last-child a {
+    border-right-width: 1px;
+}
+.accounts-content {
+    border: 1px solid #f26824;
+    padding: 25px;
+    margin-top: -1px;
+}

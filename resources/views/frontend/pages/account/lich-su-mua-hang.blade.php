@@ -104,7 +104,7 @@
 														</div>
 													</td>
 													<td>
-														<span>{{format_datetime($item->created_at,'d-m-y')}}</span>
+														<span>{{format_datetime($item->created_at,'d-m-Y')}}</span>
 													</td>
 													<td class="status">
 														<span>{{ app()->getLocale() == 'vi' ? $item->name_status : $item->nameen_status }}</span>

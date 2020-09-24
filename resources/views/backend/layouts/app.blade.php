@@ -33,7 +33,7 @@
     <link rel="stylesheet" href="{{ url('public/backend/plugins/taginput/bootstrap-tagsinput.css') }}">
     <link rel="stylesheet" href="{{ url('public/backend/dist/css/jquery.toast.min.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
      <!-- My style -->
     <link href="{{ url('public/upimgs/css/fileinput.min.css') }}" media="all" rel="stylesheet" type="text/css"/>
     <link href="{{ url('public/upimgs/themes/explorer/theme.min.css') }}" media="all" rel="stylesheet" type="text/css"/>
@@ -237,6 +237,11 @@
     <script src="{{ url('public/backend/plugins/datepicker/daterangepicker.js') }}"></script>
     <script src="{!! asset('public/tinymce/tinymce.min.js') !!}"></script>
     <script src="{{ url('public/backend/dist/js/jquery.toast.min.js') }}"></script>
+    <script src="{{ __BASE_URL__ }}/js/moment.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.3/js/bootstrap-datetimepicker.min.js"></script>
     <script src="{{ url('public/backend/cus/myscript.js') }}"></script>
     <!-- My Script -->
     <script src="{{ url('public/backend/cus/jquery.nestable.js') }}"></script>

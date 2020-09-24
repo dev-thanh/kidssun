@@ -148,6 +148,25 @@ Route::group(['namespace' => 'Admin'], function () {
 
         Route::get('xac-nhan-don-hang', 'OrdersController@xacNhanDonHang')->name('orders.xac-nhan');
 
+
+        /*  Quản lý nạp tiền  */
+        Route::resource('recharge', 'RechargeController', ['except' => ['show']]);
+        Route::post('recharge/postMultiDel', ['as' => 'recharge.postMultiDel', 'uses' => 'RechargeController@deleteMuti']);
+        Route::get('recharge/update-money', ['as' => 'recharge.update-money', 'uses' => 'RechargeController@update_Money']);
+        Route::get('recharge/xac-nhan', ['as' => 'recharge.xac-nhan', 'uses' => 'RechargeController@xac_nhan_chuyen_tien']);
+
+        /*  Quản lý thành viên  */
+        Route::resource('member', 'MemberController', ['except' => ['show']]);
+        Route::get('member/lock/{id}', 'MemberController@lockMember')->name('member.lock');
+        Route::get('member/unlock/{id}', 'MemberController@unlocklockMember')->name('member.unlock');
+        Route::get('member/filterdate', 'MemberController@filterDate')->name('member.filterdate');
+        Route::get('member/rank', 'MemberController@rankMember')->name('member.rank');
+        Route::get('member/rank/add', 'MemberController@addRankMember')->name('member.addrank');
+        Route::post('member/rank/postadd', 'MemberController@postAddRankMember')->name('member.postaddrank');
+        Route::get('member/detail/{id}', 'MemberController@member_Detail')->name('member.detail');
+
+        Route::get('chi-tiet-don-hang/{id}','MemberController@chiTietDonHang')->name('home.chi-tiet-don-hang');
+
         // Đơn ứng tuyển
         Route::group(['prefix' => 'apply-job'], function() {
             Route::get('/', ['as' => 'get.list.job', 'uses' => 'ApplyJobController@getList']);
