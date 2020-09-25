@@ -26,6 +26,115 @@
 		       	
 					<div class="row">
 						<div class="tab-content">
+                            <div class="col-sm-12">
+                                <div class="header-bank-right">
+                                    <h2 style="padding: 15px">
+                                        Thông tin chi tiết tài khoản
+                                    </h2>
+                                </div>
+                                <div>
+                                    <div>
+                                        <div class="col-sm-6 form-group">
+                                            <label for="">Trạng thái</label></br>
+                                            <span class="label label-success">@if(@$member->lock ==0) Đang hoạt động @else Bị khóa @endif</span>
+                                        </div>
+                                        <div class="col-sm-6" style="margin-bottom: 10px">
+                                            <label for="">Link giới thiệu</label>
+                                            <div class="text-center" style="position: relative">                                        
+                                                <span id="divClipboard-page" style="color: #ff00eb" class="form-control" name="" >{{url('/')}}?{{@$member->link_aff}}</span>
+                                                <label style="position: absolute;top: 0px;right: 0px;background: #716c72;padding: 7px;cursor: pointer;color: #ffffff;" for="startDate" class="depotit">
+                                                    <a href="" title="Copy" class="btn-copy" onclick="copyClipboard_Code('divClipboard-page')">Copy</a>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 form-group">
+                                        <label for="">Cấp bậc đại lý</label>
+                                        <input readonly value="@if(@$member->code =='DLBL') Đại lý bán lẻ @elseif(@$member->code =='DLPP') Đại lý phân phối @else Cộng tác viên @endif" class="form-control">
+                                    </div>
+                                    <div class="col-sm-6 form-group">
+                                        <label for="">Mã tài khoản</label>
+                                        <input value="{{@$member->link_aff}}" readonly class="form-control" name="">
+                                    </div>
+                                    <div class="col-sm-6 form-group">
+                                        <label for="">Họ tên</label>
+                                        <input value="{{@$member->full_name}}" class="form-control" name="">
+                                    </div>
+                                    <div class="col-sm-6 form-group">
+                                        <label for="">Email</label>
+                                        <input value="{{@$member->email}}" class="form-control" name="">
+                                    </div>
+                                    <div class="col-sm-6 form-group">
+                                        <label for="">Số điện thoại</label>
+                                        <input value="{{@$member->phone}}" class="form-control" name="">
+                                    </div>
+                                    <div class="col-sm-6 form-group">
+                                        <label for="">Địa chỉ</label>
+                                        <input value="{{@$member->address}}" class="form-control" name="">
+                                    </div>
+                                    <div class="col-sm-6 form-group">
+                                        <?php $gt = App\Models\Member::where('id',$member->id)->first(); ?>
+                                        <label for="">Người giới thiệu mở tài khoản</label>
+                                        <input value="{{@$gt->full_name}}" class="form-control" name="">
+                                    </div>
+                                    <div class="col-sm-6 form-group">
+                                        <label for="">Số tài khoản ngân hàng</label>
+                                        <input value="{{@$member->bank_account}}" class="form-control" name="">
+                                    </div>
+                                    <div class="col-sm-6 form-group">
+                                        <label for="">Tên chủ tài khoản</label>
+                                        <input value="{{@$member->bank_account_name}}" class="form-control" name="">
+                                    </div>
+                                    <div class="col-sm-6 form-group">
+                                        <label for="">Ngân hàng</label>
+                                        <input value="{{@$member->bank_name}}" class="form-control" name="">
+                                    </div>
+                                    <div class="col-sm-6 form-group">
+                                        <label for="">Địa chỉ ngân hàng</label>
+                                        <input value="{{@$member->bank_address}}" class="form-control" name="">
+                                    </div>
+                                    <div class="col-sm-6 form-group">
+                                        <label for="">Số chứng minh nhân dân(thẻ căn cước)</label>
+                                        <input value="{{@$member->so_cmnd}}" class="form-control" name="">
+                                    </div>
+                                    <div class="col-sm-6 ">
+                                        <label for="">Ảnh chứng minh thư(thẻ căn cước) mặt trước</label>
+                                        <div>
+                                            @if(@$member->cmnd1 !='')
+                                            <img style="max-width: 400px;max-height: 300px" src="{{url('/')}}/public/images/{{@$member->id}}_{{@$member->cmnd1}}" alt="">
+                                            @else
+                                            <img src="{{url('/')}}/public/images/img-bill.png" alt="">
+                                            </br>
+                                            <span class="label label-danger">Chưa cập nhập</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 ">
+                                        <label for="">Ảnh chứng minh thư(thẻ căn cước) mặt sau</label>
+                                        <div>
+                                            @if(@$member->cmnd2 !='')
+                                            <img style="max-width: 400px;max-height: 300px" src="{{url('/')}}/public/images/{{@$member->id}}_{{@$member->cmnd2}}" alt="">
+                                            @else
+                                            <img src="{{url('/')}}/public/images/img-bill.png" alt="">
+                                            </br>
+                                            <span class="label label-danger">Chưa cập nhập</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12" style="margin-top: 30px">
+                                    @if($member->xac_nhan == 0)
+                                    <a href="{{route('member.xac-nhan',['id'=>$member->id])}}" title="">
+                                        <button type="button" class="btn btn-primary">Xác nhận tài khoản</button>
+                                    </a>
+                                    <a href="{{route('member.index')}}" title="">
+                                        <button type="button" class="btn btn-danger">Hủy</button>
+                                    </a>
+                                    @else
+                                    <span style="padding: 5px;font-size: 13px" class="label label-success">Tài khoản đã được xác nhận</span>
+                                    @endif
+                                </div>
+                            </div>
                             
                             <div class="col-sm-12">
                                 <div class="header-bank-right">
@@ -141,6 +250,23 @@
         </div>
     </div>
 	<script type="text/javascript">
+        function copyClipboard_Code($id) {
+            event.preventDefault();
+            console.log(222);
+            var elm = document.getElementById($id);
+            $('.btn-copy').html('Copied');
+            setTimeout(function(){
+             $('.btn-copy').html('Copy'); },
+            1000);
+            if(window.getSelection) {
+                var selection = window.getSelection();
+                var range = document.createRange();
+                range.selectNodeContents(elm);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                document.execCommand("Copy");               
+            }
+        }
 		$(document).ready(function() {
             $('#table1,#table2').DataTable( {      
                  "searching": false,
@@ -149,5 +275,6 @@
                  "lengthChange":false 
             } );
         });
+
 	</script>
 @stop

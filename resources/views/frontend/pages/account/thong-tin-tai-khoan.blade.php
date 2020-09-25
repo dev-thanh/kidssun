@@ -49,7 +49,7 @@
 												<a href="#" class="password-title @if($tab =='tdmk') active @endif">{{ trans('message.mat_khau') }}</a>
 											</li>
 											<li>
-												<a href="#" class="url-title @if($tab =='urlgt') active @endif">{{ trans('message.url_gioi_thieu') }}</a>
+												<a href="#" style="border-right-width: 1px" class="url-title @if($tab =='urlgt') active @endif">{{ trans('message.url_gioi_thieu') }}</a>
 											</li>
 											<input type="hidden" class="current-url" value="{{route('home.thong-tin-tai-khoan')}}">
 										</ul>
@@ -57,7 +57,10 @@
 								</div>
 							</div>
 
-							<div class="accounts-content">
+							<div class="accounts-content" style="position: relative">
+								@if($member->xac_nhan ==0)
+									<span style="position: absolute;top: 0px;width: 100%;text-align: center;left: 0px;color:red">{{ trans('message.chua_xac_nhan') }}</span>
+								@endif
 								<div class="information-box @if($tab =='tttk' || $tab =='') active @endif">
 									<form class="forms" method="POST" id="cap_nhap_thong_tin" action="{{route('home.cap-nhap-tai-khoan')}}" enctype="multipart/form-data">
 										@csrf
@@ -88,7 +91,16 @@
 												
 												<span class="error-message error_phone"></span>
 												
+											</div>
+
+											<div class="form-group">
+												<label>{{ trans('message.so_cmt') }}</label>
+												<input class="form-control" type="number" value="{!! old('so_cmnd', @$member->so_cmnd) !!}" name="so_cmnd" placeholder="">
+												
+												<span class="error-message error_so_cmnd"></span>
+												
 											</div>	
+
 											<div class="form-group-control">
 												<input type="hidden" name="cmnd1_key" value="{{$member->cmnd1}}">
 												<input type="hidden" name="cmnd2_key" value="{{$member->cmnd2}}">
@@ -199,7 +211,7 @@
 									<ul>
 										<li>
 											<a id="divClipboard-page" href="{{route('home.index',['ma-gioi-thieu'=>$member->link_aff])}}">{{route('home.index',['ma-gioi-thieu'=>$member->link_aff])}}</a>
-											<a href="" class="btn btn-copy" onclick="copyClipboard_Code('divClipboard-page')">Copy</a>
+											<a href="" class="btn btn-copy"  onclick="copyClipboard_Code('divClipboard-page');">Copy</a>
 										</li>
 									</ul>
 								</div>

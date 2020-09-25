@@ -182,7 +182,9 @@ class MemberController extends Controller
     }
 
     public function member_Detail ($id){
-        $recharge = Member::select('recharge.*','member.user_name as member_name','member.phone as member_phone','member.email as member_email','member.id as member_id')
+        $member = Member::find($id);
+
+        $recharge = Member::select('recharge.*','member.*','member.user_name as member_name','member.phone as member_phone','member.email as member_email','member.id as member_id')
         ->where('member.id',$id)
         ->join('recharge','recharge.member_id','=','member.id')
         ->get();
@@ -191,8 +193,18 @@ class MemberController extends Controller
             ->join('status','status.id','=','orders.id_status')
             ->orderBy('orders.created_at', 'desc')->get();
 
-        return view('backend.member.detail',compact('orders','recharge'));
+        return view('backend.member.detail',compact('orders','recharge','member'));
         
+    }
+
+    public function member_Xacnhan($id){
+        $member = Member::find($id);
+        $member->xac_nhan = 1;
+        $member->save();
+
+        flash('Xác nhận tài khoản thành công')->success();
+
+        return redirect()->route('member.detail',['id'=>$id]);
     }
 
     public function chiTietDonHang($id){

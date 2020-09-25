@@ -358,6 +358,7 @@ class IndexController extends Controller
                 'password_login.required' => 'Bạn chưa nhập mật khẩu'
             ];
             $message_login = 'Tên đăng nhập hoặc mật khẩu không chính xác';
+            $message_khoataikhoan = 'Tài khoản của bạn hiện đang bị khóa';
             $message_title= 'Lỗi đăng nhập';
         }else{
             $message = [
@@ -365,6 +366,7 @@ class IndexController extends Controller
                 'password_login.required' => 'You have not entered the password'
             ];
             $message_login = 'Username or password incorrect';
+            $message_khoataikhoan = 'Your account is currently locked';
             $message_title= 'Login error';
         }
         
@@ -373,8 +375,6 @@ class IndexController extends Controller
             'password_login' => 'required'
         ],$message);
         if ($validator->passes()) {
-
-
             $login_type = filter_var($request->name_email, FILTER_VALIDATE_EMAIL ) 
                 ? 'email' 
                 : 'user_name';
@@ -383,8 +383,16 @@ class IndexController extends Controller
             }else{
                 $credentials = array('user_name' => $request->name_email, 'password' => $request->password_login);
             }
-           
+
             if (Auth::guard('customer')->attempt($credentials)) {
+                if(Auth::guard('customer')->user()->lock == 1){
+                    Auth::guard('customer')->logout();
+                    return response()->json([
+                        'status_login'=>0,
+                        'message_login' => $message_khoataikhoan,
+                        'message_title' => $message_title
+                    ]);
+                }
                         return response()->json(['status_login'=>1]);
             }
 

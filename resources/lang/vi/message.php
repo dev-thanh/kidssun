@@ -127,4 +127,6 @@ return [
     'dai_ly_cap_duoi' => 'Đơn hàng của đại lý cấp dưới',
     'ngay_tham_gia' => 'Ngày tham gia',
     'mua_hang' => 'Mua hàng',
+    'so_cmt' => 'Số chứng minh nhân dân(thẻ căn cước).',
+    'chua_xac_nhan' => 'Tài khoản chưa được xác nhận',
 ];

@@ -163,9 +163,18 @@ Route::group(['namespace' => 'Admin'], function () {
         Route::get('member/rank', 'MemberController@rankMember')->name('member.rank');
         Route::get('member/rank/add', 'MemberController@addRankMember')->name('member.addrank');
         Route::post('member/rank/postadd', 'MemberController@postAddRankMember')->name('member.postaddrank');
+        Route::get('member/xac-nhan/{id}', 'MemberController@member_Xacnhan')->name('member.xac-nhan');
+
         Route::get('member/detail/{id}', 'MemberController@member_Detail')->name('member.detail');
 
         Route::get('chi-tiet-don-hang/{id}','MemberController@chiTietDonHang')->name('home.chi-tiet-don-hang');
+
+        /*  Quản lý doanh thu  */
+        Route::resource('config', 'ConfigController', ['except' => ['show']]);
+
+        Route::get('config/quyen-loi', 'ConfigController@lisQuyenLoi')->name('config.quyenloi');
+
+        Route::post('config/updatequyen-loi', 'ConfigController@updateQuyenloi')->name('config.update-quyenloi');
 
         // Đơn ứng tuyển
         Route::group(['prefix' => 'apply-job'], function() {

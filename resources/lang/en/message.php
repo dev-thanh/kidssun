@@ -127,4 +127,6 @@ return [
     'dai_ly_cap_duoi' => 'Orders of subordinate agents',
     'ngay_tham_gia' => 'Join date',
     'mua_hang' => 'Purchase',
+    'so_cmt' => 'Identification number (identity card).',
+    'chua_xac_nhan' => 'Account has not been confirmed',
 ];

@@ -149,6 +149,9 @@ class ManagerAccountController extends Controller
                 'email.email' => 'Email không đúng định dạng',
                 'email.unique' => 'Email này đã có người sử dụng',
                 'phone.required' => 'Số điện thoại không được để trống',
+                'so_cmnd.required' => 'Số chứng minh nhân dân(thẻ căn cước) không được để trống',
+                'so_cmnd.numeric' => 'Số chứng minh nhân dân(thẻ căn cước) không hợp lệ',
+                'so_cmnd.min' => 'Số chứng minh nhân dân(thẻ căn cước) không hợp lệ',
                 'cmnd1.required' => 'Vui lòng chọn ảnh chứng minh thư mặt trước',
                 'cmnd2.required' => 'Vui lòng chọn ảnh chứng minh thư mặt sau',
                 'cmnd1.image' => 'Vui lòng chọn đúng file ảnh.',
@@ -166,6 +169,9 @@ class ManagerAccountController extends Controller
                 'email.email' => 'Email invalidate',
                 'email.unique' => 'This email is already in use',
                 'phone.required' => 'Phone number can not be left blank',
+                'so_cmnd.required' => 'Identification number (identity card) cannot be left blank',
+                'so_cmnd.numeric' => 'Invalid identity card (ID) number',
+                'so_cmnd.min' => 'Invalid identity card (ID) number',
                 'cmnd1.required' => 'Please choose a photo of your ID card in front',
                 'cmnd2.required' => 'Please select the back photo of your ID card',
                 'cmnd1.image' => 'Please select the correct image file.',
@@ -180,6 +186,7 @@ class ManagerAccountController extends Controller
             'full_name' => 'required|min:6',
             'email' => ['required','email',Rule::unique('member')->ignore($member_id)],
             'phone' => 'required',
+            'so_cmnd' => 'required|numeric|min:7',
         ];
         if($request->cmnd1_key ==''){
         	$fields['cmnd1'] = 'required|image|mimes:jpeg,png,jpg,jpeg|max:3048';

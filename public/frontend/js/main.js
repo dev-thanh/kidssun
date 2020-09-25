@@ -1022,7 +1022,8 @@ $(document).ready(function($) {
             success: function(data) {
                 if(data.status==1){
                     toastr["success"](data.toastr, "");
-                }else{                          
+                }else{            
+                    console.log(data.error);              
                     if(data.error.full_name){
                         $('.error_full_name').html(data.error.full_name);
                     }
@@ -1031,6 +1032,9 @@ $(document).ready(function($) {
                     }
                     if(data.error.phone){
                         $('.error_phone').html(data.error.phone);
+                    }
+                    if(data.error.so_cmnd){
+                        $('.error_so_cmnd').html(data.error.so_cmnd);
                     }
                     if(data.error.cmnd1){
                         $('.error_cmnd1').html(data.error.cmnd1);

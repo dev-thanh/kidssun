@@ -673,3 +673,20 @@ $('.products-table .code-orders').click(function(e){
 $('.popups-box').click(function(){
     $('.art-popups').removeClass('active');
 });
+$('input#amount_money1,input#amount_money2').keyup(function(event) {
+    if($(this).val() != ''){
+        $('.amount_money_error').html('');
+    }
+    var _this = $(this);
+    if(event.which >= 37 && event.which <= 40) return;
+    $(this).val(function(index, value) {
+        return value
+        .replace(/\D/g, "")
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        ;
+    });
+    var number = $(this).val().replace(/,/g, '');
+    _this.parents('tr').find('input[type="hidden"]').val(number);
+    // $('input[name="total"]').val(number);
+    // $('input[name="money"]').val(number);
+});
