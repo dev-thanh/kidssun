@@ -28,6 +28,7 @@ use App\Models\Recharge;
 use App\Models\Order;
 use App\Models\Order_detail;
 use App\Models\Status;
+use App\Models\Rank;
 
 class ManagerAccountController extends Controller
 {
@@ -531,7 +532,7 @@ class ManagerAccountController extends Controller
 	            $orderDetail->save();
 	        }
 
-	        //Cart::destroy();
+	        Cart::destroy();
 	        return redirect()->route('home.list-products')->with([
 	            'success' => 'Đơn hàng của bạn đã được đặt thành công. Chúng tôi sẽ xác nhận trong thời gian sớm nhất.',
 	        ]);
@@ -605,10 +606,53 @@ class ManagerAccountController extends Controller
                     $q->where('orders.id_status',$request->status);
                 }
             })->orderBy('orders.created_at', 'desc')->get();
-	    // dd($orders);
+
     	return view('frontend.pages.account.lich-su-mua-hang-dlcd',compact('orders','all_status','thanhvien'));
     }
 
+    public static function doanhthu_Daily($member){
+        $dangnhap = Auth::guard('customer')->user();
+
+        $doanhthu =0;
+        $rank = Rank::all();
+        $tien_dlbl = 0;
+        $tien_dlpp = 0;
+        foreach ($rank as $val) {
+            if($val->key==1){
+                $tien_dlbl = $val->total;
+            }
+            if($val->key==2){
+                $tien_dlpp = $val->total;
+            }
+        }
+        if($member->code=='DLBL' || $member->code=='DLPP')
+        {
+            $tong = 0;
+            $order_success = Order::where([
+                'id_status' => 2,
+                'id_member' => $member->id
+            ])->get();
+            foreach ($order_success as $item) {
+                $tong+=$item->tongtien;
+            }
+            return $tong-$tien_dlbl;
+
+        }else{
+            return 0;
+        }
+    }
+
+    public static function tongtien_Donhang_Thanhcong_Daily($member){
+        $tong_tien = 0;
+        $order_success = Order::where([
+            'id_status' => 2,
+            'id_member' => $member->id
+        ])->get();
+        foreach ($order_success as $item) {
+            $tong_tien+=$item->tongtien;
+        }
+        return $tong_tien;
+    }
     public function quanLyDaiLy(Request $request){
     	$member_id = Auth::guard('customer')->user()->id;
 
@@ -616,7 +660,7 @@ class ManagerAccountController extends Controller
     	if($request->daily !=''){
 
 	    	$thanhvien = Member::where('id',$request->daily)->get();
-	    	
+
 	    }else{
 
 	    	$thanhvien = Member::where(function($q) use ($request,$member_id) {
@@ -629,6 +673,7 @@ class ManagerAccountController extends Controller
                     $q->whereBetween('member.created_at', [$start_format, $end_format]);
                 }
 			})->orderBy('member.created_at', 'desc')->get();
+
 	    }
 
     	return view('frontend.pages.account.quan-ly-dai-ly',compact('thanhvien'));

@@ -89,9 +89,9 @@
 											<thead>
 												<tr>
 													<th>STT</th>
+													<th>{{ trans('message.thanh_vien') }}</th>
 													<th>{{ trans('message.ma_don_hang') }}</th>
 													<th>{{ trans('message.thanh_tien') }}</th>
-													<th>{{ trans('message.thanh_vien') }}</th>
 													<th>{{ trans('message.trang_thai') }}</th>
 													<th>{{ trans('message.chi_tiet') }}</th>
 												</tr>
@@ -104,6 +104,11 @@
 														<span>{{$k+1}}</span>
 													</td>
 													<td>
+														<a href="#" title="Mã thành viên" class="code-members">
+															<span>{{$item->full_name}}</span>
+														</a>
+													</td>
+													<td>
 														<a href="#" title="Mã đơn" class="code-orders">
 															<span>{{$item->mavd}}</span>
 														</a>
@@ -112,11 +117,6 @@
 														<div class="product-prices">
 															<span class="price">{!! number_format(@$item->tongtien, 0, '.', '.')!!} đ</span>
 														</div>
-													</td>
-													<td>
-														<a href="#" title="Mã thành viên" class="code-members">
-															<span>{{$item->full_name}}</span>
-														</a>
 													</td>
 													<td class="status">
 														<span>{{ app()->getLocale() == 'vi' ? $item->name_status : $item->nameen_status }}</span>

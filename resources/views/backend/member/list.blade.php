@@ -79,6 +79,9 @@
 			    				@else
 			    					<span class="label label-danger">Đang khóa</span>
 			    				@endif
+			    				@if ($item->xac_nhan == 0 )
+			    					</br><span class="label label-danger">Chưa xác nhận</span>
+			    				@endif
 			    			<td>
 		    					@if ($item->user_name != 'gco_admin')
 			    					<a href="javascript:;" class="btn-destroy" data-href="{{ route( 'member.destroy',  $item->id ) }}"

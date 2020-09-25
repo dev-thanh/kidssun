@@ -1,7 +1,7 @@
 @extends('backend.layouts.app')
 @section('controller','Quyền lợi của đại lý')
 @section('action','Cập nhập')
-@section('controller_route', route('member.rank'))
+
 @section('content')
 <style type="text/css" media="screen">
 	.deposit{

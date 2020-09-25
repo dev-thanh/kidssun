@@ -87,7 +87,11 @@
 												</tr>
 											</thead>
 											<tbody>
+												<?php $tong = 0; ?>
 												@foreach($thanhvien as $k => $item)
+												<?php $dt = App\Http\Controllers\ManagerAccountController::tongtien_Donhang_Thanhcong_Daily($item);
+													$tong+=$dt;
+												?>
 												<tr>
 													<td>
 														<span>{{$k+1}}</span>
@@ -102,7 +106,7 @@
 														<a href="tle: 09xxxx">{{$item->phone}}</a>
 													</td>
 													<td class="price">
-														<span>30.000.000 vnđ</span>
+														<span>{!! number_format(@$dt, 0, '.', '.')!!} đ</span>
 													</td>
 												</tr>
 												@endforeach
@@ -113,7 +117,7 @@
 									<div class="table-footer">
 										<div class="product-total">
 											<label>{{ trans('message.tong') }}:</label>
-											<span>30.000.000 vnđ</span>
+											<span>{!! number_format(@$tong, 0, '.', '.')!!} đ</span>
 										</div>
 									</div>
 								</div>

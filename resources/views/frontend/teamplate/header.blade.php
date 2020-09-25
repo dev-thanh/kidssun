@@ -123,6 +123,7 @@
                                         <div class="content">
                                             <ul>
                                                 <li>
+                                                    
                                                     <div class="title-sub">
                                                         <div class="img" style="text-align: center; margin-bottom: 5px;">
                                                             <img src="http://tpl.gco.vn/kidssunvn/assets/images/pr-01.jpg" title="Logo" style="max-width: 40px; max-height: 40px; width: 100%; height: 100%; border-radius: 50%;">
@@ -132,7 +133,11 @@
                                                     <div class="sub-menu">
                                                         <ul>
                                                             <li>
-                                                                <a href="{{route('home.list-products')}}">{{ trans('message.capbac') }}: {{ trans('message.dlpp') }}</a>
+                                                                <a href="{{route('home.list-products')}}">{{ trans('message.capbac') }}: @if(Auth::guard('customer')->user()->code == 'DLBL') {{ trans('message.dlbl') }} @endif
+
+                                                                @if(Auth::guard('customer')->user()->code == 'DLPP') {{ trans('message.dlpp') }} @endif
+                                                                @if(Auth::guard('customer')->user()->code == 'CTV') {{ trans('message.cong_tac_vien') }} @endif
+                                                                </a>
                                                             </li>
                                                             <li>
                                                                 <a href="{{ route('home.logout') }}" title="Logout" class="logout">{{ trans('message.thoat') }}</a>

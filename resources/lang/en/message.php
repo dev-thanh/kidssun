@@ -68,6 +68,8 @@ return [
     'xinchao' => 'Hello',
     'capbac' => 'Rank',
     'thoat' => 'Logout',
+    'cong_tac_vien' => 'Collaborators',
+    'dlbl' => 'Retail agent',
     'dlpp' => 'Distribution agent',
     'thong_tin_tai_khoan' => 'Account information',
     'doanh_thu' => 'Revenue',

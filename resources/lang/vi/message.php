@@ -68,6 +68,8 @@ return [
     'xinchao' => 'Xin chào',
     'capbac' => 'Cấp bậc',
     'thoat' => 'Thoát',
+    'cong_tac_vien' => 'Cộng tác viên',
+    'dlbl' => 'Đại lý bán lẻ',
     'dlpp' => 'Đại lý phân phối',
     'thong_tin_tai_khoan' => 'Thông tin tài khoản',
     'doanh_thu' => 'Doanh thu',

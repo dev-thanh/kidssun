@@ -23,9 +23,6 @@ class MemberController extends Controller
      */
     public function index(Request $request)
     {
-        //$user_id = Auth::user()->id;
-        //dd($user_id);
-
         if($request->startdate){
             $stdf = $request->startdate;         
             $endf = $request->enddate;         

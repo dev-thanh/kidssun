@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DataTables;
+use App\Models\Member;
 use App\Models\Order;
+use App\Models\Rank;
+use Carbon\Carbon;
 use App\Models\Order_detail;
 
 class OrdersController extends Controller
@@ -135,8 +138,45 @@ class OrdersController extends Controller
     public function xacNhanDonHang(Request $request){
         // dd($request->all());
         $order = Order::find($request->id);
+        
         if($order){
             $order->update(['id_status'=>$request->status]);
+        }
+        $id_member = $order->id_member;
+        $order_success = Order::where(
+            [
+                'id_member' => $id_member,
+                'id_status' => 2
+            ]
+        )->get();
+
+        $tongtien = 0;
+        foreach ($order_success as $value) {
+            $tongtien+=$value->tongtien;
+        }
+
+        $rank = Rank::all();
+        $tien_dlbl = 0;
+        $tien_dlpp = 0;
+        foreach ($rank as $val) {
+            if($val->key==1){
+                $tien_dlbl = $val->total;
+            }
+            if($val->key==2){
+                $tien_dlpp = $val->total;
+            }
+        }
+        // dd($tongtien);
+        if($tongtien >= $tien_dlbl && $tongtien < $tien_dlpp){
+            $member = Member::find($id_member);
+            $member->code = 'DLBL';
+            $member->save();
+        }else{
+            if($tongtien >= $tien_dlpp){
+                $member = Member::find($id_member);
+                $member->code = 'DLPP';
+                $member->save();
+            }
         }
         if($request->status == 2){
             flash('Đã xác nhận đơn hàng hoàn thành.')->success();
@@ -173,20 +213,29 @@ class OrdersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request,$id)
     {   
+
         $data['order'] = Order::select('orders.*','orders.id as order_id','status.name as name_status','member.full_name as full_name','member.*')
             ->where('orders.id',$id)      
             ->join('status','status.id','=','orders.id_status')
             ->join('member','member.id','=','orders.id_member')
             ->first();
-            
 
         $data['order_details'] = Order_detail::select('order_detail.*','products.name as product_name','products.name_en as product_name_en','products.image as image')
-        ->where('order_id',$id)
         ->join('products','products.id','order_detail.product_id')
+        ->where('order_id',$id)
+        ->where(function($q) use ($request) {
+            if($request->startdate !=''){
+                $start_format = Carbon::parse($request->startdate);
+                $start_format->format('Y-m-d');
+                $end_format = Carbon::parse($request->enddate);
+                $end_format->format('Y-m-d');
+                $q->whereBetween('order_detail.created_at', [$start_format, $end_format]);
+            }           
+        })->orderBy('order_detail.created_at', 'desc')
         ->get();
-        //dd($data['order']);
+        //dd($data['order_details']);
         $data['module'] = $this->module();
         return view("backend.{$this->module()['module']}.edit", $data);
     }
