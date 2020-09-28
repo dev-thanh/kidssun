@@ -29,6 +29,7 @@ use App\Models\Order;
 use App\Models\Order_detail;
 use App\Models\Status;
 use App\Models\Rank;
+use App\Models\Log_profits;
 
 class ManagerAccountController extends Controller
 {
@@ -574,9 +575,9 @@ class ManagerAccountController extends Controller
     }
 
     public function lichSuMuaHangDaiLyCapDuoi(Request $request){
-    	$member_id = Auth::guard('customer')->user()->id;
+    	$user_name = Auth::guard('customer')->user()->user_name;
 
-    	$thanhvien = Member::where('mentor',$member_id)->get();
+    	$thanhvien = Member::where('mentor',$user_name)->get();
 
     	$all_status = Status::where('type',1)->get();
     	$member_id_array =[];
@@ -679,4 +680,54 @@ class ManagerAccountController extends Controller
     	return view('frontend.pages.account.quan-ly-dai-ly',compact('thanhvien'));
     }
 
+    public function doanh_Thu(Request $request){
+        $member_id = Auth::guard('customer')->user()->id;
+        // $orders = Order::select('orders.*','status.name as name_status','status.name_en as nameen_status')->where('id_member',$member_id)
+        //     ->join('status','status.id','=','orders.id_status')
+        //     ->where(function($q) use ($request) {
+        //         if($request->start_date !=''){
+        //             $start_format = Carbon::parse($request->start_date);
+        //             $start_format->format('Y-m-d');
+        //             $end_format = Carbon::parse($request->end_date);
+        //             $end_format->format('Y-m-d');
+        //             $q->whereBetween('orders.created_at', [$start_format, $end_format]);
+        //         }           
+        //         if($request->status !=''){
+        //             $q->where('orders.id_status',$request->status);
+        //         }
+        //     })->orderBy('orders.created_at', 'desc')->get();
+
+        //     $all_status = Status::where('type',1)->get();
+
+        $data = Log_profits::select('log_profits.*','status.name as name_status','orders.mavd as mavd')
+        ->join('status','status.id','=','log_profits.id_status')
+        ->join('orders','orders.id','=','log_profits.id_donhang')
+        ->where(function($q) use ($request,$member_id){
+            $q->where('id_nguoinhan',$member_id);
+            if($request->startdate !=''){
+                $start_format = Carbon::parse($request->startdate);
+                $start_format->format('Y-m-d');
+                $end_format = Carbon::parse($request->enddate);
+                $end_format->format('Y-m-d');
+                $q->whereBetween('log_profits.ngay_nhan', [$start_format, $end_format]);
+            } 
+        })->orderBy('log_profits.ngay_nhan', 'desc')
+        ->get();
+        //dd($data);
+        return view('frontend.pages.account.doanh-thu',compact('data'));
+    }
+    public function clear_mentor(){
+        'KS'.Carbon::now()->format('dmYHis');
+        $member = Member::all();
+        foreach ($member as $value) {
+            $mentor = $value->link_aff;
+            // if($mentor !=''){
+                
+
+                $value->update(['link_aff'=>'KS'.$value->id.Carbon::now()->format('dmYHis')]);
+                
+            // }
+        }
+        return 'ok';
+    }
 }

@@ -332,8 +332,8 @@ class IndexController extends Controller
             }
 
             $input['password'] = Hash::make($request->password);
-            $input['mentor'] = $mentor->id;
-            $input['code'] = 'DLBL';
+            $input['mentor'] = $mentor->user_name;
+            $input['code'] = 'CTV';
             $input['active'] = 1;
             $input['link_aff'] = 'KS'.Carbon::now()->format('dmYHis');
             $member = Member::create($input);

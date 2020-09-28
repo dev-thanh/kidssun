@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DataTables;
+use Carbon\Carbon;
 use App\Models\Member;
 use App\Models\Order;
 use App\Models\Rank;
-use Carbon\Carbon;
+use App\Models\Log_profits;
 use App\Models\Order_detail;
 
 class OrdersController extends Controller
@@ -138,11 +139,14 @@ class OrdersController extends Controller
     public function xacNhanDonHang(Request $request){
         // dd($request->all());
         $order = Order::find($request->id);
-        
-        if($order){
-            $order->update(['id_status'=>$request->status]);
-        }
+
         $id_member = $order->id_member;
+
+        $member = Member::find($id_member);
+
+        $mentor = Member::where('id',$member->mentor)->first();
+        //$childrent = Member::where('mentor',$member->id)->get();
+
         $order_success = Order::where(
             [
                 'id_member' => $id_member,
@@ -150,11 +154,7 @@ class OrdersController extends Controller
             ]
         )->get();
 
-        $tongtien = 0;
-        foreach ($order_success as $value) {
-            $tongtien+=$value->tongtien;
-        }
-
+        /* Lấy số tiền của cấp đại lý */
         $rank = Rank::all();
         $tien_dlbl = 0;
         $tien_dlpp = 0;
@@ -166,18 +166,165 @@ class OrdersController extends Controller
                 $tien_dlpp = $val->total;
             }
         }
-        // dd($tongtien);
-        if($tongtien >= $tien_dlbl && $tongtien < $tien_dlpp){
-            $member = Member::find($id_member);
-            $member->code = 'DLBL';
-            $member->save();
-        }else{
-            if($tongtien >= $tien_dlpp){
-                $member = Member::find($id_member);
-                $member->code = 'DLPP';
-                $member->save();
-            }
+
+        $capdo = $member->code;
+
+        $tongtien_truoc = 0;
+        foreach ($order_success as $value) {
+            $tongtien_truoc+=$value->tongtien;
         }
+        $tien_donhang_hientai = $order->tongtien;
+
+        $tongtien = $tien_donhang_hientai+$tongtien_truoc;
+
+        if($capdo =='CTV'){
+
+            /*  Tiền cộng cho chính đại lý đó khi nạp hơn 6tr  */
+            if($tongtien >= $tien_dlbl){
+                $member->code = 'DLBL';
+                $member->save();
+                if($tongtien > $tien_dlbl){
+                    $sodu = $tongtien-$tien_dlbl;
+                    $log_profits = new Log_profits;
+                    $log_profits->id_donhang = $request->id;
+                    $log_profits->id_nguoinhan = $member->id;
+                    $log_profits->name_nguoinhan = $member->full_name;
+                    $log_profits->money = $sodu*10/100;
+                    $log_profits->id_status = 4;
+                    $log_profits->save();
+                    
+                }
+            }
+
+            /*  Tiền cộng cho đại lý giới thiệu  */
+            // $mentor = Member::where('id',$member->mentor)->first();
+
+            if($mentor->code == 'DLBL' || $mentor->code == 'DLPP'){
+
+                if($mentor->code == 'DLBL'){
+
+                    $log_profits = new Log_profits;
+                    $log_profits->id_donhang = $request->id;
+                    $log_profits->id_nguoinhan = $mentor->id;
+                    $log_profits->id_capduoi = $member->id;
+                    $log_profits->name_capduoi = $member->full_name;
+                    $log_profits->id_status = 5;
+                    if($tongtien <= $tien_dlbl){
+                        $log_profits->money = $tien_donhang_hientai*10/100;
+                        $log_profits->save();
+                    }else{
+                        $log_profits->money = ($tongtien-$tien_donhang_hientai)*10/100;
+                        $log_profits->save();
+                    }
+
+                }else{
+
+                    $log_profits = new Log_profits;
+                    $log_profits->id_donhang = $request->id;
+                    $log_profits->id_nguoinhan = $mentor->id;
+                    $log_profits->name_nguoinhan = $mentor->full_name;
+                    $log_profits->id_capduoi = $member->id;
+                    $log_profits->name_capduoi = $member->full_name;
+                    $log_profits->id_status = 5;
+
+                    if($tongtien <= $tien_dlbl){
+                        $log_profits->money = $tien_donhang_hientai*20/100;
+                        $log_profits->save();
+                    }else{
+                        $sd = $tongtien-$tien_dlbl;
+                        $log_profits->money = ($tongtien-$tien_donhang_hientai)*20/100;
+                        $log_profits->save();
+                        /*  Tiền cộng cho dlpp khi ctv trở thành dlbl  */
+                        $log_profits = new Log_profits;
+                        $log_profits->id_donhang = $request->id;
+                        $log_profits->id_nguoinhan = $mentor->id;
+                        $log_profits->name_nguoinhan = $mentor->full_name;
+                        $log_profits->id_capduoi = $member->id;
+                        $log_profits->name_capduoi = $member->full_name;
+                        $log_profits->id_status = 5;
+                        $log_profits->money = $sd*10/100;
+                        $log_profits->save();
+                    }
+                }
+            }
+        }elseif($capdo =='DLBL')
+        {
+            /*  Tiền cộng cho chính đại lý đó khi trở thành DLBL  */
+            if($tongtien < $tien_dlpp)
+            {
+                
+                $log_profits = new Log_profits;
+                $log_profits->id_donhang = $request->id;
+                $log_profits->id_nguoinhan = $member->id;
+                $log_profits->name_nguoinhan = $member->full_name;
+                $log_profits->money = $tien_donhang_hientai*10/100;
+                $log_profits->id_status = 6;
+                $log_profits->save();
+                
+                if($mentor->code=='DLPP')
+                {
+                    $log_profits = new Log_profits;
+                    $log_profits->id_donhang = $request->id;
+                    $log_profits->id_nguoinhan = $mentor->id;
+                    $log_profits->name_nguoinhan = $mentor->full_name;
+                    $log_profits->id_capduoi = $member->id;
+                    $log_profits->name_capduoi = $member->full_name;
+                    $log_profits->money = $tien_donhang_hientai*10/100;
+                    $log_profits->id_status = 5;
+                    $log_profits->save();
+                }
+
+                
+            }else
+            {
+                if($tongtien >= $tien_dlpp)
+                {
+                    $member->code = 'DLPP';
+                    $member->save();
+                }
+                $sd = $tongtien-$tien_dlpp;
+                $log_profits = new Log_profits;
+                $log_profits->id_donhang = $request->id;
+                $log_profits->id_nguoinhan = $member->id;
+                $log_profits->name_nguoinhan = $member->full_name;
+                $log_profits->money = $sd*20/100;
+                $log_profits->id_status = 6;
+                $log_profits->save();
+
+                $log_profits = new Log_profits;
+                $log_profits->id_donhang = $request->id;
+                $log_profits->id_nguoinhan = $member->id;
+                $log_profits->name_nguoinhan = $member->full_name;
+                $log_profits->money = ($tien_dlpp - $tongtien_truoc)*10/100;
+                $log_profits->id_status = 6;
+                $log_profits->save();
+                if($mentor->code=='DLPP')
+                {
+                    $log_profits = new Log_profits;
+                    $log_profits->id_donhang = $request->id;
+                    $log_profits->id_nguoinhan = $mentor->id;
+                    $log_profits->name_nguoinhan = $mentor->full_name;
+                    $log_profits->id_capduoi = $member->id;
+                    $log_profits->name_capduoi = $member->full_name;
+                    $log_profits->money = ($tien_dlpp - $tongtien_truoc)*10/100;
+                    $log_profits->id_status = 5;
+                    $log_profits->save();
+                }
+            }
+        }else
+        {
+            $log_profits = new Log_profits;
+            $log_profits->id_donhang = $request->id;
+            $log_profits->id_nguoinhan = $member->id;
+            $log_profits->name_nguoinhan = $member->full_name;
+            $log_profits->money = $tien_donhang_hientai*20/100;
+            $log_profits->id_status = 6;
+            $log_profits->save();
+        }
+        
+        $order->update(['id_status'=>$request->status]);
+
+        
         if($request->status == 2){
             flash('Đã xác nhận đơn hàng hoàn thành.')->success();
         }else{
@@ -206,6 +353,7 @@ class OrdersController extends Controller
     {
         //
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -261,5 +409,23 @@ class OrdersController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function doanhThu(Request $request){
+        $data = Log_profits::select('log_profits.*','status.name as name_status','orders.mavd as mavd')
+        ->join('status','status.id','=','log_profits.id_status')
+        ->join('orders','orders.id','=','log_profits.id_donhang')
+        ->where(function($q) use ($request){
+            if($request->startdate !=''){
+                $start_format = Carbon::parse($request->startdate);
+                $start_format->format('Y-m-d');
+                $end_format = Carbon::parse($request->enddate);
+                $end_format->format('Y-m-d');
+                $q->whereBetween('log_profits.ngay_nhan', [$start_format, $end_format]);
+            } 
+        })->orderBy('log_profits.ngay_nhan', 'desc')
+        ->get();
+
+        return view('backend.orders.doanh-thu',compact('data'));
     }
 }

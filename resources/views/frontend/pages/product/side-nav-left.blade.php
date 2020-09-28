@@ -14,6 +14,9 @@
 				<li class="{{ Request::route()->getName() =='home.lich-su-mua-hang-dlcd' ? 'active' : null }}">
 					<a href="{{route('home.lich-su-mua-hang-dlcd')}}" title="{{ trans('message.lich_su_mua_hang_dai_ly') }}">{{ trans('message.lich_su_mua_hang_dai_ly') }}</a>
 				</li>
+				<li class="{{ Request::route()->getName() =='home.doanh-thu' ? 'active' : null }}">
+					<a href="{{route('home.doanh-thu')}}" title="{{ trans('message.lich_su_mua_hang_dai_ly') }}">{{ trans('message.doanh_thu') }}</a>
+				</li>
 			</ul>
 		</div>
 	</div>

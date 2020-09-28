@@ -96,6 +96,10 @@ Route::group(['middleware' => 'locale'], function () {
         Route::get('quan-ly-dai-ly','ManagerAccountController@quanLyDaiLy')->name('home.quan-ly-dai-ly');
 
         Route::get('chi-tiet-don-hang/{id}','ManagerAccountController@chiTietDonHang')->name('home.chi-tiet-don-hang');
+
+        Route::get('doanh-thu','ManagerAccountController@doanh_Thu')->name('home.doanh-thu');
+
+        Route::get('doanh-thul','ManagerAccountController@clear_mentor');
         
     });
 
@@ -147,6 +151,8 @@ Route::group(['namespace' => 'Admin'], function () {
         Route::resource('orders', 'OrdersController', ['except' => ['show']]);
 
         Route::get('xac-nhan-don-hang', 'OrdersController@xacNhanDonHang')->name('orders.xac-nhan');
+
+        Route::get('doanh-thu', 'OrdersController@doanhThu')->name('orders.doanh-thu');
 
 
         /*  Quản lý nạp tiền  */

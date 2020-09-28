@@ -41,7 +41,7 @@
                                         <div class="col-sm-6" style="margin-bottom: 10px">
                                             <label for="">Link giới thiệu</label>
                                             <div class="text-center" style="position: relative">                                        
-                                                <span id="divClipboard-page" style="color: #ff00eb" class="form-control" name="" >{{url('/')}}?{{@$member->link_aff}}</span>
+                                                <span id="divClipboard-page" style="color: #ff00eb" class="form-control" name="" >{{url('/')}}?ma-gioi-thieu={{@$member->link_aff}}</span>
                                                 <label style="position: absolute;top: 0px;right: 0px;background: #716c72;padding: 7px;cursor: pointer;color: #ffffff;" for="startDate" class="depotit">
                                                     <a href="" title="Copy" class="btn-copy" onclick="copyClipboard_Code('divClipboard-page')">Copy</a>
                                                 </label>
@@ -58,24 +58,24 @@
                                     </div>
                                     <div class="col-sm-6 form-group">
                                         <label for="">Họ tên</label>
-                                        <input value="{{@$member->full_name}}" class="form-control" name="">
+                                        <input value="{{@$member->full_name}}" readonly class="form-control" name="">
                                     </div>
                                     <div class="col-sm-6 form-group">
                                         <label for="">Email</label>
-                                        <input value="{{@$member->email}}" class="form-control" name="">
+                                        <input value="{{@$member->email}}" readonly class="form-control" name="">
                                     </div>
                                     <div class="col-sm-6 form-group">
                                         <label for="">Số điện thoại</label>
-                                        <input value="{{@$member->phone}}" class="form-control" name="">
+                                        <input value="{{@$member->phone}}" readonly class="form-control" name="">
                                     </div>
                                     <div class="col-sm-6 form-group">
                                         <label for="">Địa chỉ</label>
-                                        <input value="{{@$member->address}}" class="form-control" name="">
+                                        <input value="{{@$member->address}}" readonly class="form-control" name="">
                                     </div>
                                     <div class="col-sm-6 form-group">
                                         <?php $gt = App\Models\Member::where('id',$member->id)->first(); ?>
                                         <label for="">Người giới thiệu mở tài khoản</label>
-                                        <input value="{{@$gt->full_name}}" class="form-control" name="">
+                                        <input value="{{@$gt->full_name}}" readonly class="form-control" name="">
                                     </div>
                                     <div class="col-sm-6 form-group">
                                         <label for="">Số tài khoản ngân hàng</label>
@@ -83,19 +83,19 @@
                                     </div>
                                     <div class="col-sm-6 form-group">
                                         <label for="">Tên chủ tài khoản</label>
-                                        <input value="{{@$member->bank_account_name}}" class="form-control" name="">
+                                        <input value="{{@$member->bank_account_name}}" readonly class="form-control" name="">
                                     </div>
                                     <div class="col-sm-6 form-group">
                                         <label for="">Ngân hàng</label>
-                                        <input value="{{@$member->bank_name}}" class="form-control" name="">
+                                        <input value="{{@$member->bank_name}}" readonly class="form-control" name="">
                                     </div>
                                     <div class="col-sm-6 form-group">
                                         <label for="">Địa chỉ ngân hàng</label>
-                                        <input value="{{@$member->bank_address}}" class="form-control" name="">
+                                        <input value="{{@$member->bank_address}}" readonly class="form-control" name="">
                                     </div>
                                     <div class="col-sm-6 form-group">
                                         <label for="">Số chứng minh nhân dân(thẻ căn cước)</label>
-                                        <input value="{{@$member->so_cmnd}}" class="form-control" name="">
+                                        <input value="{{@$member->so_cmnd}}" readonly class="form-control" name="">
                                     </div>
                                     <div class="col-sm-6 ">
                                         <label for="">Ảnh chứng minh thư(thẻ căn cước) mặt trước</label>

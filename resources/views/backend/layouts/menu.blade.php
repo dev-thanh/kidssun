@@ -39,6 +39,9 @@
         <li class="{{ Request::segment(2) === 'orders' ? 'active' : null }}">
             <a href="{{ route('orders.index') }}"><i class="fa fa-circle-o"></i> Đơn hàng</a>
         </li>
+        <li class="{{ Request::segment(2) === 'orders' ? 'active' : null }}">
+            <a href="{{ route('orders.doanh-thu') }}"><i class="fa fa-circle-o"></i> Doanh thu</a>
+        </li>
         <li class="{{ Request::segment(2) === 'member' ? 'active' : null }}">
             <a href="{{ route('member.index') }}"><i class="fa fa-circle-o"></i> Danh sách thành viên</a>
         </li>
