@@ -609,6 +609,7 @@ class ComposerStaticInit76b2f118b7e19c28354b52ec36045413
         'App\\Models\\Contact' => __DIR__ . '/../..' . '/app/Models/Contact.php',
         'App\\Models\\Customer' => __DIR__ . '/../..' . '/app/Models/Customer.php',
         'App\\Models\\Image' => __DIR__ . '/../..' . '/app/Models/Image.php',
+        'App\\Models\\Log_profits' => __DIR__ . '/../..' . '/app/Models/Log_profits.php',
         'App\\Models\\Member' => __DIR__ . '/../..' . '/app/Models/Member.php',
         'App\\Models\\Menu' => __DIR__ . '/../..' . '/app/Models/Menu.php',
         'App\\Models\\MenuGroup' => __DIR__ . '/../..' . '/app/Models/MenuGroup.php',

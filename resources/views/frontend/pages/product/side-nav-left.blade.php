@@ -8,9 +8,7 @@
 				<li class="{{ Request::route()->getName() =='home.quan-ly-dai-ly' ? 'active' : null }}">
 					<a href="{{route('home.quan-ly-dai-ly')}}" title="{{ trans('message.quan_ly_dai_ly') }}">{{ trans('message.quan_ly_dai_ly') }}</a>
 				</li>
-				<li class="{{ Request::route()->getName() =='home.lich-su-mua-hang' ? 'active' : null }}">
-					<a href="{{route('home.lich-su-mua-hang')}}" title="{{ trans('message.lich_su_mua_hang') }}">{{ trans('message.lich_su_mua_hang') }}</a>
-				</li>
+				
 				<li class="{{ Request::route()->getName() =='home.lich-su-mua-hang-dlcd' ? 'active' : null }}">
 					<a href="{{route('home.lich-su-mua-hang-dlcd')}}" title="{{ trans('message.lich_su_mua_hang_dai_ly') }}">{{ trans('message.lich_su_mua_hang_dai_ly') }}</a>
 				</li>
@@ -45,6 +43,9 @@
 			<ul>
 				<li class="{{ Request::route()->getName() =='home.thong-tin-tai-khoan' ? 'active' : null }}">
 					<a href="{{route('home.thong-tin-tai-khoan')}}" title="{{ trans('message.thong_tin_tai_khoan') }}">{{ trans('message.thong_tin_tai_khoan') }}</a>
+				</li>
+				<li class="{{ Request::route()->getName() =='home.lich-su-mua-hang' ? 'active' : null }}">
+					<a href="{{route('home.lich-su-mua-hang')}}" title="{{ trans('message.lich_su_mua_hang') }}">{{ trans('message.lich_su_mua_hang') }}</a>
 				</li>
 				<li class="{{ Request::route()->getName() =='home.tai-khoan-ngan-hang' ? 'active' : null }}">
 					<a href="{{route('home.tai-khoan-ngan-hang')}}" title="{{ trans('message.tai_khoan_ngan_hang') }}">{{ trans('message.tai_khoan_ngan_hang') }}</a>

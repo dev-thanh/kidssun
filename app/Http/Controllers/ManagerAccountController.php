@@ -575,16 +575,16 @@ class ManagerAccountController extends Controller
     }
 
     public function lichSuMuaHangDaiLyCapDuoi(Request $request){
-    	$user_name = Auth::guard('customer')->user()->user_name;
+    	$member_id = Auth::guard('customer')->user()->id;
 
-    	$thanhvien = Member::where('mentor',$user_name)->get();
+    	$thanhvien = Member::where('mentor',$member_id)->get();
 
     	$all_status = Status::where('type',1)->get();
     	$member_id_array =[];
     	foreach ($thanhvien as $value) {
     		array_push($member_id_array,$value->id);
     	}
-    	//dd($member_id_array);
+
     	$orders = Order::select('orders.*','status.name as name_status','status.name_en as nameen_status','member.full_name as full_name','member.link_aff as link_aff')
 	    	->where(function($q) use ($request,$member_id_array){
 			    if($request->mentor ==''){
@@ -657,7 +657,6 @@ class ManagerAccountController extends Controller
     public function quanLyDaiLy(Request $request){
     	$member_id = Auth::guard('customer')->user()->id;
 
-    	//$thanhvien = Member::where('mentor',$member_id)->get();
     	if($request->daily !=''){
 
 	    	$thanhvien = Member::where('id',$request->daily)->get();
@@ -682,52 +681,25 @@ class ManagerAccountController extends Controller
 
     public function doanh_Thu(Request $request){
         $member_id = Auth::guard('customer')->user()->id;
-        // $orders = Order::select('orders.*','status.name as name_status','status.name_en as nameen_status')->where('id_member',$member_id)
-        //     ->join('status','status.id','=','orders.id_status')
-        //     ->where(function($q) use ($request) {
-        //         if($request->start_date !=''){
-        //             $start_format = Carbon::parse($request->start_date);
-        //             $start_format->format('Y-m-d');
-        //             $end_format = Carbon::parse($request->end_date);
-        //             $end_format->format('Y-m-d');
-        //             $q->whereBetween('orders.created_at', [$start_format, $end_format]);
-        //         }           
-        //         if($request->status !=''){
-        //             $q->where('orders.id_status',$request->status);
-        //         }
-        //     })->orderBy('orders.created_at', 'desc')->get();
 
-        //     $all_status = Status::where('type',1)->get();
-
-        $data = Log_profits::select('log_profits.*','status.name as name_status','orders.mavd as mavd')
+        $data = Log_profits::select('log_profits.*','status.name as name_status','status.name_en as name_status_en','orders.mavd as mavd')
         ->join('status','status.id','=','log_profits.id_status')
         ->join('orders','orders.id','=','log_profits.id_donhang')
         ->where(function($q) use ($request,$member_id){
-            $q->where('id_nguoinhan',$member_id);
-            if($request->startdate !=''){
-                $start_format = Carbon::parse($request->startdate);
+            $q->where([
+                'id_nguoinhan' => $member_id,
+                'active' => 1,
+            ]);
+            if($request->start_date !=''){
+                $start_format = Carbon::parse($request->start_date);
                 $start_format->format('Y-m-d');
-                $end_format = Carbon::parse($request->enddate);
+                $end_format = Carbon::parse($request->end_date);
                 $end_format->format('Y-m-d');
                 $q->whereBetween('log_profits.ngay_nhan', [$start_format, $end_format]);
             } 
         })->orderBy('log_profits.ngay_nhan', 'desc')
         ->get();
-        //dd($data);
-        return view('frontend.pages.account.doanh-thu',compact('data'));
-    }
-    public function clear_mentor(){
-        'KS'.Carbon::now()->format('dmYHis');
-        $member = Member::all();
-        foreach ($member as $value) {
-            $mentor = $value->link_aff;
-            // if($mentor !=''){
-                
 
-                $value->update(['link_aff'=>'KS'.$value->id.Carbon::now()->format('dmYHis')]);
-                
-            // }
-        }
-        return 'ok';
+        return view('frontend.pages.account.doanh-thu',compact('data'));
     }
 }

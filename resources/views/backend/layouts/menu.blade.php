@@ -28,7 +28,24 @@
     </ul>
 </li>
 
-<li class="treeview {{ Request::segment(2) === 'orders' || Request::segment(2) === 'recharge' || Request::segment(2) === 'member' ? 'active'  : null }}">
+<li class="treeview {{ Request::route()->getName() == 'member.index' || Request::route()->getName() == 'recharge.index' ? 'active'  : null }}">
+    <a href="#">
+        <i class="fa fa-building" aria-hidden="true"></i> <span>Đại lý</span>
+        <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+        </span>
+    </a>
+    <ul class="treeview-menu">
+        <li class="{{ Request::route()->getName() == 'member.index' ? 'active' : null }}">
+            <a href="{{ route('member.index') }}"><i class="fa fa-circle-o"></i> Danh sách thành viên</a>
+        </li>
+        <li class="{{ Request::route()->getName() == 'recharge.index' ? 'active' : null }}">
+            <a href="{{ route('recharge.index') }}"><i class="fa fa-circle-o"></i> Danh sách chuyển tiền</a>
+        </li>
+    </ul>
+</li>
+
+<li class="treeview {{ Request::route()->getName() == 'orders.index' || Request::route()->getName() == 'orders.doanh-thu' || Request::route()->getName() == 'orders.bang-luong' ? 'active'  : null }}">
     <a href="#">
         <i class="fa fa-building" aria-hidden="true"></i> <span>Quản lý doanh thu</span>
         <span class="pull-right-container">
@@ -36,18 +53,16 @@
         </span>
     </a>
     <ul class="treeview-menu">
-        <li class="{{ Request::segment(2) === 'orders' ? 'active' : null }}">
+        <li class="{{ Request::route()->getName() == 'orders.index' ? 'active' : null }}">
             <a href="{{ route('orders.index') }}"><i class="fa fa-circle-o"></i> Đơn hàng</a>
         </li>
-        <li class="{{ Request::segment(2) === 'orders' ? 'active' : null }}">
+        <li class="{{  Request::route()->getName() == 'orders.doanh-thu' ? 'active' : null }}">
             <a href="{{ route('orders.doanh-thu') }}"><i class="fa fa-circle-o"></i> Doanh thu</a>
         </li>
-        <li class="{{ Request::segment(2) === 'member' ? 'active' : null }}">
-            <a href="{{ route('member.index') }}"><i class="fa fa-circle-o"></i> Danh sách thành viên</a>
+        <li class="{{ Request::route()->getName() == 'orders.bang-luong' ? 'active' : null }}">
+            <a href="{{ route('orders.bang-luong') }}"><i class="fa fa-circle-o"></i> Bảng lương</a>
         </li>
-        <li class="{{ Request::segment(2) === 'recharge' ? 'active' : null }}">
-            <a href="{{ route('recharge.index') }}"><i class="fa fa-circle-o"></i> Danh sách chuyển tiền</a>
-        </li>
+        
     </ul>
 </li>
 

@@ -131,4 +131,6 @@ return [
     'mua_hang' => 'Mua hàng',
     'so_cmt' => 'Số chứng minh nhân dân(thẻ căn cước).',
     'chua_xac_nhan' => 'Tài khoản chưa được xác nhận',
+    'hoa_hong_tu' => 'Hoa hồng từ',
+    'ngay_nhan' => 'Ngày nhận',
 ];

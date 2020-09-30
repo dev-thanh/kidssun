@@ -5,6 +5,21 @@
 ?>
 @extends('frontend.master')
 @section('main')
+	<style type="text/css" media="screen">
+		#table1_paginate{
+			float: right;
+			margin-left: -30px
+		}
+		table.dataTable thead .sorting_asc:after,table.dataTable thead .sorting:after {
+		    content: "";
+		}
+		#table1_paginate .pagination a{
+			border-radius: unset
+		}
+		#table1_wrapper{
+			display: unset
+		}
+	</style>
 	<div class="breadcrumbs">
 
 		<div class="breadcrumbs-content">
@@ -50,12 +65,17 @@
 									<div class="content-header">
 										<div class="advanced-search-block advanced-search-block-2">
 											<form class="advanced-search-form">
-												<div class="form-content">
-													
+												<div class="form-content" style="align-items: flex-end">
 													<div class="form-group">
+														<!-- <label class="input-group-addon" for="startDate">
+							                                Từ ngày
+							                            </label> -->
 														<input type="text" name="start_date" value="{{@$start_date}}" class="form-control search-start" readonly id="startDate" placeholder="{{ trans('message.tu_ngay') }}">
 													</div>
 													<div class="form-group">
+														<!-- <label class="input-group-addon" for="startDate">
+							                                Đến ngày
+							                            </label> -->
 														<input type="text" name="end_date" value="{{@$end_date}}" class="form-control search-input" readonly id="endDate" placeholder="{{ trans('message.den_ngay') }}">
 													</div>
 													<div class="form-group">
@@ -69,40 +89,45 @@
 									</div>
 
 									<div class="table-content">
-										<table border="1" class="products-table">
+										<table id="table1" border="1" class="products-table">
 											<thead>
 												<tr>
 													<th>STT</th>
-						                            <th>Doanh thu từ</th>
-						                            <th>Mã đơn hàng</th>
-						                            <th>Số tiền</th>
-						                            <th>Ngày nhận</th>
+						                            <th>{{ trans('message.hoa_hong_tu') }}</th>
+						                            <th>{{ trans('message.ma_don_hang') }}</th>
+						                            <th>{{ trans('message.so_tien') }}</th>
+						                            <th>{{ trans('message.ngay_nhan') }}</th>
 						                            <th>Note</th>
 												</tr>
 											</thead>
 											<tbody>
+												<?php $tong=0; ?>
 												@foreach($data as $k => $item)
 												<tr>
 													<td>{{ $loop->index +1 }}</td>
-						                            <td>
+						                            <td>@if(app()->getLocale() == 'vi')
 						                                {{ $item->name_capduoi !='' ? $item->name_capduoi : 'Đơn hàng' }}
+						                                @else
+						                                {{ $item->name_capduoi !='' ? $item->name_capduoi : trans('message.don_hang') }}
+						                                @endif
 						                            </td>
 						                            <td>{{ $item->mavd }}</td>
-						                            <td>{{number_format($item->money, 0, '.', '.')}}đ</td>
-						                            <td>{{ $item->ngay_nhan }}</td>
-						                            <td>{{ $item->name_status }}</td>
+						                            <td>{{number_format($item->money, 0, '.', '.')}} đ</td>
+						                            <td>{{format_datetime($item->ngay_nhan,'d-m-Y')}}</td>
+						                            <td>{{ app()->getLocale() == 'vi' ? $item->name_status : $item->name_status_en }}</td>
 												</tr>
+												<?php $tong+= $item->money; ?>
 												@endforeach
 											</tbody>
 										</table>
 									</div>
 
-									<!-- <div class="table-footer">
+									<div class="table-footer">
 										<div class="product-total">
-											<label>Tổng:</label>
-											<span>600.000 vnđ</span>
+											<label>{{ trans('message.tong') }}:</label>
+											<span>{!! number_format($tong, 0, '.', '.')!!} đ</span>
 										</div>
-									</div> -->
+									</div>
 								</div>
 							</div>
 						</article>
@@ -123,45 +148,7 @@
 				<div class="popup-content">
 					<div class="products-content">
 						<div class="table-content order-detail-content center">
-							<!-- <table border="1" class="products-table">
-								<thead>
-									<tr>
-										<th>STT</th>
-										<th>Tên sản phẩm</th>
-										<th>Số lượng</th>
-										<th>Thành tiền</th>
-										<th>Ngày mua</th>
-										<th>Trạng thái</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>
-											<span>01</span>
-										</td>
-										<td>
-											<a href="#" title="Sản phẩm" class="product-link">
-												<span>Sản phẩm 01</span>
-											</a>
-										</td>
-										<td>
-											<span>01</span>
-										</td>
-										<td>
-											<div class="product-prices">
-												<span class="price">200.000đ</span>
-											</div>
-										</td>
-										<td>
-											<span>18/09/2020</span>
-										</td>
-										<td class="status">
-											<span>Chờ xác nhận</span>
-										</td>
-									</tr>
-									
-								</tbody>
-							</table> -->
+							
 						</div>
 					</div>
 				</div>
@@ -268,5 +255,25 @@
 		    //passing 1.jquery form object, 2.start date dom Id, 3.end date dom Id
 		    bindDateRangeValidation($("#form"), 'startDate', 'endDate');
 		});
+		$(document).ready(function() {
+            $('#table1').DataTable( {      
+                 "searching": false,
+                 "paging": true, 
+                 "info": false,         
+                 "lengthChange":false ,
+                 language: {
+			        paginate: {
+			            previous: '‹',
+			            next:     '›'
+			        },
+			        aria: {
+			            paginate: {
+			                previous: 'Previous',
+			                next:     'Next'
+			            }
+			        }
+			    }
+            } );
+        });
 	</script>
 @stop

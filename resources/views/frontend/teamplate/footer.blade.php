@@ -138,7 +138,7 @@
                                     <span class="user_name-error eror-ms"></span>
                                 </div>  
                                 <div class="form-group form-no-input">
-                                    <input class="form-control" type="text" name="mentor_code" value="{{@$magioithieu}}">
+                                    <input class="form-control" type="text" readonly="" name="mentor_code" value="{{@$magioithieu}}">
                                     <span class="mentor_code-error eror-ms"></span>
                                 </div>  
                                 <div class="form-group">

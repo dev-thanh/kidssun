@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use DataTables;
 use App\Models\Member;
 use App\Models\Rank;
 use App\Models\User;
@@ -11,6 +12,8 @@ use App\Models\Order;
 use App\Models\Order_detail;
 use App\Models\Rechage;
 use App\Models\Taikhoan_khachhang;
+use App\Models\Log_profits;
+use App\Models\BangLuong;
 use Carbon\Carbon;
 use Auth;
 
@@ -21,6 +24,34 @@ class MemberController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    protected function module(){
+        return [
+            'name' => 'Bảng lương',
+            'module' => 'orders',
+            'table' =>[
+                
+                'link_aff' => [
+                    'title' => 'Mã tài khoản', 
+                    'with' => '',
+                ],
+
+                
+                'full_name' => [
+                    'title' => 'Họ và tên', 
+                    'with' => '',
+                ],
+                'code' => [
+                    'title' => 'Cấp bậc', 
+                    'with' => '',
+                ],
+                'money' => [
+                    'title' => 'Tổng lương', 
+                    'with' => '',
+                ],
+                
+            ]
+        ];
+    }
     public function index(Request $request)
     {
         if($request->startdate){
@@ -211,5 +242,96 @@ class MemberController extends Controller
         ->get();
 
         return view('frontend.pages.account.chi-tiet-don-hang',compact('order_details'));
+    }
+
+    public function bang_Luong(Request $request){
+            if(!$request->month){
+                $month = date('m');
+            }else{
+                $month = $request->month;
+            }
+            if(!$request->year){
+                $year = date('yy');
+            }else{
+                $year = $request->year;
+            }
+            
+            $bangluong = BangLuong::select('bang_luong.money','member.*')->where('bang_luong.luong_thang',$year.'-'.$month)
+            ->join('member','member.id','=','bang_luong.id_daily')
+            ->get();
+            
+            $array_id = $bangluong->pluck('id')->toArray();
+            $luong = Log_profits::select('member.id','member.full_name as full_name','member.code as code','member.link_aff as link_aff')
+                // ->join('status','status.id','=','log_profits.id_status')
+                ->join('member','member.id','=','log_profits.id_nguoinhan')
+                ->where(function($q) use ($request,$month,$year,$array_id){
+
+                    $q->whereNotIn('id_nguoinhan',$array_id);
+                    
+                    $start_format = $year.'-'.$month.'-01';
+                   
+                    $end_format = $year.'-'.$month.'-31';
+
+                    $q->whereBetween('log_profits.ngay_nhan', [$start_format, $end_format]);
+                   
+                })->orderBy('log_profits.ngay_nhan', 'desc')->distinct()
+                ->get();
+        $data['module'] = $this->module();
+        $data['luong'] = $luong;
+        $data['bangluong'] = $bangluong;
+        return view("backend.orders.bang-luong", $data);
+        //return view('backend.orders.bang-luong',compact('data'));
+    }
+
+    public function chi_Tiet_Luong(Request $request, $id){
+        //dd($request->all());
+        if($request->year && $request->month){
+            $month = $request->year.'-'.$request->month;
+        }else{
+            $month = Carbon::now()->format('Y-m');
+        }
+
+        $member_id = $id;
+
+        $member_info = Member::find($member_id);
+        $data = Log_profits::select('log_profits.*','status.name as name_status','orders.mavd as mavd')
+        ->join('status','status.id','=','log_profits.id_status')
+        ->join('orders','orders.id','=','log_profits.id_donhang')
+        ->where(function($q) use ($member_id,$month){
+
+            $q->where([
+                'id_nguoinhan' => $member_id,
+                // 'active' => 0
+            ]);
+           
+            $start_format = $month.'-01';
+           
+            $end_format = $month.'-31';
+
+            $q->whereBetween('log_profits.ngay_nhan', [$start_format, $end_format]);
+           
+        })->orderBy('log_profits.ngay_nhan', 'desc')
+        ->get();
+
+        $luong_thang_hien_tai = BangLuong::where(['id_daily'=>$member_id,'luong_thang'=>$month])->first();
+        
+         return view('backend.member.chi-tiet-luong',compact('data','member_id','luong_thang_hien_tai','member_info'));
+    }
+
+    public function xac_Nhan_Luong(Request $request){
+        //dd($request->all());
+        $bangluong = new BangLuong();
+        $bangluong->id_daily = $request->id_daily;
+        $bangluong->luong_thang = date('yy').'-'.date('m');
+        $bangluong->money = $request->money;
+        $bangluong->bu_tru = $request->bu_tru;
+        $bangluong->noidung = $request->noi_dung;
+        $bangluong->save();
+
+        Log_profits::whereIn('id',$request->checked_id)->update(['active'=>1]);
+
+        flash('Đã tính lương thành công cho đại lý');
+        return back();
+
     }
 }

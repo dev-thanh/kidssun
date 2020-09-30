@@ -6,7 +6,7 @@
 @extends('backend.layouts.app')
 @section('controller','Doanh thu')
 @section('action','Danh sách')
-@section('controller_route', route('member.index'))
+@section('controller_route', route('orders.doanh-thu'))
 @section('content')
     <div class="content">
         <div class="clearfix"></div>
@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 <div class="col-sm-4">
-                    <button type="submit" class="btn btn-sm btn-success" id="filter_date" data-href="{{route('member.index')}}">Tìm</button>
+                    <button type="submit" class="btn btn-sm btn-success" id="filter_date" data-href="{{route('orders.doanh-thu')}}">Tìm</button>
                 </div>
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
@@ -71,7 +71,7 @@
                             </td>
                             <td>{{ $item->mavd }}</td>
                             <td>{{number_format($item->money, 0, '.', '.')}}đ</td>
-                            <td>{{ $item->ngay_nhan }}</td>
+                            <td>{{format_datetime($item->ngay_nhan,'d-m-Y')}}</td>
                             <td>{{ $item->name_status }}</td>
                             
                             <!-- <td>

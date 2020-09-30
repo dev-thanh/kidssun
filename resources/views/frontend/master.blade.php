@@ -40,6 +40,8 @@
 
 	<link rel="stylesheet" type="text/css" title="" href="{{ __BASE_URL__ }}/css/reponsive.css">
 
+	<link rel="stylesheet" href="{{ url('public/backend/plugins/datatables/dataTables.bootstrap.css') }}">
+
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
 
 	<script type="text/javascript" src="{{ __BASE_URL__ }}/js/jquery.min.js"></script> 
@@ -111,6 +113,10 @@
 		<script type="text/javascript" src="{{ __BASE_URL__ }}/js/toastr.min.js"></script>
 
 		<script src="{{ __BASE_URL__ }}/js/moment.min.js"></script>
+
+		<script src="{{ url('public/backend/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+
+    	<script src="{{ url('public/backend/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>
 

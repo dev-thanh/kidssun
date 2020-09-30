@@ -98,8 +98,6 @@ Route::group(['middleware' => 'locale'], function () {
         Route::get('chi-tiet-don-hang/{id}','ManagerAccountController@chiTietDonHang')->name('home.chi-tiet-don-hang');
 
         Route::get('doanh-thu','ManagerAccountController@doanh_Thu')->name('home.doanh-thu');
-
-        Route::get('doanh-thul','ManagerAccountController@clear_mentor');
         
     });
 
@@ -154,7 +152,10 @@ Route::group(['namespace' => 'Admin'], function () {
 
         Route::get('doanh-thu', 'OrdersController@doanhThu')->name('orders.doanh-thu');
 
+        Route::get('bang-luong', 'MemberController@bang_Luong')->name('orders.bang-luong');
 
+        Route::get('chi-tiet-luong/{id}', 'MemberController@chi_Tiet_Luong')->name('orders.chi-tiet-luong');
+        Route::post('xac-nhan-luong', 'MemberController@xac_Nhan_Luong')->name('orders.xac-nhan-luong');
         /*  Quản lý nạp tiền  */
         Route::resource('recharge', 'RechargeController', ['except' => ['show']]);
         Route::post('recharge/postMultiDel', ['as' => 'recharge.postMultiDel', 'uses' => 'RechargeController@deleteMuti']);

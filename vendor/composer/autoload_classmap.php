@@ -64,6 +64,7 @@ return array(
     'App\\Models\\Contact' => $baseDir . '/app/Models/Contact.php',
     'App\\Models\\Customer' => $baseDir . '/app/Models/Customer.php',
     'App\\Models\\Image' => $baseDir . '/app/Models/Image.php',
+    'App\\Models\\Log_profits' => $baseDir . '/app/Models/Log_profits.php',
     'App\\Models\\Member' => $baseDir . '/app/Models/Member.php',
     'App\\Models\\Menu' => $baseDir . '/app/Models/Menu.php',
     'App\\Models\\MenuGroup' => $baseDir . '/app/Models/MenuGroup.php',

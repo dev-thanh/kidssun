@@ -80,9 +80,9 @@
 											<thead>
 												<tr>
 													<th>STT</th>
-													<th>{{ trans('message.ngay_tham_gia') }}</th>
 													<th>{{ trans('message.ho_ten') }}</th>
 													<th>{{ trans('message.so_dien_thoai') }}</th>
+													<th>{{ trans('message.ngay_tham_gia') }}</th>
 													<th>{{ trans('message.doanh_thu') }}</th>
 												</tr>
 											</thead>
@@ -96,14 +96,15 @@
 													<td>
 														<span>{{$k+1}}</span>
 													</td>
-													<td>
-														<span>{{format_datetime($item->created_at,'d/m/Y')}}</span>
-													</td>
+													
 													<td>
 														<span>{{$item->full_name}}</span>
 													</td>
 													<td>
 														<a href="tle: 09xxxx">{{$item->phone}}</a>
+													</td>
+													<td>
+														<span>{{format_datetime($item->created_at,'d/m/Y')}}</span>
 													</td>
 													<td class="price">
 														<span>{!! number_format(@$dt, 0, '.', '.')!!} đ</span>
