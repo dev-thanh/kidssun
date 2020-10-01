@@ -34,7 +34,7 @@
                 </br>
                 @include('flash::message')
                 <div class="clear-fix">
-                    <h3 style="background: #fe7676;width: fit-content;padding: 5px 10px;border-radius: 5px">Danh sách chưa tính lương</h3>
+                    <h3 style="background: #fe7676;padding: 5px 10px;border-radius: 3px;text-align: center">Danh sách chưa tính lương</h3>
                         <form>
                             <input type="hidden" id="url_bang_luong" value="{{route('orders.bang-luong')}}">
                             <table id="table1" class="table table-bordered table-striped">
@@ -78,7 +78,7 @@
                
 
                 <div>
-                    <h3 style="background: #aafe76;width: fit-content;padding: 5px 10px;border-radius: 5px">Đã hoàn thành</h3>
+                    <h3 style="background: #aafe76;padding: 5px 10px;border-radius: 3px;text-align: center">Đã hoàn thành</h3>
                     <form>
                         <table id="table2" class="table table-bordered table-striped">
                         <thead>

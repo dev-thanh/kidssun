@@ -198,4 +198,6 @@
             </div>
         </div> <!--main bar-->
     </div> <!--header bar-->
+    <input type="hidden" class="redirect-url-products" value="{{route('home.list-products')}}">
+    <input type="hidden" id="get_url_path" value="{{url('/')}}">
 </header> <!--header-->

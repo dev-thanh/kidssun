@@ -133,4 +133,5 @@ return [
     'chua_xac_nhan' => 'Account has not been confirmed',
     'hoa_hong_tu' => 'Rose from',
     'ngay_nhan' => 'Received date',
+    'bang_luong' => 'Payroll',
 ];

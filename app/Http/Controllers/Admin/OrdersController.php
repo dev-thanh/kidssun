@@ -88,11 +88,7 @@ class OrdersController extends Controller
             ->join('member','member.id','=','orders.id_member')
             ->orderBy('orders.created_at', 'desc')->get();
 
-
-
-
-
-            //$list_products = Products::orderBy('created_at', 'DESC')->get();
+            
             return Datatables::of($list_order)
                 ->addColumn('checkbox', function ($data) {
                     return '<input type="checkbox" name="chkItem[]" value="' . $data->id . '">';
@@ -188,6 +184,7 @@ class OrdersController extends Controller
 
             /*  Tiền cộng cho chính đại lý đó khi nạp hơn 6tr  */
             if($tongtien >= $tien_dlbl && $tongtien < $tien_dlpp){
+                
                 $member->code = 'DLBL';
                 $member->save();
                 if($tongtien > $tien_dlbl){
@@ -203,7 +200,7 @@ class OrdersController extends Controller
                     
                 }
             }
-
+           
             if($tongtien >= $tien_dlpp){
                 $member->code = 'DLPP';
                 $member->save();
@@ -248,31 +245,15 @@ class OrdersController extends Controller
                     $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
                     if($tongtien <= $tien_dlbl){
                         $log_profits->money = $tien_donhang_hientai*$hhm_dlbl/100;
-                        $log_profits->save();
                     }else{
-                        $log_profits->money = ($tongtien-$tien_donhang_hientai)*$hhm_dlbl/100;
-                        $log_profits->save();
+                        $log_profits->money = ($tien_dlbl-$tongtien_truoc)*$hhm_dlbl/100;
                     }
+                    $log_profits->save();
 
                 }else{
 
-                    $log_profits = new Log_profits;
-                    $log_profits->id_donhang = $request->id;
-                    $log_profits->id_nguoinhan = $mentor->id;
-                    $log_profits->name_nguoinhan = $mentor->full_name;
-                    $log_profits->id_capduoi = $member->id;
-                    $log_profits->name_capduoi = $member->full_name;
-                    $log_profits->id_status = 5;
-                    $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
 
                     if($tongtien <= $tien_dlbl){
-                        $log_profits->money = $tien_donhang_hientai*20/100;
-                        $log_profits->save();
-                    }else{
-                        $sd = $tongtien-$tien_dlbl;
-                        $log_profits->money = ($tongtien-$tien_donhang_hientai)*$hhtk_dlpp/100;
-                        $log_profits->save();
-                        /*  Tiền cộng cho dlpp khi ctv trở thành dlbl  */
                         $log_profits = new Log_profits;
                         $log_profits->id_donhang = $request->id;
                         $log_profits->id_nguoinhan = $mentor->id;
@@ -280,7 +261,53 @@ class OrdersController extends Controller
                         $log_profits->id_capduoi = $member->id;
                         $log_profits->name_capduoi = $member->full_name;
                         $log_profits->id_status = 5;
-                        $log_profits->money = $sd*$hhtk_dlpp/100;
+                        $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
+                        $log_profits->money = $tien_donhang_hientai*20/100;
+                        $log_profits->save();
+                    }elseif($tongtien > $tien_dlbl && $tongtien <= $tien_dlpp){
+                        $log_profits = new Log_profits;
+                        $log_profits->id_donhang = $request->id;
+                        $log_profits->id_nguoinhan = $mentor->id;
+                        $log_profits->name_nguoinhan = $mentor->full_name;
+                        $log_profits->id_capduoi = $member->id;
+                        $log_profits->name_capduoi = $member->full_name;
+                        $log_profits->id_status = 5;
+                        $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
+                        $log_profits->money = ($tien_dlbl-$tongtien_truoc)*$hhtk_dlpp/100;
+                        $log_profits->save();
+                        /*  Tiền cộng cho dlpp khi ctv trở thành dlbl  */
+                        $sd = $tongtien-$tien_dlbl;
+                        $log_profits = new Log_profits;
+                        $log_profits->id_donhang = $request->id;
+                        $log_profits->id_nguoinhan = $mentor->id;
+                        $log_profits->name_nguoinhan = $mentor->full_name;
+                        $log_profits->id_capduoi = $member->id;
+                        $log_profits->name_capduoi = $member->full_name;
+                        $log_profits->id_status = 5;
+                        $log_profits->money = $sd*$hhtk_dlbl/100;
+                        $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
+                        $log_profits->save();
+                    }else{
+                        $log_profits = new Log_profits;
+                        $log_profits->id_donhang = $request->id;
+                        $log_profits->id_nguoinhan = $mentor->id;
+                        $log_profits->name_nguoinhan = $mentor->full_name;
+                        $log_profits->id_capduoi = $member->id;
+                        $log_profits->name_capduoi = $member->full_name;
+                        $log_profits->id_status = 5;
+                        $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
+                        $log_profits->money = ($tien_dlbl-$tongtien_truoc)*$hhtk_dlpp/100;
+                        $log_profits->save();
+                        /*  Tiền cộng cho dlpp khi ctv trở thành dlbl  */
+                        $sd = $tongtien-$tien_dlbl;
+                        $log_profits = new Log_profits;
+                        $log_profits->id_donhang = $request->id;
+                        $log_profits->id_nguoinhan = $mentor->id;
+                        $log_profits->name_nguoinhan = $mentor->full_name;
+                        $log_profits->id_capduoi = $member->id;
+                        $log_profits->name_capduoi = $member->full_name;
+                        $log_profits->id_status = 5;
+                        $log_profits->money = ($tien_dlpp-$tien_dlbl)*$hhtk_dlbl/100;
                         $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
                         $log_profits->save();
                     }
@@ -457,31 +484,52 @@ class OrdersController extends Controller
     }
 
     public function doanhThu(Request $request){
-        $data = Log_profits::select('log_profits.*','status.name as name_status','orders.mavd as mavd')
-        ->join('status','status.id','=','log_profits.id_status')
-        ->join('orders','orders.id','=','log_profits.id_donhang')
-        ->where(function($q) use ($request){
-            if($request->startdate !=''){
-                $start_format = Carbon::parse($request->startdate);
-                $start_format->format('Y-m-d');
-                $end_format = Carbon::parse($request->enddate);
-                $end_format->format('Y-m-d');
-                $q->whereBetween('log_profits.ngay_nhan', [$start_format, $end_format]);
-            } 
-        })->orderBy('log_profits.ngay_nhan', 'desc')
-        ->get();
+        if (request()->ajax()) {
 
-        return view('backend.orders.doanh-thu',compact('data'));
+            $list_log = Log_profits::select('log_profits.*','status.name as name_status','orders.mavd as mavd')
+            ->join('status','status.id','=','log_profits.id_status')
+            ->join('orders','orders.id','=','log_profits.id_donhang')
+            ->where(function($q) use ($request){
+                if($request->start_date !=''){
+                    $start_format = Carbon::parse($request->start_date);
+                    $start_format->format('Y-m-d');
+                    $end_format = Carbon::parse($request->end_date);
+                    $end_format->format('Y-m-d');
+                }else{
+                    $month = date('m');
+                    $year = date('yy');
+                    $start_format = '01-'.$month.'-'.$year;
+                    $end_format = '31-'.$month.'-'.$year;
+                }
+                
+                $q->whereBetween('log_profits.ngay_nhan', [$start_format, $end_format]);
+                
+            })->orderBy('log_profits.ngay_nhan', 'desc')
+            ->get();
+
+            return Datatables::of($list_log)
+                ->addColumn('checkbox', function ($data) {
+                    return '<input type="checkbox" name="chkItem[]" value="' . $data->id . '">';
+                })->addColumn('name_nguoinhan', function ($data) {
+                    return $data->name_nguoinhan;
+                })->addColumn('mavd', function ($data) {
+                    return $data->mavd;
+                })->addColumn('money', function ($data) {
+                    return number_format($data->money, 0, '.', '.').'đ';
+                })->addColumn('ngay_nhan', function ($data) {
+                    return format_datetime($data->ngay_nhan,'d-m-Y');
+                })->addColumn('name_status', function ($data) {
+                    return $data->name_status;
+                    
+                })->rawColumns(['checkbox', 'name_nguoinhan', 'mavd', 'money', 'ngay_nhan', 'name_status'])
+                ->addIndexColumn()
+                ->make(true);
+
+        }
+
+        return view('backend.orders.doanh-thu');
     }
 
-    // public function doanh_Thu($id){
-    //     $data = Log_profits::where('id_nguoinhan',$id)->get();
-    //     $money=0;
-    //     foreach ($data as $value) {
-    //         $money+=$value->money;
-    //     }
-    //     return $money;
-    // }
     public function bang_Luong(Request $request){
         $data = Member::all();
         // foreach ($member as $value) {

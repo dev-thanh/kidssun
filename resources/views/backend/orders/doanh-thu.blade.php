@@ -1,10 +1,12 @@
 <?php 
-    $status = request()->status ? request()->status : '';
-    $start_date = request()->startdate ? request()->startdate : '';
+    $month = date('m');
+    $year = date('yy');
+    $start_format = '01-'.$month.'-'.$year;
+    $start_date = request()->startdate ? request()->startdate : $start_format;
     $end_date = request()->enddate ? request()->enddate : '';
 ?>
 @extends('backend.layouts.app')
-@section('controller','Doanh thu')
+@section('controller','Lịch sử nhận hoa hồng')
 @section('action','Danh sách')
 @section('controller_route', route('orders.doanh-thu'))
 @section('content')
@@ -44,13 +46,16 @@
                             <label class="input-group-addon" for="endDate">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </label>
+                            <label id="reset-time" class="input-group-addon">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </label>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-4">
-                    <button type="submit" class="btn btn-sm btn-success" id="filter_date" data-href="{{route('orders.doanh-thu')}}">Tìm</button>
+                    <button type="submit" style="padding: 6px 12px;font-size: 13px" class="btn btn-sm btn-success" id="filter_date" data-href="{{route('orders.doanh-thu')}}">Tìm</button>
                 </div>
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="table-ajax" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>STT</th>
@@ -63,31 +68,70 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($data as $item)
-                        <tr>
-                            <td>{{ $loop->index +1 }}</td>
-                            <td>
-                                {{ $item->name_nguoinhan }}
-                            </td>
-                            <td>{{ $item->mavd }}</td>
-                            <td>{{number_format($item->money, 0, '.', '.')}}đ</td>
-                            <td>{{format_datetime($item->ngay_nhan,'d-m-Y')}}</td>
-                            <td>{{ $item->name_status }}</td>
-                            
-                            <!-- <td>
-                                <a href="" class="btn-destroy">
-                                    <i class="fa fa-unlock-alt"></i> Xem
-                                </a>
-                            </td> -->
-                        </tr>
-                        @endforeach
+                        
                     </tbody>
                 </table>
            </div>
         </div>
     </div>
     @section('scripts')
+    <script>
+        jQuery(document).ready(function ($) {
+            $('#table-ajax').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '{!! route('orders.doanh-thu') !!}',
+                    type: 'GET',
+                    data: function (d) {
+                      // read start date from the element
+                      d.start_date = $('#startDate').val();
+                      // read end date from the element
+                      d.end_date = $('#endDate').val();
+                      // d.code = $('#code').val();
+                    }
+                },
+                pageLength: 20,
+                columns: [
+                    {data: 'checkbox', name: 'checkbox'},
+                    // {data: 'DT_RowIndex',name: 'DT_RowIndex'},
+                    {data: 'name_nguoinhan', name: 'name_nguoinhan'},
+                    {data: 'mavd', name: 'mavd'},
+                    {data: 'money', name: 'money'},
+                    {data: 'ngay_nhan', name: 'ngay_nhan'},
+                    {data: 'name_status', name: 'name_status'},
+
+                ],
+                'columnDefs': [{
+                    'targets': [0, 1],
+                    'orderable': false,
+                    'searchable': false,
+                }],
+                language: {
+                    "sProcessing": "Đang xử lý...",
+                    "sLengthMenu": "Xem _MENU_ mục",
+                    "sZeroRecords": "Không tìm thấy dòng nào phù hợp",
+                    "sInfo": "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+                    "sInfoEmpty": "Đang xem 0 đến 0 trong tổng số 0 mục",
+                    "sInfoFiltered": "(được lọc từ _MAX_ mục)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Tìm:",
+                    "sUrl": "",
+                    "oPaginate": {
+                        "sFirst": "Đầu",
+                        "sPrevious": "Trước",
+                        "sNext": "Tiếp",
+                        "sLast": "Cuối"
+                    }
+                }
+            });
+        });
+    </script>
     <script type="text/javascript">
+        $('#reset-time').on('click',function (e) {
+            $('#startDate').val('');
+            $('#endDate').val('');
+        })
         var bindDateRangeValidation = function (f, s, e) {
         if(!(f instanceof jQuery)){
                 console.log("Not passing a jQuery object");

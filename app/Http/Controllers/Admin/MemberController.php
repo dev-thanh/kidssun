@@ -54,19 +54,67 @@ class MemberController extends Controller
     }
     public function index(Request $request)
     {
-        if($request->startdate){
-            $stdf = $request->startdate;         
-            $endf = $request->enddate;         
-            $start_format = Carbon::parse($request->startdate);
-            $start_format->format('Y-m-d');
-            $end_format = Carbon::parse($request->enddate);
-            $end_format->format('Y-m-d');
-            $data = Member::where('active',1)->whereBetween('created_at', [$start_format, $end_format])->get();
-            return view('backend.member.list', compact('data','stdf','endf'));
+        if (request()->ajax()) {
+            $list_post = Member::where(function($q) use ($request) {
+                if($request->start_date){
+                    $start_format = Carbon::parse($request->start_date);
+                    $start_format->format('Y-m-d');
+                    $end_format = Carbon::parse($request->end_date);
+                    $end_format->format('Y-m-d');
+                    $q->whereBetween('member.created_at', [$start_format, $end_format]);
+                }
+                if($request->code !=''){
+                    $q->where('code',$request->code);
+                }
+                
+            })->orderBy('member.created_at', 'desc')->get();
+            return Datatables::of($list_post)
+                ->addColumn('checkbox', function ($data) {
+                    return '<input type="checkbox" name="chkItem[]" value="' . $data->id . '">';
+                })->addColumn('full_name', function ($data) {
+                    return $data->full_name;
+                })->addColumn('link_aff', function ($data) {
+                    return $data->link_aff;
+                })->addColumn('phone', function ($data) {
+                    return $data->phone;
+                })->addColumn('email', function ($data) {
+                    return $data->email;
+                })->addColumn('status', function ($data) {
+                    if ($data->lock == 0) {
+                        $status = ' <span class="label label-success">Hiển thị</span>';
+                    } else {
+                        $status = ' <span class="label label-danger">Đang khóa</span>';
+                    }
+                    
+                    return $status;
+                })->addColumn('action', function ($data) {
+                    if($data->lock==0){
+                        $khoa = '&nbsp; &nbsp; &nbsp;
+                            <a href="' . route( 'member.lock', ['id'=>$data->id] ) . '" title="Khóa">
+                                <i class="fa fa-unlock"></i> Khóa
+                            </a>';
+                    }else{
+                        $khoa = '&nbsp; &nbsp; &nbsp;
+                            <a href="' . route( 'member.unlock', ['id'=>$data->id] ) . '" title="Mở">
+                                <i class="fa fa-unlock-alt"></i> Mở
+                            </a>';
+                    }
+                    return ' <a href="javascript:;" class="btn-destroy" 
+                            data-href="' . route('member.destroy', $data->id) . '"
+                            data-toggle="modal" data-target="#confim">
+                            <i class="fa fa-trash-o fa-fw"></i> Xóa</a>
+                            '.$khoa;
+                })->addColumn('lichsu', function ($data) {
+                    return '<a href="'.route( 'member.detail',  ['id'=>$data->id] ).'" class="btn-destroy">
+                                <i class="fa fa-eye"></i> Xem
+                            </a>';
+                })->rawColumns(['checkbox', 'full_name', 'link_aff', 'phone', 'email', 'status', 'action','lichsu'])
+                ->addIndexColumn()
+                ->make(true);
         }
-        
-        $data = Member::all();
-        return view('backend.member.list', compact('data'));
+
+        //$data = Member::all();
+        return view('backend.member.list');
     }
 
     /**

@@ -37,7 +37,7 @@
     </a>
     <ul class="treeview-menu">
         <li class="{{ Request::route()->getName() == 'member.index' ? 'active' : null }}">
-            <a href="{{ route('member.index') }}"><i class="fa fa-circle-o"></i> Danh sách thành viên</a>
+            <a href="{{ route('member.index') }}"><i class="fa fa-circle-o"></i> Danh sách đại lý</a>
         </li>
         <li class="{{ Request::route()->getName() == 'recharge.index' ? 'active' : null }}">
             <a href="{{ route('recharge.index') }}"><i class="fa fa-circle-o"></i> Danh sách chuyển tiền</a>
@@ -45,7 +45,7 @@
     </ul>
 </li>
 
-<li class="treeview {{ Request::route()->getName() == 'orders.index' || Request::route()->getName() == 'orders.doanh-thu' || Request::route()->getName() == 'orders.bang-luong' ? 'active'  : null }}">
+<li class="treeview {{ Request::route()->getName() == 'orders.index' || Request::route()->getName() == 'orders.doanh-thu' || Request::route()->getName() == 'orders.bang-luong' || Request::route()->getName() == 'orders.chi-tiet-luong' || Request::route()->getName() == 'orders.chi-tiet-luong' ? 'active'  : null }}">
     <a href="#">
         <i class="fa fa-building" aria-hidden="true"></i> <span>Quản lý doanh thu</span>
         <span class="pull-right-container">
@@ -57,9 +57,9 @@
             <a href="{{ route('orders.index') }}"><i class="fa fa-circle-o"></i> Đơn hàng</a>
         </li>
         <li class="{{  Request::route()->getName() == 'orders.doanh-thu' ? 'active' : null }}">
-            <a href="{{ route('orders.doanh-thu') }}"><i class="fa fa-circle-o"></i> Doanh thu</a>
+            <a href="{{ route('orders.doanh-thu') }}"><i class="fa fa-circle-o"></i> Lịch sử nhận hoa hồng</a>
         </li>
-        <li class="{{ Request::route()->getName() == 'orders.bang-luong' ? 'active' : null }}">
+        <li class="{{ Request::route()->getName() == 'orders.bang-luong' || Request::route()->getName() == 'orders.chi-tiet-luong' ? 'active' : null }}">
             <a href="{{ route('orders.bang-luong') }}"><i class="fa fa-circle-o"></i> Bảng lương</a>
         </li>
         

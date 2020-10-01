@@ -133,4 +133,5 @@ return [
     'chua_xac_nhan' => 'Tài khoản chưa được xác nhận',
     'hoa_hong_tu' => 'Hoa hồng từ',
     'ngay_nhan' => 'Ngày nhận',
+    'bang_luong' => 'Bảng lương',
 ];

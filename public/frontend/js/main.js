@@ -752,7 +752,7 @@ jQuery(document).ready(function($) {
     $(".btn-register-member").click(function(e){
         e.preventDefault();
         var _this = $(this);
-        var url_browse = window.location.origin;
+        var url_browse = $('#get_url_path').val();
         var url = $('#register-member').attr('action');
         var _token = $("input[name='_token']").val();
         var full_name = $("input[name='full_name']").val();
@@ -812,7 +812,7 @@ jQuery(document).ready(function($) {
     $(".btn-login-member:not(.disabled)").click(function(e){
         e.preventDefault();
         var _this = $(this);
-        var url_browse = window.location.origin;
+        var url_browse = $('#get_url_path').val();
         var url = $('#form-login').attr('action');
         var _token = $("input[name='_token']").val();
         var name_email = $("input[name='name_email']").val();
@@ -838,7 +838,7 @@ jQuery(document).ready(function($) {
                         toastr["error"](data.message_login, data.message_title);
                     }
                     if(data.status_login =='1'){
-                        var url_browse = window.location.origin;
+                        var url_browse = $('#get_url_path').val();
                         window.location.href = url_browse+'/san-pham';
                     }
                 }else{
@@ -1116,7 +1116,7 @@ $(document).ready(function($) {
             success: function(data) {
                 if(data.status==1){
                     $('#recharge-form')[0].reset();
-                    var url_browse = window.location.origin;
+                    var url_browse = $('#get_url_path').val();
                     $('.recharge-bill').find('.preview-img').attr('src',url_browse+'/public/images/img-bill.png');
                     toastr["success"](data.toastr, "");
                 }else{                          
@@ -1150,7 +1150,7 @@ $(document).ready(function($) {
     $('.products-table .code-orders').click(function(e){
         e.preventDefault();
         var id_order = $(this).data('id');
-        var url_browse = window.location.origin;
+        var url_browse = $('#get_url_path').val();
         $('.order-detail-content').html('<img src="'+url_browse+'/public/images/loader.gif'+'">');
         var hw = $(window).height();
         var hlg = $('.popup-content').height();
