@@ -135,265 +135,272 @@ class OrdersController extends Controller
 
     public function xacNhanDonHang(Request $request){
         // dd($request->all());
-        $order = Order::find($request->id);
+        if($request->status == 2){
+            $order = Order::find($request->id);
 
-        $id_member = $order->id_member;
+            $id_member = $order->id_member;
 
-        $member = Member::find($id_member);
+            $member = Member::find($id_member);
 
-        $mentor = Member::where('id',$member->mentor)->first();
-        //$childrent = Member::where('mentor',$member->id)->get();
-        $quyenloi = Quyenloi::first();
-        
-        $hhds_dlbl = $quyenloi->hhds_dlbl;
-        $hhm_dlbl = $quyenloi->hhm_dlbl;
-        $hhds_dlpp = $quyenloi->hhds_dlpp;
-        $hhtk_dlbl = $quyenloi->hhtk_dlbl;
-        $hhtk_dlpp = $quyenloi->hhtk_dlpp;
-        $order_success = Order::where(
-            [
-                'id_member' => $id_member,
-                'id_status' => 2
-            ]
-        )->get();
+            $mentor = Member::where('id',$member->mentor)->first();
+            //$childrent = Member::where('mentor',$member->id)->get();
+            $quyenloi = Quyenloi::first();
+            
+            $hhds_dlbl = $quyenloi->hhds_dlbl;
+            $hhm_dlbl = $quyenloi->hhm_dlbl;
+            $hhds_dlpp = $quyenloi->hhds_dlpp;
+            $hhtk_dlbl = $quyenloi->hhtk_dlbl;
+            $hhtk_dlpp = $quyenloi->hhtk_dlpp;
+            $order_success = Order::where(
+                [
+                    'id_member' => $id_member,
+                    'id_status' => 2
+                ]
+            )->get();
 
-        /* Lấy số tiền của cấp đại lý */
-        $rank = Rank::all();
-        $tien_dlbl = 0;
-        $tien_dlpp = 0;
-        foreach ($rank as $val) {
-            if($val->key==1){
-                $tien_dlbl = $val->total;
+            /* Lấy số tiền của cấp đại lý */
+            $rank = Rank::all();
+            $tien_dlbl = 0;
+            $tien_dlpp = 0;
+            foreach ($rank as $val) {
+                if($val->key==1){
+                    $tien_dlbl = $val->total;
+                }
+                if($val->key==2){
+                    $tien_dlpp = $val->total;
+                }
             }
-            if($val->key==2){
-                $tien_dlpp = $val->total;
+
+            $capdo = $member->code;
+
+            $tongtien_truoc = 0;
+            foreach ($order_success as $value) {
+                $tongtien_truoc+=$value->tongtien;
             }
-        }
+            $tien_donhang_hientai = $order->tongtien;
 
-        $capdo = $member->code;
+            $tongtien = $tien_donhang_hientai+$tongtien_truoc;
 
-        $tongtien_truoc = 0;
-        foreach ($order_success as $value) {
-            $tongtien_truoc+=$value->tongtien;
-        }
-        $tien_donhang_hientai = $order->tongtien;
+            if($capdo =='CTV'){
 
-        $tongtien = $tien_donhang_hientai+$tongtien_truoc;
-
-        if($capdo =='CTV'){
-
-            /*  Tiền cộng cho chính đại lý đó khi nạp hơn 6tr  */
-            if($tongtien >= $tien_dlbl && $tongtien < $tien_dlpp){
-                
-                $member->code = 'DLBL';
-                $member->save();
-                if($tongtien > $tien_dlbl){
-                    $sodu = $tongtien-$tien_dlbl;
-                    $log_profits = new Log_profits;
-                    $log_profits->id_donhang = $request->id;
-                    $log_profits->id_nguoinhan = $member->id;
-                    $log_profits->name_nguoinhan = $member->full_name;
-                    $log_profits->money = $sodu*$hhds_dlbl/100;
-                    $log_profits->id_status = 4;
-                    $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
-                    $log_profits->save();
+                /*  Tiền cộng cho chính đại lý đó khi nạp hơn 6tr  */
+                if($tongtien >= $tien_dlbl && $tongtien < $tien_dlpp){
                     
-                }
-            }
-           
-            if($tongtien >= $tien_dlpp){
-                $member->code = 'DLPP';
-                $member->save();
-                
-                $log_profits = new Log_profits;
-                $log_profits->id_donhang = $request->id;
-                $log_profits->id_nguoinhan = $member->id;
-                $log_profits->name_nguoinhan = $member->full_name;
-                $log_profits->money = ($tien_dlpp-$tien_dlbl)*$hhds_dlbl/100;
-                $log_profits->id_status = 4;
-                $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
-                $log_profits->save();
-
-                if($tongtien > $tien_dlpp){
-                    $sodu = $tongtien-$tien_dlpp;
-                    $log_profits = new Log_profits;
-                    $log_profits->id_donhang = $request->id;
-                    $log_profits->id_nguoinhan = $member->id;
-                    $log_profits->name_nguoinhan = $member->full_name;
-                    $log_profits->money = $sodu*$hhds_dlpp/100;
-                    $log_profits->id_status = 4;
-                    $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
-                    $log_profits->save();
-                }
-            }
-
-
-            /*  Tiền cộng cho đại lý giới thiệu  */
-            // $mentor = Member::where('id',$member->mentor)->first();
-
-            if($mentor->code == 'DLBL' || $mentor->code == 'DLPP'){
-
-                if($mentor->code == 'DLBL'){
-
-                    $log_profits = new Log_profits;
-                    $log_profits->id_donhang = $request->id;
-                    $log_profits->id_nguoinhan = $mentor->id;
-                    $log_profits->name_nguoinhan = $mentor->full_name;
-                    $log_profits->id_capduoi = $member->id;
-                    $log_profits->name_capduoi = $member->full_name;
-                    $log_profits->id_status = 5;
-                    $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
-                    if($tongtien <= $tien_dlbl){
-                        $log_profits->money = $tien_donhang_hientai*$hhm_dlbl/100;
-                    }else{
-                        $log_profits->money = ($tien_dlbl-$tongtien_truoc)*$hhm_dlbl/100;
-                    }
-                    $log_profits->save();
-
-                }else{
-
-
-                    if($tongtien <= $tien_dlbl){
+                    $member->code = 'DLBL';
+                    $member->save();
+                    if($tongtien > $tien_dlbl){
+                        $sodu = $tien_donhang_hientai-($tien_dlbl-$tongtien_truoc);
                         $log_profits = new Log_profits;
                         $log_profits->id_donhang = $request->id;
-                        $log_profits->id_nguoinhan = $mentor->id;
-                        $log_profits->name_nguoinhan = $mentor->full_name;
-                        $log_profits->id_capduoi = $member->id;
-                        $log_profits->name_capduoi = $member->full_name;
-                        $log_profits->id_status = 5;
-                        $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
-                        $log_profits->money = $tien_donhang_hientai*20/100;
-                        $log_profits->save();
-                    }elseif($tongtien > $tien_dlbl && $tongtien <= $tien_dlpp){
-                        $log_profits = new Log_profits;
-                        $log_profits->id_donhang = $request->id;
-                        $log_profits->id_nguoinhan = $mentor->id;
-                        $log_profits->name_nguoinhan = $mentor->full_name;
-                        $log_profits->id_capduoi = $member->id;
-                        $log_profits->name_capduoi = $member->full_name;
-                        $log_profits->id_status = 5;
-                        $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
-                        $log_profits->money = ($tien_dlbl-$tongtien_truoc)*$hhtk_dlpp/100;
-                        $log_profits->save();
-                        /*  Tiền cộng cho dlpp khi ctv trở thành dlbl  */
-                        $sd = $tongtien-$tien_dlbl;
-                        $log_profits = new Log_profits;
-                        $log_profits->id_donhang = $request->id;
-                        $log_profits->id_nguoinhan = $mentor->id;
-                        $log_profits->name_nguoinhan = $mentor->full_name;
-                        $log_profits->id_capduoi = $member->id;
-                        $log_profits->name_capduoi = $member->full_name;
-                        $log_profits->id_status = 5;
-                        $log_profits->money = $sd*$hhtk_dlbl/100;
+                        $log_profits->id_nguoinhan = $member->id;
+                        $log_profits->name_nguoinhan = $member->full_name;
+                        $log_profits->money = $sodu*$hhds_dlbl/100;
+                        $log_profits->id_status = 4;
                         $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
                         $log_profits->save();
-                    }else{
-                        $log_profits = new Log_profits;
-                        $log_profits->id_donhang = $request->id;
-                        $log_profits->id_nguoinhan = $mentor->id;
-                        $log_profits->name_nguoinhan = $mentor->full_name;
-                        $log_profits->id_capduoi = $member->id;
-                        $log_profits->name_capduoi = $member->full_name;
-                        $log_profits->id_status = 5;
-                        $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
-                        $log_profits->money = ($tien_dlbl-$tongtien_truoc)*$hhtk_dlpp/100;
-                        $log_profits->save();
-                        /*  Tiền cộng cho dlpp khi ctv trở thành dlbl  */
-                        $sd = $tongtien-$tien_dlbl;
-                        $log_profits = new Log_profits;
-                        $log_profits->id_donhang = $request->id;
-                        $log_profits->id_nguoinhan = $mentor->id;
-                        $log_profits->name_nguoinhan = $mentor->full_name;
-                        $log_profits->id_capduoi = $member->id;
-                        $log_profits->name_capduoi = $member->full_name;
-                        $log_profits->id_status = 5;
-                        $log_profits->money = ($tien_dlpp-$tien_dlbl)*$hhtk_dlbl/100;
-                        $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
-                        $log_profits->save();
+                        
                     }
                 }
-            }
-        }elseif($capdo =='DLBL')
-        {
-            /*  Tiền cộng cho chính đại lý đó khi trở thành DLBL  */
-            if($tongtien < $tien_dlpp)
-            {
-                
-                $log_profits = new Log_profits;
-                $log_profits->id_donhang = $request->id;
-                $log_profits->id_nguoinhan = $member->id;
-                $log_profits->name_nguoinhan = $member->full_name;
-                $log_profits->money = $tien_donhang_hientai*$hhds_dlbl/100;
-                $log_profits->id_status = 6;
-                $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
-                $log_profits->save();
-                
-                if($mentor->code=='DLPP')
-                {
-                    $log_profits = new Log_profits;
-                    $log_profits->id_donhang = $request->id;
-                    $log_profits->id_nguoinhan = $mentor->id;
-                    $log_profits->name_nguoinhan = $mentor->full_name;
-                    $log_profits->id_capduoi = $member->id;
-                    $log_profits->name_capduoi = $member->full_name;
-                    $log_profits->money = $tien_donhang_hientai*$hhtk_dlbl/100;
-                    $log_profits->id_status = 5;
-                    $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
-                    $log_profits->save();
-                }
-
-                
-            }else
-            {
-                if($tongtien >= $tien_dlpp)
-                {
+               
+                if($tongtien >= $tien_dlpp){
                     $member->code = 'DLPP';
                     $member->save();
-                }
-                $sd = $tongtien-$tien_dlpp;
-                $log_profits = new Log_profits;
-                $log_profits->id_donhang = $request->id;
-                $log_profits->id_nguoinhan = $member->id;
-                $log_profits->name_nguoinhan = $member->full_name;
-                $log_profits->money = $sd*$hhds_dlpp/100;
-                $log_profits->id_status = 6;
-                $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
-                $log_profits->save();
-
-                $log_profits = new Log_profits;
-                $log_profits->id_donhang = $request->id;
-                $log_profits->id_nguoinhan = $member->id;
-                $log_profits->name_nguoinhan = $member->full_name;
-                $log_profits->money = ($tien_dlpp - $tongtien_truoc)*$hhds_dlbl/100;
-                $log_profits->id_status = 6;
-                $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
-                $log_profits->save();
-                if($mentor->code=='DLPP')
-                {
+                    
                     $log_profits = new Log_profits;
                     $log_profits->id_donhang = $request->id;
-                    $log_profits->id_nguoinhan = $mentor->id;
-                    $log_profits->name_nguoinhan = $mentor->full_name;
-                    $log_profits->id_capduoi = $member->id;
-                    $log_profits->name_capduoi = $member->full_name;
-                    $log_profits->money = ($tien_dlpp - $tongtien_truoc)*$hhtk_dlbl/100;
-                    $log_profits->id_status = 5;
+                    $log_profits->id_nguoinhan = $member->id;
+                    $log_profits->name_nguoinhan = $member->full_name;
+                    $log_profits->money = ($tien_dlpp-$tien_dlbl)*$hhds_dlbl/100;
+                    $log_profits->id_status = 4;
                     $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
                     $log_profits->save();
+
+                    if($tongtien > $tien_dlpp){
+                        $sodu = $tongtien-$tien_dlpp;
+                        $log_profits = new Log_profits;
+                        $log_profits->id_donhang = $request->id;
+                        $log_profits->id_nguoinhan = $member->id;
+                        $log_profits->name_nguoinhan = $member->full_name;
+                        $log_profits->money = $sodu*$hhds_dlpp/100;
+                        $log_profits->id_status = 4;
+                        $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
+                        $log_profits->save();
+                    }
                 }
+
+
+                /*  Tiền cộng cho đại lý giới thiệu  */
+                // $mentor = Member::where('id',$member->mentor)->first();
+                if($mentor){
+                    if($mentor->code == 'DLBL' || $mentor->code == 'DLPP'){
+
+                        if($mentor->code == 'DLBL'){
+
+                            $log_profits = new Log_profits;
+                            $log_profits->id_donhang = $request->id;
+                            $log_profits->id_nguoinhan = $mentor->id;
+                            $log_profits->name_nguoinhan = $mentor->full_name;
+                            $log_profits->id_capduoi = $member->id;
+                            $log_profits->name_capduoi = $member->full_name;
+                            $log_profits->id_status = 5;
+                            $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
+                            if($tongtien <= $tien_dlbl){
+                                $log_profits->money = $tien_donhang_hientai*$hhm_dlbl/100;
+                            }else{
+                                $log_profits->money = ($tien_dlbl-$tongtien_truoc)*$hhm_dlbl/100;
+                            }
+                            $log_profits->save();
+
+                        }else{
+
+
+                            if($tongtien <= $tien_dlbl){
+                                $log_profits = new Log_profits;
+                                $log_profits->id_donhang = $request->id;
+                                $log_profits->id_nguoinhan = $mentor->id;
+                                $log_profits->name_nguoinhan = $mentor->full_name;
+                                $log_profits->id_capduoi = $member->id;
+                                $log_profits->name_capduoi = $member->full_name;
+                                $log_profits->id_status = 5;
+                                $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
+                                $log_profits->money = $tien_donhang_hientai*20/100;
+                                $log_profits->save();
+                            }elseif($tongtien > $tien_dlbl && $tongtien <= $tien_dlpp){
+                                $log_profits = new Log_profits;
+                                $log_profits->id_donhang = $request->id;
+                                $log_profits->id_nguoinhan = $mentor->id;
+                                $log_profits->name_nguoinhan = $mentor->full_name;
+                                $log_profits->id_capduoi = $member->id;
+                                $log_profits->name_capduoi = $member->full_name;
+                                $log_profits->id_status = 5;
+                                $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
+                                $log_profits->money = ($tien_dlbl-$tongtien_truoc)*$hhtk_dlpp/100;
+                                $log_profits->save();
+                                /*  Tiền cộng cho dlpp khi ctv trở thành dlbl  */
+                                $sd = $tongtien-$tien_dlbl;
+                                $log_profits = new Log_profits;
+                                $log_profits->id_donhang = $request->id;
+                                $log_profits->id_nguoinhan = $mentor->id;
+                                $log_profits->name_nguoinhan = $mentor->full_name;
+                                $log_profits->id_capduoi = $member->id;
+                                $log_profits->name_capduoi = $member->full_name;
+                                $log_profits->id_status = 5;
+                                $log_profits->money = $sd*$hhtk_dlbl/100;
+                                $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
+                                $log_profits->save();
+                            }else{
+                                $log_profits = new Log_profits;
+                                $log_profits->id_donhang = $request->id;
+                                $log_profits->id_nguoinhan = $mentor->id;
+                                $log_profits->name_nguoinhan = $mentor->full_name;
+                                $log_profits->id_capduoi = $member->id;
+                                $log_profits->name_capduoi = $member->full_name;
+                                $log_profits->id_status = 5;
+                                $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
+                                $log_profits->money = ($tien_dlbl-$tongtien_truoc)*$hhtk_dlpp/100;
+                                $log_profits->save();
+                                /*  Tiền cộng cho dlpp khi ctv trở thành dlbl  */
+                                $sd = $tongtien-$tien_dlbl;
+                                $log_profits = new Log_profits;
+                                $log_profits->id_donhang = $request->id;
+                                $log_profits->id_nguoinhan = $mentor->id;
+                                $log_profits->name_nguoinhan = $mentor->full_name;
+                                $log_profits->id_capduoi = $member->id;
+                                $log_profits->name_capduoi = $member->full_name;
+                                $log_profits->id_status = 5;
+                                $log_profits->money = ($tien_dlpp-$tien_dlbl)*$hhtk_dlbl/100;
+                                $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
+                                $log_profits->save();
+                            }
+                        }
+                    }
+                }
+
+            }elseif($capdo =='DLBL')
+            {
+                /*  Tiền cộng cho chính đại lý đó khi trở thành DLBL  */
+                if($tongtien < $tien_dlpp)
+                {
+                    
+                    $log_profits = new Log_profits;
+                    $log_profits->id_donhang = $request->id;
+                    $log_profits->id_nguoinhan = $member->id;
+                    $log_profits->name_nguoinhan = $member->full_name;
+                    $log_profits->money = $tien_donhang_hientai*$hhds_dlbl/100;
+                    $log_profits->id_status = 6;
+                    $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
+                    $log_profits->save();
+                    if($mentor){
+                        if($mentor->code=='DLPP')
+                        {
+                            $log_profits = new Log_profits;
+                            $log_profits->id_donhang = $request->id;
+                            $log_profits->id_nguoinhan = $mentor->id;
+                            $log_profits->name_nguoinhan = $mentor->full_name;
+                            $log_profits->id_capduoi = $member->id;
+                            $log_profits->name_capduoi = $member->full_name;
+                            $log_profits->money = $tien_donhang_hientai*$hhtk_dlbl/100;
+                            $log_profits->id_status = 5;
+                            $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
+                            $log_profits->save();
+                        }
+                    }
+
+                    
+                }else
+                {
+                    if($tongtien >= $tien_dlpp)
+                    {
+                        $member->code = 'DLPP';
+                        $member->save();
+                    }
+                    $sd = $tongtien-$tien_dlpp;
+                    $log_profits = new Log_profits;
+                    $log_profits->id_donhang = $request->id;
+                    $log_profits->id_nguoinhan = $member->id;
+                    $log_profits->name_nguoinhan = $member->full_name;
+                    $log_profits->money = $sd*$hhds_dlpp/100;
+                    $log_profits->id_status = 6;
+                    $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
+                    $log_profits->save();
+
+                    $log_profits = new Log_profits;
+                    $log_profits->id_donhang = $request->id;
+                    $log_profits->id_nguoinhan = $member->id;
+                    $log_profits->name_nguoinhan = $member->full_name;
+                    $log_profits->money = ($tien_dlpp - $tongtien_truoc)*$hhds_dlbl/100;
+                    $log_profits->id_status = 6;
+                    $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
+                    $log_profits->save();
+                    if($mentor){
+                        if($mentor->code=='DLPP')
+                        {
+                            $log_profits = new Log_profits;
+                            $log_profits->id_donhang = $request->id;
+                            $log_profits->id_nguoinhan = $mentor->id;
+                            $log_profits->name_nguoinhan = $mentor->full_name;
+                            $log_profits->id_capduoi = $member->id;
+                            $log_profits->name_capduoi = $member->full_name;
+                            $log_profits->money = ($tien_dlpp - $tongtien_truoc)*$hhtk_dlbl/100;
+                            $log_profits->id_status = 5;
+                            $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
+                            $log_profits->save();
+                        }
+                    }
+                }
+            }elseif($capdo =='DLPP')
+            {
+                $log_profits = new Log_profits;
+                $log_profits->id_donhang = $request->id;
+                $log_profits->id_nguoinhan = $member->id;
+                $log_profits->name_nguoinhan = $member->full_name;
+                $log_profits->money = $tien_donhang_hientai*$hhds_dlpp/100;
+                $log_profits->id_status = 6;
+                $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
+                $log_profits->save();
             }
-        }elseif($capdo =='DLPP')
-        {
-            $log_profits = new Log_profits;
-            $log_profits->id_donhang = $request->id;
-            $log_profits->id_nguoinhan = $member->id;
-            $log_profits->name_nguoinhan = $member->full_name;
-            $log_profits->money = $tien_donhang_hientai*$hhds_dlpp/100;
-            $log_profits->id_status = 6;
-            $log_profits->ngay_nhan = Carbon::now()->format('Y-m-d');
-            $log_profits->save();
         }
-        
+
         $order->update(['id_status'=>$request->status]);
 
         
@@ -504,7 +511,7 @@ class OrdersController extends Controller
                 
                 $q->whereBetween('log_profits.ngay_nhan', [$start_format, $end_format]);
                 
-            })->orderBy('log_profits.ngay_nhan', 'desc')
+            })->orderBy('log_profits.id', 'desc')
             ->get();
 
             return Datatables::of($list_log)

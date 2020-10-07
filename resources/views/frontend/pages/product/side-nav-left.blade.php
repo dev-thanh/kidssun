@@ -13,7 +13,7 @@
 					<a href="{{route('home.lich-su-mua-hang-dlcd')}}" title="{{ trans('message.lich_su_mua_hang_dai_ly') }}">{{ trans('message.lich_su_mua_hang_dai_ly') }}</a>
 				</li>
 				<li class="{{ Request::route()->getName() =='home.doanh-thu' ? 'active' : null }}">
-					<a href="{{route('home.doanh-thu')}}" title="{{ trans('message.lich_su_mua_hang_dai_ly') }}">{{ trans('message.doanh_thu') }}</a>
+					<a href="{{route('home.doanh-thu')}}" title="{{ trans('message.lich_su_mua_hang_dai_ly') }}">{{ trans('message.tinh_luong') }}</a>
 				</li>
 			</ul>
 		</div>

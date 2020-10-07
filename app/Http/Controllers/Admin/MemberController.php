@@ -181,6 +181,12 @@ class MemberController extends Controller
     public function destroy($id)
     {
         Member::destroy($id);
+        $orders = Orders::where('id_member',$id)->get();
+        $orders_id = $orders->pluck('id')->toArray();
+        Orders::where('id_member',$id)->get()->delete();
+        Order_detail::whereIn('order_id',$orders_id)->get()->delete();
+        Log_profits::where('id_nguoinhan',$id)->get()->delete();
+        BangLuong::where('id_daily',$id)->get()->delete();
         flash('Xóa thành công.')->success();
         return back();
     }

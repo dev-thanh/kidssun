@@ -1,5 +1,4 @@
 <?php 
-    $status = request()->status ? request()->status : '';
     $month = request()->month && request()->month !='' ? request()->month : now()->month;
     $year = request()->year && request()->year !='' ? request()->year : now()->year;
 ?>
@@ -90,7 +89,7 @@
                           <label class="form-check-label">
                             <!-- <input class="form-check-input" type="checkbox" value="" id="chkConfirm"> -->
                             @if(!$luong_thang_hien_tai)
-                            <button class="btn btn-primary"  onclick="return confirm('Bạn có chắc chắn xóa không ?')" class="form-check-sign">Xác nhận.</button>
+                            <button class="btn btn-primary"  onclick="return confirm('Bạn có chắc chắn xác nhận ?')" class="form-check-sign">Xác nhận.</button>
                             @else
                             <span class="label label-success">Đã tính lương cho đại lý</span>
                             @endif

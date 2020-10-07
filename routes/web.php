@@ -183,6 +183,8 @@ Route::group(['namespace' => 'Admin'], function () {
 
         Route::post('config/updatequyen-loi', 'ConfigController@updateQuyenloi')->name('config.update-quyenloi');
 
+        Route::resource('banks', 'BanksController', ['except' => ['show']]);
+
         // Đơn ứng tuyển
         Route::group(['prefix' => 'apply-job'], function() {
             Route::get('/', ['as' => 'get.list.job', 'uses' => 'ApplyJobController@getList']);

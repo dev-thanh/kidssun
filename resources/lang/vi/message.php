@@ -134,4 +134,5 @@ return [
     'hoa_hong_tu' => 'Hoa hồng từ',
     'ngay_nhan' => 'Ngày nhận',
     'bang_luong' => 'Bảng lương',
+    'tinh_luong' => 'Tính lương',
 ];

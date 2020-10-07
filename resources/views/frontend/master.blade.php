@@ -42,6 +42,8 @@
 
 	<link rel="stylesheet" href="{{ url('public/backend/plugins/datatables/dataTables.bootstrap.css') }}">
 
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
 
 	<script type="text/javascript" src="{{ __BASE_URL__ }}/js/jquery.min.js"></script> 
@@ -121,6 +123,8 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>
 
 	    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.3/js/bootstrap-datetimepicker.min.js"></script>
+
+	    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
 		<script type="text/javascript" src="{{ __BASE_URL__ }}/js/main.js"></script>
 

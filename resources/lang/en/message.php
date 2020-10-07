@@ -134,4 +134,5 @@ return [
     'hoa_hong_tu' => 'Rose from',
     'ngay_nhan' => 'Received date',
     'bang_luong' => 'Payroll',
+    'tinh_luong' => 'Payroll',
 ];

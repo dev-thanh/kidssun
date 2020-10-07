@@ -85,7 +85,7 @@
 									</div>
 
 									<div class="table-content">
-										<table border="1" class="products-table">
+										<table id="table1" border="1" class="products-table">
 											<thead>
 												<tr>
 													<th>STT</th>
@@ -97,6 +97,15 @@
 												</tr>
 											</thead>
 											<tbody>
+												@if(count($orders)==0)
+													<tr>
+														@if(app()->getLocale() == 'vi')
+														<td colspan="6" rowspan="" headers="">Không tìm thấy đơn hàng nào.</td>
+														@else
+														<td colspan="6" rowspan="" headers="">No orders found.</td>
+														@endif
+													</tr>
+												@endif
 												<?php $tong=0; ?>
 												@foreach($orders as $k => $item)
 												<tr>
@@ -120,7 +129,7 @@
 													</td>
 													<td class="status">
 														<span>{{ app()->getLocale() == 'vi' ? $item->name_status : $item->nameen_status }}</span>
-													</td></span>
+													</td>
 													</td>														
 													<td>
 														<a href="#" class="code-orders show-order-detal" data-id="{{$item->id}}">

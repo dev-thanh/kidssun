@@ -73,7 +73,7 @@
                                         <input value="{{@$member->address}}" readonly class="form-control" name="">
                                     </div>
                                     <div class="col-sm-6 form-group">
-                                        <?php $gt = App\Models\Member::where('id',$member->id)->first(); ?>
+                                        <?php $gt = App\Models\Member::where('id',$member->mentor)->first(); ?>
                                         <label for="">Người giới thiệu mở tài khoản</label>
                                         <input value="{{@$gt->full_name}}" readonly class="form-control" name="">
                                     </div>

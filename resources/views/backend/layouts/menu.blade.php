@@ -113,7 +113,7 @@
         </span>
     </a>
 </li>
-<li class="treeview {{ Request::segment(2) === 'config' ? 'active' : null }}">
+<li class="treeview {{ Request::segment(2) === 'config' || Request::segment(2) === 'banks' ? 'active' : null }}">
     <a href="#">
         <i class="fa fa-building" aria-hidden="true"></i> <span>Config</span>
         <span class="pull-right-container">
@@ -121,6 +121,9 @@
         </span>
     </a>
     <ul class="treeview-menu">
+        <li class="{{ Request::segment(2) === 'banks' ? 'active' : null }}">
+            <a href="{{ route('banks.index') }}"><i class="fa fa-circle-o"></i> Tài khoản ngân hàng</a>
+        </li>
         <li class="{{ Request::route()->getName() == 'config.index' || Request::route()->getName() == 'config.create' ? 'active' : null }}">
             <a href="{{ route('config.index') }}"><i class="fa fa-circle-o"></i> Cấp bậc đại lý</a>
         </li>

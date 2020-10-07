@@ -88,6 +88,15 @@
 												</tr>
 											</thead>
 											<tbody>
+												@if(count($orders)==0)
+													<tr>
+														@if(app()->getLocale() == 'vi')
+														<td colspan="6" rowspan="" headers="">Không tìm thấy đơn hàng nào.</td>
+														@else
+														<td colspan="6" rowspan="" headers="">No orders found.</td>
+														@endif
+													</tr>
+												@endif
 												@foreach($orders as $k => $item)
 												<tr>
 													<td>

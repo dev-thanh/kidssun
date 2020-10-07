@@ -30,6 +30,8 @@ use App\Models\Order_detail;
 use App\Models\Status;
 use App\Models\Rank;
 use App\Models\Log_profits;
+use App\Models\BangLuong;
+use App\Models\Banks;
 
 class ManagerAccountController extends Controller
 {
@@ -360,7 +362,8 @@ class ManagerAccountController extends Controller
     }
 
     public function napTien(){
-    	return view('frontend.pages.account.nap-tien');
+        $banks = Banks::where('status',1)->get();
+    	return view('frontend.pages.account.nap-tien',compact('banks'));
     }
 
     public function postNapTien(Request $request){
@@ -438,7 +441,7 @@ class ManagerAccountController extends Controller
 	            'image' => url('/').'/public/images/naptien/'.$member_id.'_'.$image_name,
 	            'trading_code' => $request->trading_code,
 	            'node' => $request->note,
-	            'url' => 'dfdsfsd',
+	            'url' => route('recharge.index'),
 	            
 	        ];
 	        Mail::send('frontend.mail.mail-teamplate', $content_email, function ($msg) use($email_admin) {
@@ -682,24 +685,31 @@ class ManagerAccountController extends Controller
     public function doanh_Thu(Request $request){
         $member_id = Auth::guard('customer')->user()->id;
 
+        if($request->year && $request->month){
+            $month = $request->year.'-'.$request->month;
+        }else{
+            $month = Carbon::now()->format('Y-m');
+        }
+
         $data = Log_profits::select('log_profits.*','status.name as name_status','status.name_en as name_status_en','orders.mavd as mavd')
         ->join('status','status.id','=','log_profits.id_status')
         ->join('orders','orders.id','=','log_profits.id_donhang')
-        ->where(function($q) use ($request,$member_id){
+        ->where(function($q) use ($request,$member_id,$month){
             $q->where([
                 'id_nguoinhan' => $member_id,
                 'active' => 1,
             ]);
-            if($request->start_date !=''){
-                $start_format = Carbon::parse($request->start_date);
-                $start_format->format('Y-m-d');
-                $end_format = Carbon::parse($request->end_date);
-                $end_format->format('Y-m-d');
-                $q->whereBetween('log_profits.ngay_nhan', [$start_format, $end_format]);
-            } 
+            $start_format = $month.'-01';
+           
+            $end_format = $month.'-31';
+
+            $q->whereBetween('log_profits.ngay_nhan', [$start_format, $end_format]);
         })->orderBy('log_profits.ngay_nhan', 'desc')
         ->get();
-
-        return view('frontend.pages.account.doanh-thu',compact('data'));
+        $luong = BangLuong::where([
+            'id_daily' => $member_id,
+            'luong_thang' => $month
+        ])->first();
+        return view('frontend.pages.account.doanh-thu',compact('data','luong'));
     }
 }

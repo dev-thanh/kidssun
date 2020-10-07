@@ -1,7 +1,6 @@
-<?php 
-	$status = request()->status ? request()->status : '';
-	$start_date = request()->start_date ? request()->start_date : '';
-	$end_date = request()->end_date ? request()->end_date : '';
+<?php
+    $month = request()->month && request()->month !='' ? request()->month : now()->month;
+    $year = request()->year && request()->year !='' ? request()->year : now()->year;
 ?>
 @extends('frontend.master')
 @section('main')
@@ -19,6 +18,13 @@
 		#table1_wrapper{
 			display: unset
 		}
+		.advanced-search-form select{
+			font-size: 16px;
+    		padding: 2px;
+		}
+		.advanced-search-form label{
+			color: #000
+		}
 	</style>
 	<div class="breadcrumbs">
 
@@ -32,7 +38,7 @@
 
 						<div class="title-box breadcrumbs-title title-left">
 
-							<h1 class="title">{{ trans('message.lich_su_mua_hang') }}</h1>
+							<h1 class="title">{{ trans('message.tinh_luong') }}</h1>
 
 						</div>
 
@@ -65,25 +71,27 @@
 									<div class="content-header">
 										<div class="advanced-search-block advanced-search-block-2">
 											<form class="advanced-search-form">
-												<div class="form-content" style="align-items: flex-end">
-													<div class="form-group">
-														<!-- <label class="input-group-addon" for="startDate">
-							                                Từ ngày
-							                            </label> -->
-														<input type="text" name="start_date" value="{{@$start_date}}" class="form-control search-start" readonly id="startDate" placeholder="{{ trans('message.tu_ngay') }}">
-													</div>
-													<div class="form-group">
-														<!-- <label class="input-group-addon" for="startDate">
-							                                Đến ngày
-							                            </label> -->
-														<input type="text" name="end_date" value="{{@$end_date}}" class="form-control search-input" readonly id="endDate" placeholder="{{ trans('message.den_ngay') }}">
-													</div>
-													<div class="form-group">
-														<button class="btn search-btn">
-															<span>{{ trans('message.tim_kiem') }}</span>
-														</button>
-													</div>
-												</div>
+												
+												<div style="font-size: 18px;display: inline-flex;">
+							                      <label style="margin-right: 10px">Năm:
+							                        <select id="yearSelector" class="get-year">
+							                       		@for($i=2019;$i<=now()->year;$i++)
+							                          		<option value="{{$i}}" @if($year == $i) selected="selected" @endif>{{$i}}</option>
+							                          	@endfor
+							                        </select>
+							                      </label>
+							                      <label>Tháng:
+							                        <select id="monthSelector">
+							                            @for($i=01;$i<13;$i++)
+							                            @if($i < 10)
+							                            <option value="0{{$i}}" @if($month==$i) selected @endif>{{$i}}</option>
+							                            @else
+							                            <option value="{{$i}}" @if($month==$i) selected @endif>{{$i}}</option>
+							                            @endif
+							                          @endfor
+							                        </select>
+							                      </label>
+							                    </div>
 											</form>
 										</div>
 									</div>
@@ -101,6 +109,15 @@
 												</tr>
 											</thead>
 											<tbody>
+												@if(count($data)==0)
+													<tr>
+														@if(app()->getLocale() == 'vi')
+														<td colspan="6" rowspan="" headers="">Không tìm thấy dữ liệu nào</td>
+														@else
+														<td colspan="6" rowspan="" headers="">No data found</td>
+														@endif
+													</tr>
+												@endif
 												<?php $tong=0; ?>
 												@foreach($data as $k => $item)
 												<tr>
@@ -125,7 +142,7 @@
 									<div class="table-footer">
 										<div class="product-total">
 											<label>{{ trans('message.tong') }}:</label>
-											<span>{!! number_format($tong, 0, '.', '.')!!} đ</span>
+											<span>{!! number_format($tong+@$luong->bu_tru, 0, '.', '.')!!} đ</span>
 										</div>
 									</div>
 								</div>
@@ -136,7 +153,7 @@
 			</div>				
 
 		</div>
-
+		<input type="hidden" name="" id="url_chitiet_luong" value="{{route('home.doanh-thu')}}">
 	</main> <!--main-->
 	<div class="art-popups art-popups-code-orders">
 		<div class="popups-box">
@@ -157,123 +174,12 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-		var bindDateRangeValidation = function (f, s, e) {
-		    if(!(f instanceof jQuery)){
-					console.log("Not passing a jQuery object");
-		    }
-		  
-		    var jqForm = f,
-		        startDateId = s,
-		        endDateId = e;
-		  
-		    var checkDateRange = function (startDate, endDate) {
-		        var isValid = (startDate != "" && endDate != "") ? startDate <= endDate : true;
-		        return isValid;
-		    }
-
-		    var bindValidator = function () {
-		        var bstpValidate = jqForm.data('bootstrapValidator');
-		        var validateFields = {
-		            startDate: {
-		                validators: {
-		                    notEmpty: { message: 'This field is required.' },
-		                    callback: {
-		                        message: 'Start Date must less than or equal to End Date.',
-		                        callback: function (startDate, validator, $field) {
-		                            return checkDateRange(startDate, $('#' + endDateId).val())
-		                        }
-		                    }
-		                }
-		            },
-		            endDate: {
-		                validators: {
-		                    notEmpty: { message: 'This field is required.' },
-		                    callback: {
-		                        message: 'End Date must greater than or equal to Start Date.',
-		                        callback: function (endDate, validator, $field) {
-		                            return checkDateRange($('#' + startDateId).val(), endDate);
-		                        }
-		                    }
-		                }
-		            },
-		          	customize: {
-		                validators: {
-		                    customize: { message: 'customize.' }
-		                }
-		            }
-		        }
-		        if (!bstpValidate) {
-		            jqForm.bootstrapValidator({
-		                excluded: [':disabled'], 
-		            })
-		        }
-		      
-		        jqForm.bootstrapValidator('addField', startDateId, validateFields.startDate);
-		        jqForm.bootstrapValidator('addField', endDateId, validateFields.endDate);
-		      
-		    };
-
-		    var hookValidatorEvt = function () {
-		        var dateBlur = function (e, bundleDateId, action) {
-		            jqForm.bootstrapValidator('revalidateField', e.target.id);
-		        }
-
-		        $('#' + startDateId).on("dp.change dp.update blur", function (e) {
-		            $('#' + endDateId).data("DateTimePicker").setMinDate(e.date);
-		            dateBlur(e, endDateId);
-		        });
-
-		        $('#' + endDateId).on("dp.change dp.update blur", function (e) {
-		            $('#' + startDateId).data("DateTimePicker").setMaxDate(e.date);
-		            dateBlur(e, startDateId);
-		        });
-		    }
-
-		    bindValidator();
-		    hookValidatorEvt();
-		};
-
-
-		$(function () {
-		    var sd = @if($start_date !='') '{{$start_date}}' @else new Date() @endif;
-		    var ed = new Date();
-		  
-		    $('#startDate').datetimepicker({ 
-		      pickTime: false, 
-		      format: "DD-MM-YYYY", 
-		      // defaultDate: @if(@$stdf) '{{@$stdf}}' @else sd @endif, 
-		      maxDate: ed 
-		    });
-		  
-		    $('#endDate').datetimepicker({ 
-		      pickTime: false, 
-		      format: "DD-MM-YYYY", 
-		      // defaultDate: @if(@$endf) '{{@$endf}}' @else ed @endif,
-		      minDate: sd 
-		    });
-
-		    //passing 1.jquery form object, 2.start date dom Id, 3.end date dom Id
-		    bindDateRangeValidation($("#form"), 'startDate', 'endDate');
-		});
-		$(document).ready(function() {
-            $('#table1').DataTable( {      
-                 "searching": false,
-                 "paging": true, 
-                 "info": false,         
-                 "lengthChange":false ,
-                 language: {
-			        paginate: {
-			            previous: '‹',
-			            next:     '›'
-			        },
-			        aria: {
-			            paginate: {
-			                previous: 'Previous',
-			                next:     'Next'
-			            }
-			        }
-			    }
-            } );
+        $('select').change(function () {
+            var url = $('#url_chitiet_luong').val();
+            var month = $('#monthSelector').val();
+            var year = $('.get-year').val();
+            // var month = $('.get-month').val();
+            window.location.href = url+'?year='+year+'&month='+month;
         });
-	</script>
+    </script>
 @stop
